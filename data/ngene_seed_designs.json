@@ -1,0 +1,482 @@
+[
+  {
+    "seed_design_id": "seed_005",
+    "task_ids": [
+      "task_0125",
+      "task_0028",
+      "task_0199",
+      "task_0149",
+      "task_0141",
+      "task_0046"
+    ],
+    "bayesian_d_error": 23.135572
+  },
+  {
+    "seed_design_id": "seed_021",
+    "task_ids": [
+      "task_0003",
+      "task_0101",
+      "task_0114",
+      "task_0069",
+      "task_0104",
+      "task_0029"
+    ],
+    "bayesian_d_error": 23.182293
+  },
+  {
+    "seed_design_id": "seed_035",
+    "task_ids": [
+      "task_0181",
+      "task_0005",
+      "task_0011",
+      "task_0032",
+      "task_0155",
+      "task_0073"
+    ],
+    "bayesian_d_error": 23.282862
+  },
+  {
+    "seed_design_id": "seed_007",
+    "task_ids": [
+      "task_0075",
+      "task_0032",
+      "task_0156",
+      "task_0207",
+      "task_0168",
+      "task_0104"
+    ],
+    "bayesian_d_error": 23.289457
+  },
+  {
+    "seed_design_id": "seed_016",
+    "task_ids": [
+      "task_0101",
+      "task_0083",
+      "task_0085",
+      "task_0149",
+      "task_0157",
+      "task_0003"
+    ],
+    "bayesian_d_error": 23.510114
+  },
+  {
+    "seed_design_id": "seed_013",
+    "task_ids": [
+      "task_0135",
+      "task_0142",
+      "task_0174",
+      "task_0032",
+      "task_0165",
+      "task_0104"
+    ],
+    "bayesian_d_error": 23.599304
+  },
+  {
+    "seed_design_id": "seed_009",
+    "task_ids": [
+      "task_0029",
+      "task_0147",
+      "task_0081",
+      "task_0206",
+      "task_0046",
+      "task_0060"
+    ],
+    "bayesian_d_error": 23.715736
+  },
+  {
+    "seed_design_id": "seed_029",
+    "task_ids": [
+      "task_0060",
+      "task_0135",
+      "task_0212",
+      "task_0149",
+      "task_0086",
+      "task_0217"
+    ],
+    "bayesian_d_error": 24.002726
+  },
+  {
+    "seed_design_id": "seed_006",
+    "task_ids": [
+      "task_0069",
+      "task_0024",
+      "task_0073",
+      "task_0177",
+      "task_0070",
+      "task_0149"
+    ],
+    "bayesian_d_error": 24.179893
+  },
+  {
+    "seed_design_id": "seed_033",
+    "task_ids": [
+      "task_0104",
+      "task_0114",
+      "task_0086",
+      "task_0112",
+      "task_0095",
+      "task_0218"
+    ],
+    "bayesian_d_error": 24.180952
+  },
+  {
+    "seed_design_id": "seed_012",
+    "task_ids": [
+      "task_0046",
+      "task_0170",
+      "task_0193",
+      "task_0062",
+      "task_0021",
+      "task_0135"
+    ],
+    "bayesian_d_error": 24.207996
+  },
+  {
+    "seed_design_id": "seed_004",
+    "task_ids": [
+      "task_0116",
+      "task_0212",
+      "task_0114",
+      "task_0032",
+      "task_0069",
+      "task_0044"
+    ],
+    "bayesian_d_error": 24.20979
+  },
+  {
+    "seed_design_id": "seed_010",
+    "task_ids": [
+      "task_0194",
+      "task_0105",
+      "task_0072",
+      "task_0118",
+      "task_0149",
+      "task_0086"
+    ],
+    "bayesian_d_error": 24.22801
+  },
+  {
+    "seed_design_id": "seed_014",
+    "task_ids": [
+      "task_0096",
+      "task_0151",
+      "task_0022",
+      "task_0062",
+      "task_0101",
+      "task_0156"
+    ],
+    "bayesian_d_error": 24.346836
+  },
+  {
+    "seed_design_id": "seed_039",
+    "task_ids": [
+      "task_0105",
+      "task_0150",
+      "task_0130",
+      "task_0148",
+      "task_0028",
+      "task_0022"
+    ],
+    "bayesian_d_error": 24.526138
+  },
+  {
+    "seed_design_id": "seed_011",
+    "task_ids": [
+      "task_0202",
+      "task_0218",
+      "task_0043",
+      "task_0076",
+      "task_0186",
+      "task_0073"
+    ],
+    "bayesian_d_error": 24.852238
+  },
+  {
+    "seed_design_id": "seed_025",
+    "task_ids": [
+      "task_0058",
+      "task_0011",
+      "task_0061",
+      "task_0057",
+      "task_0193",
+      "task_0129"
+    ],
+    "bayesian_d_error": 24.860111
+  },
+  {
+    "seed_design_id": "seed_020",
+    "task_ids": [
+      "task_0075",
+      "task_0095",
+      "task_0037",
+      "task_0213",
+      "task_0071",
+      "task_0054"
+    ],
+    "bayesian_d_error": 24.911503
+  },
+  {
+    "seed_design_id": "seed_031",
+    "task_ids": [
+      "task_0177",
+      "task_0013",
+      "task_0045",
+      "task_0212",
+      "task_0106",
+      "task_0111"
+    ],
+    "bayesian_d_error": 24.948999
+  },
+  {
+    "seed_design_id": "seed_015",
+    "task_ids": [
+      "task_0156",
+      "task_0060",
+      "task_0046",
+      "task_0179",
+      "task_0049",
+      "task_0036"
+    ],
+    "bayesian_d_error": 25.051094
+  },
+  {
+    "seed_design_id": "seed_003",
+    "task_ids": [
+      "task_0111",
+      "task_0047",
+      "task_0028",
+      "task_0159",
+      "task_0141",
+      "task_0114"
+    ],
+    "bayesian_d_error": 25.05378
+  },
+  {
+    "seed_design_id": "seed_018",
+    "task_ids": [
+      "task_0048",
+      "task_0173",
+      "task_0032",
+      "task_0083",
+      "task_0177",
+      "task_0190"
+    ],
+    "bayesian_d_error": 25.081775
+  },
+  {
+    "seed_design_id": "seed_002",
+    "task_ids": [
+      "task_0072",
+      "task_0171",
+      "task_0050",
+      "task_0058",
+      "task_0141",
+      "task_0137"
+    ],
+    "bayesian_d_error": 25.127404
+  },
+  {
+    "seed_design_id": "seed_017",
+    "task_ids": [
+      "task_0060",
+      "task_0062",
+      "task_0021",
+      "task_0116",
+      "task_0095",
+      "task_0212"
+    ],
+    "bayesian_d_error": 25.259415
+  },
+  {
+    "seed_design_id": "seed_030",
+    "task_ids": [
+      "task_0029",
+      "task_0060",
+      "task_0083",
+      "task_0057",
+      "task_0059",
+      "task_0010"
+    ],
+    "bayesian_d_error": 25.286068
+  },
+  {
+    "seed_design_id": "seed_027",
+    "task_ids": [
+      "task_0105",
+      "task_0090",
+      "task_0106",
+      "task_0120",
+      "task_0217",
+      "task_0175"
+    ],
+    "bayesian_d_error": 25.347325
+  },
+  {
+    "seed_design_id": "seed_040",
+    "task_ids": [
+      "task_0155",
+      "task_0112",
+      "task_0207",
+      "task_0044",
+      "task_0135",
+      "task_0141"
+    ],
+    "bayesian_d_error": 25.369732
+  },
+  {
+    "seed_design_id": "seed_001",
+    "task_ids": [
+      "task_0207",
+      "task_0062",
+      "task_0073",
+      "task_0192",
+      "task_0111",
+      "task_0083"
+    ],
+    "bayesian_d_error": 25.369771
+  },
+  {
+    "seed_design_id": "seed_032",
+    "task_ids": [
+      "task_0049",
+      "task_0114",
+      "task_0017",
+      "task_0184",
+      "task_0122",
+      "task_0129"
+    ],
+    "bayesian_d_error": 25.372052
+  },
+  {
+    "seed_design_id": "seed_028",
+    "task_ids": [
+      "task_0205",
+      "task_0076",
+      "task_0138",
+      "task_0046",
+      "task_0206",
+      "task_0196"
+    ],
+    "bayesian_d_error": 25.497477
+  },
+  {
+    "seed_design_id": "seed_023",
+    "task_ids": [
+      "task_0109",
+      "task_0031",
+      "task_0107",
+      "task_0069",
+      "task_0120",
+      "task_0007"
+    ],
+    "bayesian_d_error": 25.575932
+  },
+  {
+    "seed_design_id": "seed_019",
+    "task_ids": [
+      "task_0176",
+      "task_0199",
+      "task_0181",
+      "task_0117",
+      "task_0015",
+      "task_0039"
+    ],
+    "bayesian_d_error": 25.66131
+  },
+  {
+    "seed_design_id": "seed_036",
+    "task_ids": [
+      "task_0096",
+      "task_0200",
+      "task_0155",
+      "task_0151",
+      "task_0037",
+      "task_0174"
+    ],
+    "bayesian_d_error": 25.716948
+  },
+  {
+    "seed_design_id": "seed_008",
+    "task_ids": [
+      "task_0131",
+      "task_0212",
+      "task_0138",
+      "task_0054",
+      "task_0190",
+      "task_0155"
+    ],
+    "bayesian_d_error": 25.723457
+  },
+  {
+    "seed_design_id": "seed_034",
+    "task_ids": [
+      "task_0156",
+      "task_0018",
+      "task_0014",
+      "task_0049",
+      "task_0028",
+      "task_0031"
+    ],
+    "bayesian_d_error": 25.764077
+  },
+  {
+    "seed_design_id": "seed_026",
+    "task_ids": [
+      "task_0145",
+      "task_0175",
+      "task_0087",
+      "task_0179",
+      "task_0044",
+      "task_0108"
+    ],
+    "bayesian_d_error": 25.907852
+  },
+  {
+    "seed_design_id": "seed_024",
+    "task_ids": [
+      "task_0215",
+      "task_0203",
+      "task_0076",
+      "task_0095",
+      "task_0210",
+      "task_0137"
+    ],
+    "bayesian_d_error": 26.235088
+  },
+  {
+    "seed_design_id": "seed_037",
+    "task_ids": [
+      "task_0160",
+      "task_0109",
+      "task_0021",
+      "task_0136",
+      "task_0031",
+      "task_0069"
+    ],
+    "bayesian_d_error": 26.236355
+  },
+  {
+    "seed_design_id": "seed_022",
+    "task_ids": [
+      "task_0034",
+      "task_0175",
+      "task_0186",
+      "task_0040",
+      "task_0106",
+      "task_0146"
+    ],
+    "bayesian_d_error": 26.918175
+  },
+  {
+    "seed_design_id": "seed_038",
+    "task_ids": [
+      "task_0042",
+      "task_0135",
+      "task_0064",
+      "task_0040",
+      "task_0062",
+      "task_0044"
+    ],
+    "bayesian_d_error": 27.448608
+  }
+]

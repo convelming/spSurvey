@@ -1,0 +1,1221 @@
+{
+  "respondent_id": "R20260316173232_WINCHRPC_JYGL_KHTD",
+  "created_at": "2026-03-17T03:24:23.567272+00:00",
+  "updated_at": "2026-03-17T03:24:23.567272+00:00",
+  "profile": null,
+  "trip_diary": null,
+  "sp": {
+    "submissions": [
+      {
+        "submission_id": "sp_169bcbb72c43",
+        "assignment_id": "saved_design_1773717286417_m18tld",
+        "respondent_id": "R20260316173232_WINCHRPC_JYGL_KHTD",
+        "design_save_name": "短途_xjh",
+        "choices": {
+          "saved_1773717286417_1": "bike",
+          "saved_1773717286417_2": "bike",
+          "saved_1773717286417_3": "ebike",
+          "saved_1773717286417_4": "pt",
+          "saved_1773717286417_5": "pt",
+          "saved_1773717286417_6": "bike",
+          "saved_1773717286417_7": "bike",
+          "saved_1773717286417_8": "ebike"
+        },
+        "choice_details": [
+          {
+            "task_id": "saved_1773717286417_1",
+            "chosen_alternative": "bike",
+            "chosen_attributes": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 2,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_2",
+            "chosen_alternative": "bike",
+            "chosen_attributes": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 1,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_3",
+            "chosen_alternative": "ebike",
+            "chosen_attributes": {
+              "travel_time": 8,
+              "delay": 2,
+              "cost": 3
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 30,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 2,
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 1
+              },
+              "ebike": {
+                "travel_time": 8,
+                "delay": 2,
+                "cost": 3
+              },
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 1
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 10
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_4",
+            "chosen_alternative": "pt",
+            "chosen_attributes": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 1,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 1,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_5",
+            "chosen_alternative": "pt",
+            "chosen_attributes": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 2,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 2,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_6",
+            "chosen_alternative": "bike",
+            "chosen_attributes": {
+              "walk_time": 2,
+              "travel_time": 10,
+              "delay": 1,
+              "cost": 1
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 30,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 2,
+                "travel_time": 10,
+                "delay": 1,
+                "cost": 1
+              },
+              "ebike": {
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 1
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 10
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_7",
+            "chosen_alternative": "bike",
+            "chosen_attributes": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 2,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773717286417_8",
+            "chosen_alternative": "ebike",
+            "chosen_attributes": {
+              "travel_time": 6,
+              "delay": 1,
+              "cost": 5
+            },
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 1,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          }
+        ],
+        "tasks": [
+          {
+            "id": "saved_1773717286417_1",
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 2,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_2",
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 1,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_3",
+            "alternatives": {
+              "walk": {
+                "walk_time": 30,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 2,
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 1
+              },
+              "ebike": {
+                "travel_time": 8,
+                "delay": 2,
+                "cost": 3
+              },
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 1
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 10
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_4",
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 1,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 1,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_5",
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 2,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 2,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_6",
+            "alternatives": {
+              "walk": {
+                "walk_time": 30,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 2,
+                "travel_time": 10,
+                "delay": 1,
+                "cost": 1
+              },
+              "ebike": {
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 1
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 10,
+                "delay": 5,
+                "cost": 10
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_7",
+            "alternatives": {
+              "walk": {
+                "walk_time": 24,
+                "delay": 2
+              },
+              "bike": {
+                "walk_time": 3,
+                "travel_time": 12,
+                "delay": 2,
+                "cost": 2
+              },
+              "ebike": {
+                "travel_time": 10,
+                "delay": 2,
+                "cost": 4
+              },
+              "pt": {
+                "walk_time": 4,
+                "wait_time": 6,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 2
+              },
+              "taxi": {
+                "wait_time": 4,
+                "travel_time": 12,
+                "delay": 3,
+                "cost": 12
+              }
+            }
+          },
+          {
+            "id": "saved_1773717286417_8",
+            "alternatives": {
+              "walk": {
+                "walk_time": 27,
+                "delay": 1
+              },
+              "bike": {
+                "walk_time": 4,
+                "travel_time": 8,
+                "delay": 1,
+                "cost": 3
+              },
+              "ebike": {
+                "travel_time": 6,
+                "delay": 1,
+                "cost": 5
+              },
+              "pt": {
+                "walk_time": 6,
+                "wait_time": 8,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 3
+              },
+              "taxi": {
+                "wait_time": 6,
+                "travel_time": 8,
+                "delay": 4,
+                "cost": 14
+              }
+            }
+          }
+        ],
+        "submitted_at": "2026-03-17T03:24:23.566815+00:00"
+      }
+    ],
+    "last_response": {
+      "submission_id": "sp_169bcbb72c43",
+      "assignment_id": "saved_design_1773717286417_m18tld",
+      "respondent_id": "R20260316173232_WINCHRPC_JYGL_KHTD",
+      "design_save_name": "短途_xjh",
+      "choices": {
+        "saved_1773717286417_1": "bike",
+        "saved_1773717286417_2": "bike",
+        "saved_1773717286417_3": "ebike",
+        "saved_1773717286417_4": "pt",
+        "saved_1773717286417_5": "pt",
+        "saved_1773717286417_6": "bike",
+        "saved_1773717286417_7": "bike",
+        "saved_1773717286417_8": "ebike"
+      },
+      "choice_details": [
+        {
+          "task_id": "saved_1773717286417_1",
+          "chosen_alternative": "bike",
+          "chosen_attributes": {
+            "walk_time": 3,
+            "travel_time": 12,
+            "delay": 2,
+            "cost": 2
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_2",
+          "chosen_alternative": "bike",
+          "chosen_attributes": {
+            "walk_time": 4,
+            "travel_time": 8,
+            "delay": 1,
+            "cost": 3
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 1,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_3",
+          "chosen_alternative": "ebike",
+          "chosen_attributes": {
+            "travel_time": 8,
+            "delay": 2,
+            "cost": 3
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 30,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 2,
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 1
+            },
+            "ebike": {
+              "travel_time": 8,
+              "delay": 2,
+              "cost": 3
+            },
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 1
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 10
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_4",
+          "chosen_alternative": "pt",
+          "chosen_attributes": {
+            "walk_time": 4,
+            "wait_time": 6,
+            "travel_time": 12,
+            "delay": 3,
+            "cost": 2
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 1,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 1,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_5",
+          "chosen_alternative": "pt",
+          "chosen_attributes": {
+            "walk_time": 6,
+            "wait_time": 8,
+            "travel_time": 8,
+            "delay": 4,
+            "cost": 3
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 2,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 2,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_6",
+          "chosen_alternative": "bike",
+          "chosen_attributes": {
+            "walk_time": 2,
+            "travel_time": 10,
+            "delay": 1,
+            "cost": 1
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 30,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 2,
+              "travel_time": 10,
+              "delay": 1,
+              "cost": 1
+            },
+            "ebike": {
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 1
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 10
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_7",
+          "chosen_alternative": "bike",
+          "chosen_attributes": {
+            "walk_time": 3,
+            "travel_time": 12,
+            "delay": 2,
+            "cost": 2
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773717286417_8",
+          "chosen_alternative": "ebike",
+          "chosen_attributes": {
+            "travel_time": 6,
+            "delay": 1,
+            "cost": 5
+          },
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 1,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "saved_1773717286417_1",
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_2",
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 1,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_3",
+          "alternatives": {
+            "walk": {
+              "walk_time": 30,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 2,
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 1
+            },
+            "ebike": {
+              "travel_time": 8,
+              "delay": 2,
+              "cost": 3
+            },
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 1
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 10
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_4",
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 1,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 1,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_5",
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 2,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 2,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_6",
+          "alternatives": {
+            "walk": {
+              "walk_time": 30,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 2,
+              "travel_time": 10,
+              "delay": 1,
+              "cost": 1
+            },
+            "ebike": {
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 1
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 10,
+              "delay": 5,
+              "cost": 10
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_7",
+          "alternatives": {
+            "walk": {
+              "walk_time": 24,
+              "delay": 2
+            },
+            "bike": {
+              "walk_time": 3,
+              "travel_time": 12,
+              "delay": 2,
+              "cost": 2
+            },
+            "ebike": {
+              "travel_time": 10,
+              "delay": 2,
+              "cost": 4
+            },
+            "pt": {
+              "walk_time": 4,
+              "wait_time": 6,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 2
+            },
+            "taxi": {
+              "wait_time": 4,
+              "travel_time": 12,
+              "delay": 3,
+              "cost": 12
+            }
+          }
+        },
+        {
+          "id": "saved_1773717286417_8",
+          "alternatives": {
+            "walk": {
+              "walk_time": 27,
+              "delay": 1
+            },
+            "bike": {
+              "walk_time": 4,
+              "travel_time": 8,
+              "delay": 1,
+              "cost": 3
+            },
+            "ebike": {
+              "travel_time": 6,
+              "delay": 1,
+              "cost": 5
+            },
+            "pt": {
+              "walk_time": 6,
+              "wait_time": 8,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 3
+            },
+            "taxi": {
+              "wait_time": 6,
+              "travel_time": 8,
+              "delay": 4,
+              "cost": 14
+            }
+          }
+        }
+      ],
+      "submitted_at": "2026-03-17T03:24:23.566815+00:00"
+    }
+  }
+}

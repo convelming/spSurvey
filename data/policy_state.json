@@ -1,0 +1,175 @@
+{
+  "policy_version": 3,
+  "created_at": "2026-03-04T08:48:53.886829+00:00",
+  "response_count": 7,
+  "current_d_error": 35.319427,
+  "current_design_tasks": [
+    "task_0050",
+    "task_0115",
+    "task_0018"
+  ],
+  "used_task_ids": [
+    "task_0125",
+    "task_0028",
+    "task_0199",
+    "task_0080",
+    "task_0132",
+    "task_0087",
+    "task_0174",
+    "task_0184",
+    "task_0120",
+    "task_0208",
+    "task_0068",
+    "task_0056",
+    "task_0136",
+    "task_0126",
+    "task_0113",
+    "task_0003",
+    "task_0158",
+    "task_0074",
+    "task_0050",
+    "task_0115",
+    "task_0018",
+    "task_0184",
+    "task_0193",
+    "task_0048"
+  ],
+  "actor_weights": [
+    [
+      -0.054386622344760646,
+      -0.04734692119653965,
+      -0.020023443665581557,
+      0.0037025203382968865
+    ],
+    [
+      -0.11344353961592835,
+      -0.056842611246401574,
+      -0.03844183467156237,
+      -0.04888811736101071
+    ],
+    [
+      -0.07966154288840514,
+      -0.044371370268792745,
+      -0.016208874076200103,
+      -0.01652382823402156
+    ]
+  ],
+  "critic_weights": [
+    1.177126680166566e-06,
+    0.03317051010883177,
+    -0.03916422930460051,
+    -0.025778773886497148
+  ],
+  "level_counts": {
+    "car.time.16": 4,
+    "car.park_time.4": 4,
+    "car.cost.8": 8,
+    "car.walk_distance.250": 7,
+    "car.wait_time.0": 21,
+    "public_transit.time.15": 18,
+    "public_transit.park_time.0": 21,
+    "public_transit.cost.2": 10,
+    "public_transit.walk_distance.400": 6,
+    "public_transit.wait_time.10": 8,
+    "ebike.time.18": 17,
+    "ebike.park_time.0": 21,
+    "ebike.cost.1": 5,
+    "ebike.walk_distance.150": 8,
+    "ebike.wait_time.0": 21,
+    "car.time.8": 8,
+    "car.park_time.8": 12,
+    "car.walk_distance.100": 13,
+    "public_transit.walk_distance.200": 15,
+    "public_transit.wait_time.6": 4,
+    "ebike.time.10": 1,
+    "ebike.cost.3": 11,
+    "ebike.walk_distance.50": 5,
+    "car.time.12": 9,
+    "car.walk_distance.400": 1,
+    "public_transit.wait_time.3": 9,
+    "ebike.time.14": 3,
+    "public_transit.cost.4": 5,
+    "car.cost.16": 8,
+    "ebike.walk_distance.100": 8,
+    "public_transit.cost.6": 6,
+    "car.cost.12": 5,
+    "ebike.cost.2": 5,
+    "public_transit.time.28": 2,
+    "car.park_time.1": 5,
+    "public_transit.time.20": 1
+  },
+  "rp_counts": {
+    "total": 7,
+    "age_group": {
+      "46-60": 3,
+      "18-30": 2,
+      "31-45": 2
+    },
+    "income_group": {
+      "5k-10k": 1,
+      "<5k": 3,
+      "10k-20k": 3
+    }
+  },
+  "repr_gap": 1.0514285714285712,
+  "dominance_rate": 0.0,
+  "rng_seed": 42,
+  "metrics_history": [
+    {
+      "response_count": 1,
+      "reward": -0.255206,
+      "advantage": -0.255288,
+      "d_error": 28.492359,
+      "repr_gap": 2.8,
+      "published": false
+    },
+    {
+      "response_count": 2,
+      "reward": -0.347624,
+      "advantage": -0.387113,
+      "d_error": 33.159565,
+      "repr_gap": 1.84,
+      "published": false
+    },
+    {
+      "response_count": 3,
+      "reward": 0.166772,
+      "advantage": 0.240325,
+      "d_error": 24.593673,
+      "repr_gap": 0.56,
+      "published": true
+    },
+    {
+      "response_count": 4,
+      "reward": -0.325109,
+      "advantage": -0.315547,
+      "d_error": 30.975956,
+      "repr_gap": 0.76,
+      "published": false
+    },
+    {
+      "response_count": 5,
+      "reward": -0.058411,
+      "advantage": -0.038659,
+      "d_error": 31.87815,
+      "repr_gap": 0.84,
+      "published": false
+    },
+    {
+      "response_count": 6,
+      "reward": 0.123528,
+      "advantage": 0.146501,
+      "d_error": 26.82823,
+      "repr_gap": 0.88,
+      "published": true
+    },
+    {
+      "response_count": 7,
+      "reward": -0.403787,
+      "advantage": -0.385278,
+      "d_error": 35.319427,
+      "repr_gap": 1.051429,
+      "published": false
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>调查模块导航</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">城市居民出行调查<sup>V-0.01:20260309</sup></div>
+      <nav class="nav-links">
+        <a data-page="index">首页</a>
+        <a data-page="profile">1 基础信息</a>
+        <a data-page="trip">2 日常出行</a>
+        <a data-page="sp">3 出行意向调查</a>
+        <a data-page="design">4 SP设计</a>
+        <a data-page="overview">查看收集情况</a>
+        <a data-page="docs">算法文档</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>城市居民出行RP/SP调查总述</h1>
+      <p>城市居民日常出行调查说明<br>
+        您好！本调查旨在了解城市居民的日常出行方式和出行偏好，为改进城市交通服务和交通规划提供参考。
+          本问卷包含两部分内容：一部分是关于您本人及家庭成员近期实际出行情况的问题，另一部分是关于不同假设出行情景下选择偏好的问题。<br>
+        本调查采用匿名方式进行，不会收集任何能够识别个人身份的信息，对于家庭住址的收集，您只要给出模糊的定位即可。所有数据仅用于学术研究与交通规划分析，并以汇总统计形式进行分析，绝不会披露任何个人信息。<br>
+        您的参与完全自愿，问卷结果仅用于整体研究分析。衷心感谢您对本研究的支持与帮助！<br>
+      </p>
+    </section>
+
+    <section class="card">
+      <div class="button-row">
+        <a class="btn-link" data-page="profile">个人家庭信息搜集</a>
+        <a class="btn-link" data-page="trip">日常出行调查</a>
+        <a class="btn-link" data-page="sp">出行意向性问题调查</a>
+        <a class="btn-link" data-page="design">SP设计</a>
+        <a class="btn-link" data-page="overview">查看收集情况</a>
+        <a class="btn-link" data-page="docs">算法文档</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const isFile = location.protocol === 'file:';
+      const currentPage = 'index';
+      const routes = isFile
+        ? {
+            index: 'index.html', profile: 'profile.html', trip: 'trip_diary.html',
+            sp: 'sp_questionnaire.html', design: 'sp_design.html', map: 'web_map.html',
+            overview: 'collection_dashboard.html', docs: 'docs.html'
+          }
+        : {
+            index: '/', profile: '/survey/profile', trip: '/survey/trip-diary',
+            sp: '/survey/sp', design: '/survey/sp-design', map: '/survey/map',
+            overview: '/survey/collection-dashboard', docs: '/survey/docs'
+          };
+
+      document.querySelectorAll('[data-page]').forEach((a) => {
+        a.setAttribute('href', routes[a.dataset.page]);
+        a.classList.toggle('is-active', a.dataset.page === currentPage);
+      });
+
+      if (!isFile) {
+        fetch('/api/design/metrics').then(r => r.json()).then(d => {
+          document.getElementById('policyVersion').textContent = d.policy_version ?? '-';
+        }).catch(() => {});
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,935 @@
+{
+  "respondent_id": "R20260317150851_WINCHRPC_JYGL_QDGJ",
+  "created_at": "2026-03-17T07:10:14.599969+00:00",
+  "updated_at": "2026-03-17T07:10:14.599969+00:00",
+  "profile": null,
+  "trip_diary": null,
+  "sp": {
+    "submissions": [
+      {
+        "submission_id": "sp_3c484e7292b4",
+        "assignment_id": "saved_design_1773731338025_nt2u05",
+        "respondent_id": "R20260317150851_WINCHRPC_JYGL_QDGJ",
+        "design_save_name": "中途_xjh",
+        "choices": {
+          "saved_1773731338025_1": "pt",
+          "saved_1773731338025_2": "car",
+          "saved_1773731338025_3": "taxi",
+          "saved_1773731338025_4": "car",
+          "saved_1773731338025_5": "taxi",
+          "saved_1773731338025_6": "car",
+          "saved_1773731338025_7": "car",
+          "saved_1773731338025_8": "taxi"
+        },
+        "choice_details": [
+          {
+            "task_id": "saved_1773731338025_1",
+            "chosen_alternative": "pt",
+            "chosen_attributes": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 7
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_2",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 3
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 3
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_3",
+            "chosen_alternative": "taxi",
+            "chosen_attributes": {
+              "wait_time": 2,
+              "travel_time": 15,
+              "delay": 3,
+              "cost": 19
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 12,
+                "wait_time": 3,
+                "travel_time": 16,
+                "delay": 9,
+                "cost": 1
+              },
+              "car": {
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 14,
+                "park_time": 4
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 15,
+                "delay": 3,
+                "cost": 19
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_4",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 5
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 5
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_5",
+            "chosen_alternative": "taxi",
+            "chosen_attributes": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 6
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_6",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 14,
+              "park_time": 7
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 12,
+                "wait_time": 3,
+                "travel_time": 16,
+                "delay": 9,
+                "cost": 1
+              },
+              "car": {
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 14,
+                "park_time": 7
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 15,
+                "delay": 3,
+                "cost": 19
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_7",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 3
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 3
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773731338025_8",
+            "chosen_alternative": "taxi",
+            "chosen_attributes": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            },
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 4
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          }
+        ],
+        "tasks": [
+          {
+            "id": "saved_1773731338025_1",
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 7
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_2",
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 3
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_3",
+            "alternatives": {
+              "pt": {
+                "walk_time": 12,
+                "wait_time": 3,
+                "travel_time": 16,
+                "delay": 9,
+                "cost": 1
+              },
+              "car": {
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 14,
+                "park_time": 4
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 15,
+                "delay": 3,
+                "cost": 19
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_4",
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 5
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_5",
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 6
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_6",
+            "alternatives": {
+              "pt": {
+                "walk_time": 12,
+                "wait_time": 3,
+                "travel_time": 16,
+                "delay": 9,
+                "cost": 1
+              },
+              "car": {
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 14,
+                "park_time": 7
+              },
+              "taxi": {
+                "wait_time": 2,
+                "travel_time": 15,
+                "delay": 3,
+                "cost": 19
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_7",
+            "alternatives": {
+              "pt": {
+                "walk_time": 8,
+                "wait_time": 4,
+                "travel_time": 18,
+                "delay": 5,
+                "cost": 2
+              },
+              "car": {
+                "travel_time": 15,
+                "delay": 5,
+                "cost": 12,
+                "park_time": 3
+              },
+              "taxi": {
+                "wait_time": 3,
+                "travel_time": 13,
+                "delay": 4,
+                "cost": 21
+              }
+            }
+          },
+          {
+            "id": "saved_1773731338025_8",
+            "alternatives": {
+              "pt": {
+                "walk_time": 10,
+                "wait_time": 5,
+                "travel_time": 14,
+                "delay": 7,
+                "cost": 3
+              },
+              "car": {
+                "travel_time": 17,
+                "delay": 3,
+                "cost": 13,
+                "park_time": 4
+              },
+              "taxi": {
+                "wait_time": 1,
+                "travel_time": 14,
+                "delay": 5,
+                "cost": 17
+              }
+            }
+          }
+        ],
+        "submitted_at": "2026-03-17T07:10:14.599488+00:00"
+      }
+    ],
+    "last_response": {
+      "submission_id": "sp_3c484e7292b4",
+      "assignment_id": "saved_design_1773731338025_nt2u05",
+      "respondent_id": "R20260317150851_WINCHRPC_JYGL_QDGJ",
+      "design_save_name": "中途_xjh",
+      "choices": {
+        "saved_1773731338025_1": "pt",
+        "saved_1773731338025_2": "car",
+        "saved_1773731338025_3": "taxi",
+        "saved_1773731338025_4": "car",
+        "saved_1773731338025_5": "taxi",
+        "saved_1773731338025_6": "car",
+        "saved_1773731338025_7": "car",
+        "saved_1773731338025_8": "taxi"
+      },
+      "choice_details": [
+        {
+          "task_id": "saved_1773731338025_1",
+          "chosen_alternative": "pt",
+          "chosen_attributes": {
+            "walk_time": 8,
+            "wait_time": 4,
+            "travel_time": 18,
+            "delay": 5,
+            "cost": 2
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 7
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_2",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "travel_time": 17,
+            "delay": 3,
+            "cost": 13,
+            "park_time": 3
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 3
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_3",
+          "chosen_alternative": "taxi",
+          "chosen_attributes": {
+            "wait_time": 2,
+            "travel_time": 15,
+            "delay": 3,
+            "cost": 19
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 12,
+              "wait_time": 3,
+              "travel_time": 16,
+              "delay": 9,
+              "cost": 1
+            },
+            "car": {
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 14,
+              "park_time": 4
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 15,
+              "delay": 3,
+              "cost": 19
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_4",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "travel_time": 15,
+            "delay": 5,
+            "cost": 12,
+            "park_time": 5
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 5
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_5",
+          "chosen_alternative": "taxi",
+          "chosen_attributes": {
+            "wait_time": 1,
+            "travel_time": 14,
+            "delay": 5,
+            "cost": 17
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 6
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_6",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "travel_time": 13,
+            "delay": 4,
+            "cost": 14,
+            "park_time": 7
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 12,
+              "wait_time": 3,
+              "travel_time": 16,
+              "delay": 9,
+              "cost": 1
+            },
+            "car": {
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 14,
+              "park_time": 7
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 15,
+              "delay": 3,
+              "cost": 19
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_7",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "travel_time": 15,
+            "delay": 5,
+            "cost": 12,
+            "park_time": 3
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 3
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773731338025_8",
+          "chosen_alternative": "taxi",
+          "chosen_attributes": {
+            "wait_time": 1,
+            "travel_time": 14,
+            "delay": 5,
+            "cost": 17
+          },
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 4
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "saved_1773731338025_1",
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 7
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_2",
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 3
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_3",
+          "alternatives": {
+            "pt": {
+              "walk_time": 12,
+              "wait_time": 3,
+              "travel_time": 16,
+              "delay": 9,
+              "cost": 1
+            },
+            "car": {
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 14,
+              "park_time": 4
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 15,
+              "delay": 3,
+              "cost": 19
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_4",
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 5
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_5",
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 6
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_6",
+          "alternatives": {
+            "pt": {
+              "walk_time": 12,
+              "wait_time": 3,
+              "travel_time": 16,
+              "delay": 9,
+              "cost": 1
+            },
+            "car": {
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 14,
+              "park_time": 7
+            },
+            "taxi": {
+              "wait_time": 2,
+              "travel_time": 15,
+              "delay": 3,
+              "cost": 19
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_7",
+          "alternatives": {
+            "pt": {
+              "walk_time": 8,
+              "wait_time": 4,
+              "travel_time": 18,
+              "delay": 5,
+              "cost": 2
+            },
+            "car": {
+              "travel_time": 15,
+              "delay": 5,
+              "cost": 12,
+              "park_time": 3
+            },
+            "taxi": {
+              "wait_time": 3,
+              "travel_time": 13,
+              "delay": 4,
+              "cost": 21
+            }
+          }
+        },
+        {
+          "id": "saved_1773731338025_8",
+          "alternatives": {
+            "pt": {
+              "walk_time": 10,
+              "wait_time": 5,
+              "travel_time": 14,
+              "delay": 7,
+              "cost": 3
+            },
+            "car": {
+              "travel_time": 17,
+              "delay": 3,
+              "cost": 13,
+              "park_time": 4
+            },
+            "taxi": {
+              "wait_time": 1,
+              "travel_time": 14,
+              "delay": 5,
+              "cost": 17
+            }
+          }
+        }
+      ],
+      "submitted_at": "2026-03-17T07:10:14.599488+00:00"
+    }
+  }
+}

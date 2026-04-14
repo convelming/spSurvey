@@ -1,0 +1,144 @@
+{
+  "source_design_save_name": "中途_xjh_限制1",
+  "effective_design_type": "selfattention",
+  "generated_rows": 2,
+  "rows_loaded_for_train": 2,
+  "candidate_pool_size": 120,
+  "candidate_pool_target": 120,
+  "expert_preview_size": 6,
+  "candidate_expert_overlap": 0,
+  "train_model_state": {
+    "trained": true,
+    "backend": "pytorch_selfattention",
+    "input_dim": 22,
+    "output_dim": 120,
+    "candidate_pool_size": 120,
+    "training_data_source": "synthetic_popsim_rollout",
+    "rows_used": 0,
+    "rollout_episodes": 2,
+    "rollout_steps": 12,
+    "mean_episode_reward": 0.15209780878597065,
+    "train_samples": 12,
+    "train_epochs": 2,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.01,
+    "batch_size": 128,
+    "target_kl": 0.03,
+    "epsilon": 0.2,
+    "seq_len": 16,
+    "hidden_dim": 64,
+    "num_heads": 4,
+    "expert_overlap": 0,
+    "expert_prior_weight": 0.0,
+    "active_bound_mask_params": 0,
+    "bound_masked_candidates": 0,
+    "bound_mask_min_factor": 1.0,
+    "scoring_state_source": "current_respondent",
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "zone_categories": [
+      "440103",
+      "440104",
+      "440105",
+      "440106",
+      "440111",
+      "440112",
+      "440113",
+      "440114",
+      "440115",
+      "440117",
+      "440118",
+      "__missing__"
+    ],
+    "policy_version": 1,
+    "current_mnl_signal": {
+      "n_observations": 12,
+      "adjusted_pseudo_r2": null,
+      "estimated_beta_raw": {},
+      "estimated_beta": {},
+      "bound_violation": {
+        "penalty": 0.0,
+        "violating_count": 0,
+        "violating_params": [],
+        "param_multipliers": {}
+      }
+    }
+  },
+  "train_iteration_log": [
+    {
+      "epoch": 1,
+      "loss": 0.816321,
+      "policy_loss": 0.0,
+      "value_loss": 1.724808,
+      "entropy": 4.608324,
+      "approx_kl": 0.0,
+      "clip_frac": 0.0,
+      "mean_reward": 0.376945,
+      "episodes": 2,
+      "steps": 12
+    },
+    {
+      "epoch": 2,
+      "loss": 4.089402,
+      "policy_loss": -0.046473,
+      "value_loss": 8.362487,
+      "entropy": 4.536783,
+      "approx_kl": 0.857034,
+      "clip_frac": 0.833333,
+      "mean_reward": 0.376945,
+      "episodes": 2,
+      "steps": 12
+    },
+    {
+      "epoch": 2,
+      "event": "early_stop_target_kl",
+      "target_kl": 0.03,
+      "approx_kl": 0.857034
+    }
+  ],
+  "online_update_steps": 2,
+  "final_policy_version": 0,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 2,
+    "n_rows_source": "selfattention.train_respondents"
+  },
+  "outputs": {
+    "rows_jsonl": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1632/xjh_limit1_selfattention_rows.jsonl",
+    "trace_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1632/xjh_limit1_selfattention_trace.json",
+    "summary_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1632/xjh_limit1_selfattention_summary.json",
+    "candidate_pool_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1632/xjh_limit1_selfattention_candidate_pool.json"
+  }
+}

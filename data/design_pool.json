@@ -1,0 +1,6822 @@
+[
+  {
+    "id": "task_0001",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0002",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0003",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0004",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0005",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0006",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0007",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0008",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0009",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.54
+    }
+  },
+  {
+    "id": "task_0010",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0011",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0012",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0013",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0014",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.68
+    }
+  },
+  {
+    "id": "task_0015",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.48
+    }
+  },
+  {
+    "id": "task_0016",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0017",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0018",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.6
+    }
+  },
+  {
+    "id": "task_0019",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.19
+    }
+  },
+  {
+    "id": "task_0020",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.86
+    }
+  },
+  {
+    "id": "task_0021",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.73
+    }
+  },
+  {
+    "id": "task_0022",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0023",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.64
+    }
+  },
+  {
+    "id": "task_0024",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.2
+    }
+  },
+  {
+    "id": "task_0025",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0026",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.64
+    }
+  },
+  {
+    "id": "task_0027",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.95
+    }
+  },
+  {
+    "id": "task_0028",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.47
+    }
+  },
+  {
+    "id": "task_0029",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0030",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.8
+    }
+  },
+  {
+    "id": "task_0031",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0032",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.07
+    }
+  },
+  {
+    "id": "task_0033",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0034",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0035",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  },
+  {
+    "id": "task_0036",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.32
+    }
+  },
+  {
+    "id": "task_0037",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.36
+    }
+  },
+  {
+    "id": "task_0038",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.3
+    }
+  },
+  {
+    "id": "task_0039",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0040",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0041",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0042",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0043",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.59
+    }
+  },
+  {
+    "id": "task_0044",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.47
+    }
+  },
+  {
+    "id": "task_0045",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  },
+  {
+    "id": "task_0046",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0047",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0048",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0049",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0050",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.11
+    }
+  },
+  {
+    "id": "task_0051",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.96
+    }
+  },
+  {
+    "id": "task_0052",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.74
+    }
+  },
+  {
+    "id": "task_0053",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  },
+  {
+    "id": "task_0054",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0055",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0056",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0057",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0058",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.2
+    }
+  },
+  {
+    "id": "task_0059",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0060",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.64
+    }
+  },
+  {
+    "id": "task_0061",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0062",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0063",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.47
+    }
+  },
+  {
+    "id": "task_0064",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0065",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0066",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.59
+    }
+  },
+  {
+    "id": "task_0067",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.4
+    }
+  },
+  {
+    "id": "task_0068",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.51
+    }
+  },
+  {
+    "id": "task_0069",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.55
+    }
+  },
+  {
+    "id": "task_0070",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.75
+    }
+  },
+  {
+    "id": "task_0071",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.51
+    }
+  },
+  {
+    "id": "task_0072",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.48
+    }
+  },
+  {
+    "id": "task_0073",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0074",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.91
+    }
+  },
+  {
+    "id": "task_0075",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0076",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0077",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0078",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0079",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0080",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0081",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.63
+    }
+  },
+  {
+    "id": "task_0082",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0083",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.87
+    }
+  },
+  {
+    "id": "task_0084",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0085",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0086",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.86
+    }
+  },
+  {
+    "id": "task_0087",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0088",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.12
+    }
+  },
+  {
+    "id": "task_0089",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.88
+    }
+  },
+  {
+    "id": "task_0090",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0091",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0092",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.86
+    }
+  },
+  {
+    "id": "task_0093",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0094",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.6
+    }
+  },
+  {
+    "id": "task_0095",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.47
+    }
+  },
+  {
+    "id": "task_0096",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0097",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.87
+    }
+  },
+  {
+    "id": "task_0098",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.51
+    }
+  },
+  {
+    "id": "task_0099",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.12
+    }
+  },
+  {
+    "id": "task_0100",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.51
+    }
+  },
+  {
+    "id": "task_0101",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.24
+    }
+  },
+  {
+    "id": "task_0102",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.96
+    }
+  },
+  {
+    "id": "task_0103",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.64
+    }
+  },
+  {
+    "id": "task_0104",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.6
+    }
+  },
+  {
+    "id": "task_0105",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0106",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.2
+    }
+  },
+  {
+    "id": "task_0107",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.33
+    }
+  },
+  {
+    "id": "task_0108",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  },
+  {
+    "id": "task_0109",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.11
+    }
+  },
+  {
+    "id": "task_0110",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.52
+    }
+  },
+  {
+    "id": "task_0111",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.64
+    }
+  },
+  {
+    "id": "task_0112",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.82
+    }
+  },
+  {
+    "id": "task_0113",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0114",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.49
+    }
+  },
+  {
+    "id": "task_0115",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0116",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.63
+    }
+  },
+  {
+    "id": "task_0117",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0118",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.51
+    }
+  },
+  {
+    "id": "task_0119",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.56
+    }
+  },
+  {
+    "id": "task_0120",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.8
+    }
+  },
+  {
+    "id": "task_0121",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0122",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.75
+    }
+  },
+  {
+    "id": "task_0123",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.84
+    }
+  },
+  {
+    "id": "task_0124",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0125",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.36
+    }
+  },
+  {
+    "id": "task_0126",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0127",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0128",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.48
+    }
+  },
+  {
+    "id": "task_0129",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.55
+    }
+  },
+  {
+    "id": "task_0130",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.64
+    }
+  },
+  {
+    "id": "task_0131",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.73
+    }
+  },
+  {
+    "id": "task_0132",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.39
+    }
+  },
+  {
+    "id": "task_0133",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.63
+    }
+  },
+  {
+    "id": "task_0134",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0135",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.52
+    }
+  },
+  {
+    "id": "task_0136",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0137",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.02
+    }
+  },
+  {
+    "id": "task_0138",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0139",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.83
+    }
+  },
+  {
+    "id": "task_0140",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.18
+    }
+  },
+  {
+    "id": "task_0141",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0142",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.07
+    }
+  },
+  {
+    "id": "task_0143",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.47
+    }
+  },
+  {
+    "id": "task_0144",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.32
+    }
+  },
+  {
+    "id": "task_0145",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.52
+    }
+  },
+  {
+    "id": "task_0146",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.86
+    }
+  },
+  {
+    "id": "task_0147",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.8
+    }
+  },
+  {
+    "id": "task_0148",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0149",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.09
+    }
+  },
+  {
+    "id": "task_0150",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.34
+    }
+  },
+  {
+    "id": "task_0151",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.53
+    }
+  },
+  {
+    "id": "task_0152",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0153",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.91
+    }
+  },
+  {
+    "id": "task_0154",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0155",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.35
+    }
+  },
+  {
+    "id": "task_0156",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0157",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0158",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.64
+    }
+  },
+  {
+    "id": "task_0159",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.82
+    }
+  },
+  {
+    "id": "task_0160",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0161",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.84
+    }
+  },
+  {
+    "id": "task_0162",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.87
+    }
+  },
+  {
+    "id": "task_0163",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.1
+    }
+  },
+  {
+    "id": "task_0164",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.79
+    }
+  },
+  {
+    "id": "task_0165",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0166",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0167",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0168",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.89
+    }
+  },
+  {
+    "id": "task_0169",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.96
+    }
+  },
+  {
+    "id": "task_0170",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 28,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.79
+    }
+  },
+  {
+    "id": "task_0171",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.24
+    }
+  },
+  {
+    "id": "task_0172",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.1
+    }
+  },
+  {
+    "id": "task_0173",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0174",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.67
+    }
+  },
+  {
+    "id": "task_0175",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.75
+    }
+  },
+  {
+    "id": "task_0176",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.75
+    }
+  },
+  {
+    "id": "task_0177",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.16
+    }
+  },
+  {
+    "id": "task_0178",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0179",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0180",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.48
+    }
+  },
+  {
+    "id": "task_0181",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.4
+    }
+  },
+  {
+    "id": "task_0182",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.56
+    }
+  },
+  {
+    "id": "task_0183",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.82
+    }
+  },
+  {
+    "id": "task_0184",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.36
+    }
+  },
+  {
+    "id": "task_0185",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.08
+    }
+  },
+  {
+    "id": "task_0186",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.47
+    }
+  },
+  {
+    "id": "task_0187",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.16
+    }
+  },
+  {
+    "id": "task_0188",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0189",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0190",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.84
+    }
+  },
+  {
+    "id": "task_0191",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.92
+    }
+  },
+  {
+    "id": "task_0192",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.46
+    }
+  },
+  {
+    "id": "task_0193",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.96
+    }
+  },
+  {
+    "id": "task_0194",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.56
+    }
+  },
+  {
+    "id": "task_0195",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.68
+    }
+  },
+  {
+    "id": "task_0196",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.84
+    }
+  },
+  {
+    "id": "task_0197",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0198",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  },
+  {
+    "id": "task_0199",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.15
+    }
+  },
+  {
+    "id": "task_0200",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.39
+    }
+  },
+  {
+    "id": "task_0201",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0202",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.56
+    }
+  },
+  {
+    "id": "task_0203",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.55
+    }
+  },
+  {
+    "id": "task_0204",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.72
+    }
+  },
+  {
+    "id": "task_0205",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 10,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.52
+    }
+  },
+  {
+    "id": "task_0206",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0207",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.75
+    }
+  },
+  {
+    "id": "task_0208",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 12,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.07
+    }
+  },
+  {
+    "id": "task_0209",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.71
+    }
+  },
+  {
+    "id": "task_0210",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 8,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 1,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0211",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 400,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.76
+    }
+  },
+  {
+    "id": "task_0212",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.47
+    }
+  },
+  {
+    "id": "task_0213",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.44
+    }
+  },
+  {
+    "id": "task_0214",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 14,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.36
+    }
+  },
+  {
+    "id": "task_0215",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 8,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.2
+    }
+  },
+  {
+    "id": "task_0216",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 20,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 200,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 100,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.59
+    }
+  },
+  {
+    "id": "task_0217",
+    "alternatives": {
+      "car": {
+        "time": 8,
+        "park_time": 1,
+        "cost": 16,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 10
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.27
+    }
+  },
+  {
+    "id": "task_0218",
+    "alternatives": {
+      "car": {
+        "time": 16,
+        "park_time": 4,
+        "cost": 8,
+        "walk_distance": 250,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 400,
+        "wait_time": 3
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 50,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.04
+    }
+  },
+  {
+    "id": "task_0219",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 4,
+        "cost": 16,
+        "walk_distance": 100,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 6,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 3,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 0.92
+    }
+  },
+  {
+    "id": "task_0220",
+    "alternatives": {
+      "car": {
+        "time": 12,
+        "park_time": 1,
+        "cost": 12,
+        "walk_distance": 400,
+        "wait_time": 0
+      },
+      "public_transit": {
+        "time": 15,
+        "park_time": 0,
+        "cost": 4,
+        "walk_distance": 200,
+        "wait_time": 6
+      },
+      "ebike": {
+        "time": 18,
+        "park_time": 0,
+        "cost": 2,
+        "walk_distance": 150,
+        "wait_time": 0
+      }
+    },
+    "meta": {
+      "source": "random_factorial",
+      "dominance": false,
+      "utility_spread": 1.31
+    }
+  }
+]

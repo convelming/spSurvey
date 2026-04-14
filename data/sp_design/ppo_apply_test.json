@@ -1,0 +1,120 @@
+{
+  "save_name": "ppo_apply_test",
+  "type": "dyppo",
+  "saved_at": "2026-03-24T03:49:48.413663+00:00",
+  "payload": {
+    "beta_bounds": {},
+    "beta_defaults": {
+      "car.asc": 0,
+      "car.cost": -1,
+      "car.time": -1,
+      "pt.asc": 0,
+      "pt.cost": -1,
+      "pt.time": -1
+    },
+    "design_options": {
+      "dyppo": {
+        "batch_size": 8,
+        "explore_epsilon": 0.2,
+        "reward_weight_d_error": 1.0,
+        "tasks_per_round": 3
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "car",
+          "variables": [
+            {
+              "levels": [
+                10,
+                20,
+                30
+              ],
+              "name": "time"
+            },
+            {
+              "levels": [
+                2,
+                3,
+                4
+              ],
+              "name": "cost"
+            }
+          ]
+        },
+        {
+          "name": "pt",
+          "variables": [
+            {
+              "levels": [
+                12,
+                18,
+                28
+              ],
+              "name": "time"
+            },
+            {
+              "levels": [
+                1,
+                2,
+                3
+              ],
+              "name": "cost"
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "car",
+      "conditions": []
+    },
+    "design_type": "dyppo",
+    "n_parameters": 4,
+    "sample_size": 120,
+    "target_block_sample": 100,
+    "tasks_per_person_candidates": [
+      3
+    ]
+  },
+  "recommendation": {
+    "blocks": 1,
+    "rows": 3,
+    "tasks_per_person": 3
+  },
+  "preview_tasks": [],
+  "runtime": {
+    "distribution_log": [
+      {
+        "dedupe_key": "api/survey/sp-submit|sp_7d0dd6110024|ASSIGN_PPO_APPLY|R_PPO_APPLY",
+        "submission_id": "sp_7d0dd6110024",
+        "assignment_id": "ASSIGN_PPO_APPLY",
+        "respondent_id": "R_PPO_APPLY",
+        "source": "api/survey/sp-submit",
+        "issued_to_respondent_id": "R_PPO_APPLY",
+        "submitted_at": "2026-03-24T03:49:48.478012+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3"
+        ],
+        "choices": {
+          "preview_b1_r1": "car",
+          "preview_b1_r2": "car",
+          "preview_b1_r3": "car"
+        }
+      }
+    ],
+    "distribution_count": 1,
+    "task_issue_counts": {
+      "preview_b1_r1": 1,
+      "preview_b1_r2": 1,
+      "preview_b1_r3": 1
+    },
+    "choice_counts": {
+      "preview_b1_r1::car": 1,
+      "preview_b1_r2::car": 1,
+      "preview_b1_r3::car": 1
+    },
+    "last_distributed_at": "2026-03-24T03:49:48.478012+00:00"
+  }
+}

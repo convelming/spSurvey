@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>SP问题</title><link id="appCss" rel="stylesheet" href="/static/style.css" /><script>if(location.protocol==='file:'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('appCss').href='../static/style.css';});}</script></head>
+<body>
+<header class="topbar"><div class="topbar-inner"><div class="brand">城市居民出行调查</div><nav class="nav-links"><a data-page="index">首页</a><a data-page="profile">1 基础信息</a><a data-page="trip">2 Trip Diary</a><a data-page="sp">3 SP问题</a><a data-page="design">4 SP设计</a><a data-page="overview">查看收集情况</a><a data-page="docs">算法文档</a></nav></div></header>
+<main class="container">
+<section class="card"><h1>3. SP问题页面</h1><p>先读取基础信息，再实时获取本轮SP题组（策略版本 <strong id="policyVersion">-</strong>）。</p><p class="hint" id="spInheritBanner">继承检查：加载中...</p></section>
+<section class="card">
+  <h2>选择SP设计版本</h2>
+  <div class="grid">
+    <div class="field">
+      <label>保存名（save_name）</label>
+      <select id="spDesignSelect"><option value="" selected>请先选择</option></select>
+    </div>
+  </div>
+  <p class="hint">先选择已保存的 SP Design，再点击“获取SP题组”。当前作答将自动绑定当前 respondent_id。</p>
+  <div class="actions">
+    <button id="loadDesignBtn" type="button">获取SP题组</button>
+    <button id="exportRespondentJsonBtn" type="button">导出当前受访者JSON</button>
+  </div>
+</section>
+<section class="card hidden" id="spSection"><h2>SP题组</h2><div id="tasksContainer"></div><div class="actions"><button id="submitBtn" type="button">提交答案</button></div></section>
+<section class="card">
+  <div class="collapsible-panel">
+    <div class="collapsible-panel-header">
+      <h2>在线指标</h2>
+      <button type="button" class="collapse-toggle" id="metricsToggle" aria-expanded="false" aria-controls="metricsWrap" aria-label="展开在线指标" title="展开">
+        <span class="collapse-toggle-icon">▶</span>
+        <span class="collapse-toggle-text">展开</span>
+      </button>
+    </div>
+    <div class="collapsible-panel-body" id="metricsWrap" hidden>
+      <pre id="metricsBox">加载中...</pre>
+    </div>
+  </div>
+</section>
+</main>
+<script>
+(function(){
+  const isFile=location.protocol==='file:';
+  const currentPage='sp';
+  const routes=isFile?{index:'index.html',profile:'profile.html',trip:'trip_diary.html',sp:'sp_questionnaire.html',design:'sp_design.html',map:'web_map.html',overview:'collection_dashboard.html',docs:'docs.html'}:{index:'/',profile:'/survey/profile',trip:'/survey/trip-diary',sp:'/survey/sp',design:'/survey/sp-design',map:'/survey/map',overview:'/survey/collection-dashboard',docs:'/survey/docs'};
+  document.querySelectorAll('[data-page]').forEach(a=>{a.href=routes[a.dataset.page];a.classList.toggle('is-active', a.dataset.page===currentPage);});
+  const toggle = document.getElementById('metricsToggle');
+  const panel = document.getElementById('metricsWrap');
+  if (toggle && panel) {
+    const text = toggle.querySelector('.collapse-toggle-text');
+    const setExpanded = (expanded) => {
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.setAttribute('aria-label', expanded ? '收起在线指标' : '展开在线指标');
+      toggle.title = expanded ? '收起' : '展开';
+      if (text) text.textContent = expanded ? '收起' : '展开';
+      panel.hidden = !expanded;
+    };
+    setExpanded(false);
+    toggle.addEventListener('click', () => setExpanded(toggle.getAttribute('aria-expanded') !== 'true'));
+  }
+  window.APP_BOOTSTRAP={
+    rpSchema:{age_group:['18-30','31-45','46-60','60+'],income_group:['<5k','5k-10k','10k-20k','>20k'],gender:['male','female'],family_size:[1,2,3,4,5],car_availability:[0,1],occupation:['student','office','service','other']}
+  };
+})();
+</script>
+<script id="appJs" src="/static/app.js"></script>
+<script>
+if(location.protocol==='file:'){document.getElementById('appJs').src='../static/app.js';}
+(async function(){
+  const isFile=location.protocol==='file:';
+  const profileRaw=localStorage.getItem('survey_profile_data');
+  if (profileRaw) {
+    const data = JSON.parse(profileRaw);
+    for (const [k,v] of Object.entries(data)) {
+      const el = document.getElementById(`rp_${k}`);
+      if (el) el.value = String(v);
+    }
+  }
+  if(isFile) return;
+  try{
+    const r=await fetch('/api/config');
+    const d=await r.json();
+    if(window.setSurveySchema) window.setSurveySchema(d.rp_schema||window.APP_BOOTSTRAP.rpSchema);
+    if(d.policy_version!==undefined) document.getElementById('policyVersion').textContent=String(d.policy_version);
+    if (profileRaw) {
+      const data = JSON.parse(profileRaw);
+      for (const [k,v] of Object.entries(data)) {
+        const el = document.getElementById(`rp_${k}`);
+        if (el) el.value = String(v);
+      }
+    }
+  }catch(_e){}
+})();
+</script>
+</body></html>

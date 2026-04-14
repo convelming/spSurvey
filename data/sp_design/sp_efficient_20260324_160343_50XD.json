@@ -1,0 +1,182 @@
+{
+  "save_name": "sp_efficient_20260324_160343_50XD",
+  "type": "dyppo",
+  "saved_at": "2026-03-24T08:04:21.871126+00:00",
+  "payload": {
+    "sample_size": 120,
+    "design_type": "dyppo",
+    "design_options": {
+      "dyppo": {
+        "tasks_per_round": 3,
+        "batch_size": 8,
+        "explore_epsilon": 0.2,
+        "reward_weight_d_error": 1
+      }
+    },
+    "n_parameters": 5,
+    "min_block_sample": 1,
+    "target_block_sample": 120,
+    "tasks_per_person_candidates": [
+      3
+    ],
+    "level_count_by_variable": {
+      "car.time": 3,
+      "car.cost": 3,
+      "pt.time": 3,
+      "pt.cost": 3
+    },
+    "beta_defaults": {
+      "car.asc": 0,
+      "car.time": 0,
+      "car.cost": 0,
+      "pt.asc": 0,
+      "pt.time": 0,
+      "pt.cost": 0
+    },
+    "beta_bounds": {
+      "car.time": {
+        "min": null,
+        "max": null
+      },
+      "car.cost": {
+        "min": null,
+        "max": null
+      },
+      "pt.time": {
+        "min": null,
+        "max": null
+      },
+      "pt.cost": {
+        "min": null,
+        "max": null
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "car",
+          "variables": [
+            {
+              "name": "time",
+              "description": "",
+              "beta_default": 0,
+              "beta_min": null,
+              "beta_max": null,
+              "levels": [
+                "10",
+                "20",
+                "30"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "",
+              "beta_default": 0,
+              "beta_min": null,
+              "beta_max": null,
+              "levels": [
+                "2",
+                "3",
+                "4"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "pt",
+          "variables": [
+            {
+              "name": "time",
+              "description": "",
+              "beta_default": 0,
+              "beta_min": null,
+              "beta_max": null,
+              "levels": [
+                "12",
+                "18",
+                "28"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "",
+              "beta_default": 0,
+              "beta_min": null,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "car",
+      "sp_intro_text": "",
+      "conditions": []
+    }
+  },
+  "recommendation": {
+    "blocks": 1,
+    "rows": 3,
+    "tasks_per_person": 3
+  },
+  "preview_tasks": [
+    {
+      "alternatives": {
+        "car": {
+          "cost": "4",
+          "time": "10"
+        },
+        "pt": {
+          "cost": "3",
+          "time": "12"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r1",
+      "row_in_block": 1,
+      "sig": "183a70243ac5f8ac"
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "3",
+          "time": "20"
+        },
+        "pt": {
+          "cost": "2",
+          "time": "18"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r2",
+      "row_in_block": 2,
+      "sig": "1efe0f7e1539790c"
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "2",
+          "time": "10"
+        },
+        "pt": {
+          "cost": "2",
+          "time": "28"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r3",
+      "row_in_block": 3,
+      "sig": "4c4cc39dccabc17d"
+    }
+  ],
+  "runtime": {
+    "distribution_log": [],
+    "distribution_count": 0,
+    "task_issue_counts": {},
+    "choice_counts": {},
+    "last_distributed_at": null
+  }
+}

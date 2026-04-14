@@ -1,0 +1,33 @@
+{
+  "dynamic_ppo": {
+    "seed": 42,
+    "input_dim": 6,
+    "train_respondents": 300,
+    "train_epochs": 200,
+    "train_lr": 0.03
+  },
+  "self_attention": {
+    "seed": 42,
+    "window_length": 16,
+    "hidden_dim": 64,
+    "num_heads": 4,
+    "explore_epsilon": 0.15,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.01,
+    "train_respondents": 300,
+    "train_epochs": 200,
+    "train_lr": 0.03,
+    "batch_size": 128,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "target_kl": 0.03,
+    "online_lr": 0.005,
+    "online_epochs": 2,
+    "online_batch_size": 128
+  },
+  "data_sources": {
+    "popsim_stats_path": "zone2_targets.json",
+    "zone_geojson_path": "zone2_target.geojson"
+  }
+}

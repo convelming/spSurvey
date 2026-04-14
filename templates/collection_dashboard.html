@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>收集情况看板</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+  <style>
+    .dash-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .map-wrap { height: 520px; border: 1px solid #d4deea; border-radius: 10px; overflow: hidden; }
+    #dashMap { width:100%; height:100%; }
+    .mini { font-size: 12px; color: #586d85; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border: 1px solid #d7e2ef; padding: 6px 8px; text-align: left; }
+    th { background: #f1f6fb; }
+    .scroll-box { max-height: 320px; overflow: auto; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    @media (max-width: 980px) { .dash-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">城市居民出行调查</div>
+      <nav class="nav-links">
+        <a data-page="index">首页</a>
+        <a data-page="profile">1 基础信息</a>
+        <a data-page="trip">2 Trip Diary</a>
+        <a data-page="sp">3 SP问题</a>
+        <a data-page="design">4 SP设计</a>
+        <a data-page="overview">查看收集情况</a>
+        <a data-page="docs">算法文档</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 style="margin-top:0;">收集看板</h2>
+      <div class="grid">
+        <div class="field">
+          <label>SP策略类型</label>
+          <select id="designTypeSel">
+            <option value="">全部/自动</option>
+            <option value="efficient">efficient</option>
+            <option value="dyppo">dynamicPPO</option>
+            <option value="selfattention">SelfAttention</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>SP设计名称</label>
+          <select id="designNameSel"><option value="">自动选择最新</option></select>
+        </div>
+        <div class="field">
+          <label>参数估计batch</label>
+          <input id="batchSizeInput" type="number" min="1" step="1" value="20" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="refreshBtn" type="button">刷新统计</button>
+      </div>
+      <p class="mini" id="summaryLine">加载中...</p>
+    </section>
+
+    <section class="card">
+      <h3 style="margin-top:0;">WebGIS点位（家/出行目的）</h3>
+      <div class="map-wrap"><div id="dashMap"></div></div>
+      <div class="legend" id="purposeLegend"></div>
+    </section>
+
+    <section class="dash-grid">
+      <article class="card">
+        <h3 style="margin-top:0;">各区收集与偏差（RP）</h3>
+        <div class="scroll-box">
+          <table>
+            <thead><tr><th>区</th><th>zone_id</th><th>样本数</th><th>TV偏差</th><th>L1偏差</th><th>最大绝对差</th></tr></thead>
+            <tbody id="zoneTableBody"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 style="margin-top:0;">SP选项与参数重估</h3>
+        <p class="mini" id="spMetaLine"></p>
+        <div class="scroll-box">
+          <table>
+            <thead><tr><th>参数</th><th>初始</th><th>重估</th><th>变化</th></tr></thead>
+            <tbody id="betaTableBody"></tbody>
+          </table>
+        </div>
+        <div class="collapsible-panel">
+          <div class="collapsible-panel-header">
+            <h4>选项占比</h4>
+            <button type="button" class="collapse-toggle" id="choiceBoxToggle" aria-expanded="false" aria-controls="choiceBoxWrap" aria-label="展开选项占比" title="展开">
+              <span class="collapse-toggle-icon">▶</span>
+              <span class="collapse-toggle-text">展开</span>
+            </button>
+          </div>
+          <div class="collapsible-panel-body" id="choiceBoxWrap" hidden>
+            <pre id="choiceBox">{}</pre>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h3 style="margin-top:0;">Batch重估轨迹（与初始参数对比）</h3>
+      <div class="scroll-box">
+        <table>
+          <thead><tr><th>累计样本n</th><th>参数变化(Δ)</th></tr></thead>
+          <tbody id="batchTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    (function () {
+      const isFile = location.protocol === 'file:';
+      const currentPage = 'overview';
+      const routes = isFile
+        ? { index: 'index.html', profile: 'profile.html', trip: 'trip_diary.html', sp: 'sp_questionnaire.html', design: 'sp_design.html', map: 'web_map.html', overview: 'collection_dashboard.html', docs: 'docs.html' }
+        : { index: '/', profile: '/survey/profile', trip: '/survey/trip-diary', sp: '/survey/sp', design: '/survey/sp-design', map: '/survey/map', overview: '/survey/collection-dashboard', docs: '/survey/docs' };
+      document.querySelectorAll('[data-page]').forEach((a) => { a.href = routes[a.dataset.page]; a.classList.toggle('is-active', a.dataset.page === currentPage); });
+
+      const typeSel = document.getElementById('designTypeSel');
+      const nameSel = document.getElementById('designNameSel');
+      const batchInput = document.getElementById('batchSizeInput');
+      const summaryLine = document.getElementById('summaryLine');
+      const zoneTbody = document.getElementById('zoneTableBody');
+      const betaTbody = document.getElementById('betaTableBody');
+      const batchTbody = document.getElementById('batchTableBody');
+      const choiceBox = document.getElementById('choiceBox');
+      const spMetaLine = document.getElementById('spMetaLine');
+      const legend = document.getElementById('purposeLegend');
+
+      const map = L.map('dashMap').setView([23.14, 113.27], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+      let zoneLayer = null;
+      const pointLayer = L.layerGroup().addTo(map);
+
+      const choiceToggle = document.getElementById('choiceBoxToggle');
+      const choicePanel = document.getElementById('choiceBoxWrap');
+      if (choiceToggle && choicePanel) {
+        const text = choiceToggle.querySelector('.collapse-toggle-text');
+        const setExpanded = (expanded) => {
+          choiceToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          choiceToggle.setAttribute('aria-label', expanded ? '收起选项占比' : '展开选项占比');
+          choiceToggle.title = expanded ? '收起' : '展开';
+          if (text) text.textContent = expanded ? '收起' : '展开';
+          choicePanel.hidden = !expanded;
+        };
+        setExpanded(false);
+        choiceToggle.addEventListener('click', () => setExpanded(choiceToggle.getAttribute('aria-expanded') !== 'true'));
+      }
+
+      function purposeColor(p) {
+        const key = String(p || '').trim();
+        const map = {
+          home: '#2563eb',
+          工作: '#ef4444',
+          上学: '#f97316',
+          接送: '#a855f7',
+          购物: '#0ea5e9',
+          日常办事: '#22c55e',
+          外出就餐: '#eab308',
+          社交: '#ec4899',
+          休闲娱乐: '#14b8a6',
+          工作跑腿: '#8b5cf6',
+          回家: '#374151',
+        };
+        return map[key] || '#64748b';
+      }
+
+      function fillDesignOptions(items, selectedName) {
+        const oldVal = nameSel.value;
+        nameSel.innerHTML = '<option value="">自动选择最新</option>';
+        (items || []).forEach((it) => {
+          const opt = document.createElement('option');
+          opt.value = it.save_name;
+          opt.textContent = `${it.save_name} (${it.type === 'dyppo' ? 'dynamicPPO' : (it.type === 'selfattention' ? 'SelfAttention' : 'efficient')})`;
+          nameSel.appendChild(opt);
+        });
+        if (selectedName) nameSel.value = selectedName;
+        else if (oldVal) nameSel.value = oldVal;
+      }
+
+      function renderMap(points) {
+        pointLayer.clearLayers();
+        const bounds = [];
+        const purposes = new Set();
+        (points || []).forEach((p) => {
+          const lat = Number(p.lat), lng = Number(p.lng);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+          const color = purposeColor(p.purpose);
+          purposes.add(String(p.purpose || '其他'));
+          const marker = L.circleMarker([lat, lng], {
+            radius: p.type === 'home' ? 5 : 4,
+            color,
+            fillColor: color,
+            fillOpacity: p.type === 'home' ? 0.9 : 0.7,
+            weight: 1,
+          }).bindPopup(`${p.type === 'home' ? '家' : '目的地'} | ${p.label || ''}`);
+          marker.addTo(pointLayer);
+          bounds.push([lat, lng]);
+        });
+        legend.innerHTML = '';
+        ['home', ...Array.from(purposes).filter((x) => x && x !== 'home')].forEach((p) => {
+          const item = document.createElement('span');
+          item.className = 'legend-item';
+          item.innerHTML = `<span class="dot" style="background:${purposeColor(p)}"></span>${p === 'home' ? '家位置' : p}`;
+          legend.appendChild(item);
+        });
+        if (bounds.length) map.fitBounds(bounds, { padding: [20, 20] });
+      }
+
+      function colorByTv(tv) {
+        const v = Number(tv || 0);
+        if (v >= 0.5) return '#7f1d1d';
+        if (v >= 0.3) return '#b91c1c';
+        if (v >= 0.2) return '#dc2626';
+        if (v >= 0.1) return '#f97316';
+        if (v >= 0.05) return '#f59e0b';
+        return '#16a34a';
+      }
+
+      function renderZones(zoneGeojson, zoneRows) {
+        if (zoneLayer) {
+          map.removeLayer(zoneLayer);
+          zoneLayer = null;
+        }
+        const fc = zoneGeojson && zoneGeojson.type === 'FeatureCollection' ? zoneGeojson : null;
+        if (!fc || !Array.isArray(fc.features) || !fc.features.length) return;
+
+        const biasMap = {};
+        (zoneRows || []).forEach((r) => { biasMap[String(r.zone_id || '')] = r; });
+
+        zoneLayer = L.geoJSON(fc, {
+          style: (feature) => {
+            const p = (feature && feature.properties) || {};
+            const zid = String(p.zone_id || p.zone2_id || '');
+            const row = biasMap[zid] || {};
+            const tv = Number(row.bias_tv || 0);
+            return {
+              color: '#334155',
+              weight: 1.2,
+              fillColor: colorByTv(tv),
+              fillOpacity: 0.22,
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            const p = (feature && feature.properties) || {};
+            const zid = String(p.zone_id || p.zone2_id || '');
+            const row = biasMap[zid] || {};
+            const nm = p.zone_name_cn || p.zone2_name_cn || p.zone_name || p.zone2_name || zid || 'unknown';
+            layer.bindPopup(`区域: ${nm}<br>zone_id: ${zid}<br>样本: ${row.sample_count || 0}<br>TV偏差: ${row.bias_tv ?? '-'}`);
+          }
+        }).addTo(map);
+      }
+
+      function renderZoneTable(rows) {
+        zoneTbody.innerHTML = '';
+        (rows || []).sort((a,b) => (b.sample_count||0) - (a.sample_count||0)).forEach((r) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.zone_name_cn || r.zone_name || '-'}</td><td>${r.zone_id || '-'}</td><td>${r.sample_count || 0}</td><td>${r.bias_tv ?? '-'}</td><td>${r.bias_l1 ?? '-'}</td><td>${r.bias_max_abs ?? '-'}</td>`;
+          zoneTbody.appendChild(tr);
+        });
+      }
+
+      function renderSp(est) {
+        betaTbody.innerHTML = '';
+        batchTbody.innerHTML = '';
+        const keys = est.param_keys || [];
+        keys.forEach((k) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${k}</td><td>${est.initial_beta && est.initial_beta[k] != null ? est.initial_beta[k] : '-'}</td><td>${est.estimated_beta && est.estimated_beta[k] != null ? est.estimated_beta[k] : '-'}</td><td>${est.delta_beta && est.delta_beta[k] != null ? est.delta_beta[k] : '-'}</td>`;
+          betaTbody.appendChild(tr);
+        });
+        (est.batch_history || []).forEach((row) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${row.n}</td><td>${JSON.stringify(row.delta || {})}</td>`;
+          batchTbody.appendChild(tr);
+        });
+        choiceBox.textContent = JSON.stringify({ counts: est.choice_counts || {}, share: est.choice_share || {} }, null, 2);
+        spMetaLine.textContent = `设计：${est.selected_save_name || '(未选择)'} | 类型：${est.selected_type || '-'} | submissions=${est.n_submissions || 0} | observations=${est.n_observations || 0}`;
+      }
+
+      async function refresh() {
+        const q = new URLSearchParams();
+        if (typeSel.value) q.set('design_type', typeSel.value);
+        if (nameSel.value) q.set('design_save_name', nameSel.value);
+        q.set('batch_size', String(Math.max(1, Number(batchInput.value || 20))));
+
+        const res = await fetch(`/api/dashboard/collection-summary?${q.toString()}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '读取收集统计失败');
+
+        fillDesignOptions(data.sp_designs || [], (data.sp_estimation || {}).selected_save_name || '');
+        const ov = data.overview || {};
+        summaryLine.textContent = `更新时间：${data.updated_at || '-'}；受访者=${ov.respondents_total || 0}；Profile=${ov.profile_count || 0}；TripDiary=${ov.trip_diary_count || 0}；SP=${ov.sp_count || 0}`;
+        renderZoneTable(data.zone_summary || []);
+        renderZones(data.zone_geojson || null, data.zone_summary || []);
+        renderMap(data.map_points || []);
+        if ((!data.map_points || !data.map_points.length) && zoneLayer) {
+          try { map.fitBounds(zoneLayer.getBounds(), { padding: [20, 20] }); } catch (_e) {}
+        }
+        renderSp(data.sp_estimation || {});
+      }
+
+      document.getElementById('refreshBtn').addEventListener('click', () => {
+        refresh().catch((e) => alert(e.message || '刷新失败'));
+      });
+
+      refresh().catch((e) => {
+        summaryLine.textContent = `加载失败：${e.message || 'unknown error'}`;
+      });
+    })();
+  </script>
+</body>
+</html>

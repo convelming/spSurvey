@@ -1,0 +1,134 @@
+{
+  "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+  "created_at": "2026-04-14T07:55:46.742568+00:00",
+  "updated_at": "2026-04-14T07:56:47.201417+00:00",
+  "profile": {
+    "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+    "housing_status": "自有住房，家庭同住",
+    "family_total": 3,
+    "dependent_children_count": 1,
+    "household_vehicle_count": 0,
+    "household_ebike_count": 0,
+    "household_income_annual": "72万及以上",
+    "home_location": "POINT(23.119759,113.314533)",
+    "household_members": [
+      {
+        "member_id": "P1",
+        "relationship": "本人",
+        "gender": "男",
+        "age_group": "6~18岁",
+        "occupation": "待业",
+        "education": "初中及以下",
+        "income_pre_tax": "暂无收入",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      },
+      {
+        "member_id": "P2",
+        "relationship": "配偶",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "education": "本科",
+        "income_pre_tax": "0~6万",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      },
+      {
+        "member_id": "P3",
+        "relationship": "子女",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "education": "本科",
+        "income_pre_tax": "0~6万",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      }
+    ]
+  },
+  "trip_diary": {
+    "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+    "survey_date": "2026-04-14",
+    "residence": "POINT(23.119759,113.314533)",
+    "household_size": 2,
+    "members": [
+      {
+        "member_id": "P1",
+        "gender": "男",
+        "age_group": "6~18岁",
+        "occupation": "待业",
+        "relationship": "本人",
+        "trips": [
+          {
+            "origin": "POINT(23.119759,113.314533)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.119759,113.314533)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          }
+        ]
+      },
+      {
+        "member_id": "P2",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "relationship": "配偶",
+        "trips": [
+          {
+            "origin": "POINT(23.119759,113.314533)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.158669,113.316422)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          },
+          {
+            "origin": "POINT(23.158669,113.316422)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.151409,113.215485)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          },
+          {
+            "origin": "POINT(23.151409,113.215485)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.119759,113.314533)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          }
+        ]
+      }
+    ]
+  },
+  "sp": {}
+}

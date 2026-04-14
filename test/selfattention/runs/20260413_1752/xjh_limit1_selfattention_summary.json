@@ -1,0 +1,117 @@
+{
+  "source_design_save_name": "中途_xjh_限制1",
+  "effective_design_type": "selfattention",
+  "generated_rows": 300,
+  "rows_loaded_for_train": 300,
+  "candidate_pool_size": 120,
+  "candidate_pool_target": 120,
+  "expert_preview_size": 6,
+  "candidate_expert_overlap": 0,
+  "train_model_state": {
+    "trained": true,
+    "backend": "pytorch_selfattention",
+    "input_dim": 22,
+    "output_dim": 120,
+    "candidate_pool_size": 120,
+    "training_data_source": "synthetic_popsim_rollout",
+    "rows_used": 0,
+    "rollout_episodes": 300,
+    "rollout_steps": 1800,
+    "mean_episode_reward": 0.15221423959398273,
+    "train_samples": 1800,
+    "train_epochs": 200,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.01,
+    "batch_size": 128,
+    "target_kl": 0.03,
+    "epsilon": 0.2,
+    "seq_len": 16,
+    "hidden_dim": 64,
+    "num_heads": 4,
+    "expert_overlap": 0,
+    "expert_prior_weight": 0.0,
+    "scoring_state_source": "current_respondent",
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "zone_categories": [
+      "440103",
+      "440104",
+      "440105",
+      "440106",
+      "440111",
+      "440112",
+      "440113",
+      "440114",
+      "440115",
+      "440117",
+      "440118",
+      "__missing__"
+    ],
+    "policy_version": 1
+  },
+  "train_iteration_log": [
+    {
+      "epoch": 1,
+      "loss": 1.158631,
+      "policy_loss": 0.38791,
+      "value_loss": 1.599078,
+      "entropy": 2.881823,
+      "approx_kl": 2.96407,
+      "clip_frac": 0.870313,
+      "mean_reward": 0.375133,
+      "episodes": 300,
+      "steps": 1800
+    },
+    {
+      "epoch": 1,
+      "event": "early_stop_target_kl",
+      "target_kl": 0.03,
+      "approx_kl": 2.96407
+    }
+  ],
+  "online_update_steps": 300,
+  "final_policy_version": 0,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 300,
+    "n_rows_source": "selfattention.train_respondents"
+  },
+  "outputs": {
+    "rows_jsonl": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/selfattention/runs/20260413_1752/xjh_limit1_selfattention_rows.jsonl",
+    "trace_json": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/selfattention/runs/20260413_1752/xjh_limit1_selfattention_trace.json",
+    "summary_json": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/selfattention/runs/20260413_1752/xjh_limit1_selfattention_summary.json",
+    "candidate_pool_json": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/selfattention/runs/20260413_1752/xjh_limit1_selfattention_candidate_pool.json"
+  }
+}

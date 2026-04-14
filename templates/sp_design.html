@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SP设计</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+  <style>
+    #recommendResult table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: #fff;
+    }
+    #recommendResult th, #recommendResult td {
+      border: 1px solid #d9e4ef;
+      padding: 6px 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+    #recommendResult thead th {
+      background: #f2f7fd;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    #recommendResult .meta {
+      margin-bottom: 8px;
+      color: #3e5670;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">城市居民出行调查</div>
+    <nav class="nav-links">
+      <a data-page="index">首页</a>
+      <a data-page="profile">1 基础信息</a>
+      <a data-page="trip">2 Trip Diary</a>
+      <a data-page="sp">3 SP问题</a>
+      <a data-page="design">4 SP设计</a>
+      <a data-page="overview">查看收集情况</a>
+      <a data-page="docs">算法文档</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h1>4. SP问卷设计页面</h1>
+    <p class="hint">支持灵活配置：先添加选项（Alternative），再给每个选项添加变量（Variable）。</p>
+    <p class="hint">每个变量可填写参数默认值（先验）和 attribute level（用英文逗号分隔）。</p>
+    <p class="hint">ASC处理规则：每个选项自动内置 ASC；默认第一个选项为基准项（ASC=0，不计入参数）；其余选项 ASC 计入参数。</p>
+  </section>
+
+  <section class="card">
+    <h2>基础设置</h2>
+    <div class="field">
+      <label>保存名（用于追溯）</label>
+      <input type="text" id="saveName" placeholder="例如：abtest_A_efficient_v1" />
+      <p class="hint">保存时必填；同名会覆盖更新。</p>
+    </div>
+    <div class="field">
+      <label>SP题目前置说明（将显示在SP题目页）</label>
+      <input type="text" id="spIntroText" placeholder="例如：请在3km通勤场景下，从以下方案中选择您最可能采用的方式。" />
+    </div>
+
+    <div class="field">
+      <label>加载已保存配置</label>
+      <div class="actions">
+        <select id="savedConfigSelect"><option value="">请选择保存名</option></select>
+        <button type="button" id="refreshSavedConfigsBtn">刷新列表</button>
+        <button type="button" id="loadSavedConfigBtn">加载已选配置</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>条件约束（参考ngene，按行填写）</label>
+      <textarea id="designConditions" rows="3" placeholder="例如：\ncar.time > public_transit.time > 20\npublic_transit.wait_time <= 15"></textarea>
+      <p class="hint">支持 > / >= / < / <= 链式比较。用于过滤不合理或被主导组合。</p>
+    </div>
+    <div class="grid">
+      <div class="field">
+        <label>设计类型</label>
+        <select id="designType">
+          <option value="efficient">Efficient Design</option>
+          <option value="dyppo">dynamicPPO</option>
+          <option value="selfattention">SelfAttention</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>目标样本量 N</label>
+        <input type="number" id="sampleSize" value="600" min="1" />
+      </div>
+      <div class="field">
+        <label>参数数量 K（自动）</label>
+        <input type="number" id="paramCountAuto" value="0" readonly />
+      </div>
+    </div>
+    <div id="efficientOptions" class="grid">
+      <div class="field">
+        <label>每人题数（efficient）</label>
+        <input type="number" id="efficientTasksPerPerson" value="8" min="1" max="12" />
+      </div>
+      <div class="field">
+        <label>每 block 最小样本</label>
+        <input type="number" id="minBlockSample" value="80" min="1" />
+      </div>
+      <div class="field">
+        <label>每 block 目标样本</label>
+        <input type="number" id="targetBlockSample" value="100" min="1" />
+      </div>
+      <div class="field">
+        <label>逐行交换迭代次数</label>
+        <input type="number" id="efficientIterations" value="200" min="1" />
+      </div>
+    </div>
+    <div id="mappoOptions" class="grid hidden">
+      <div class="field">
+        <label>每轮题数（dynamicPPO）</label>
+        <input type="number" id="mappoTasksPerRound" value="6" min="1" max="12" />
+      </div>
+      <div class="field">
+        <label>batch size</label>
+        <input type="number" id="mappoBatchSize" value="16" min="1" />
+      </div>
+      <div class="field">
+        <label>探索率 epsilon</label>
+        <input type="number" id="mappoExploreEps" value="0.2" min="0" max="1" step="0.01" />
+      </div>
+      <div class="field">
+        <label>奖励权重 d-error</label>
+        <input type="number" id="mappoRewardDerr" value="1.0" min="0" step="0.1" />
+      </div>
+    </div>
+    <div id="selfAttentionOptions" class="grid hidden">
+      <div class="field">
+        <label>每轮题数（SelfAttention）</label>
+        <input type="number" id="selfAttnTasksPerRound" value="6" min="1" max="12" />
+      </div>
+      <div class="field">
+        <label>batch size</label>
+        <input type="number" id="selfAttnBatchSize" value="16" min="1" />
+      </div>
+      <div class="field">
+        <label>探索率 epsilon</label>
+        <input type="number" id="selfAttnExploreEps" value="0.15" min="0" max="1" step="0.01" />
+      </div>
+      <div class="field">
+        <label>时序窗口 L</label>
+        <input type="number" id="selfAttnWindowL" value="600" min="1" />
+      </div>
+    </div>
+    <div class="collapsible-panel">
+      <div class="collapsible-panel-header">
+        <h3>实时 Utility 公式预览</h3>
+        <button type="button" class="collapse-toggle" id="utilityPreviewToggle" aria-expanded="false" aria-controls="utilityPreviewWrap" aria-label="展开实时 Utility 公式预览" title="展开">
+          <span class="collapse-toggle-icon">▶</span>
+          <span class="collapse-toggle-text">展开</span>
+        </button>
+      </div>
+      <div class="collapsible-panel-body" id="utilityPreviewWrap" hidden>
+        <pre id="utilityPreview">尚未生成</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>选项与变量配置</h2>
+    <div class="actions">
+      <button id="addAltBtn" type="button">+ 添加选项</button>
+      <button id="buildDefaultsBtn" type="button">清空选项</button>
+    </div>
+    <section id="alternativesContainer"></section>
+  </section>
+
+  <section class="card">
+    <div class="actions">
+      <button id="recommendBtn" type="button">训练权重</button>
+      <a class="btn-link" data-page="sp" id="viewGeneratedSpBtn" target="_blank" rel="noopener noreferrer">查看生成的SP页面</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>推荐结果</h2>
+    <div id="recommendResult">尚未计算</div>
+  </section>
+
+  <section class="card">
+    <div class="collapsible-panel">
+      <div class="collapsible-panel-header">
+        <h2>提交参数摘要</h2>
+        <button type="button" class="collapse-toggle" id="configPreviewToggle" aria-expanded="false" aria-controls="configPreviewWrap" aria-label="展开提交参数摘要" title="展开">
+          <span class="collapse-toggle-icon">▶</span>
+          <span class="collapse-toggle-text">展开</span>
+        </button>
+      </div>
+      <div class="collapsible-panel-body" id="configPreviewWrap" hidden>
+        <pre id="configPreview">尚未生成</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  const isFile = location.protocol === 'file:';
+  const currentPage = 'design';
+  const routes = isFile
+    ? {index:'index.html',profile:'profile.html',trip:'trip_diary.html',sp:'sp_questionnaire.html',design:'sp_design.html',map:'web_map.html',overview:'collection_dashboard.html',docs:'docs.html'}
+    : {index:'/',profile:'/survey/profile',trip:'/survey/trip-diary',sp:'/survey/sp',design:'/survey/sp-design',map:'/survey/map',overview:'/survey/collection-dashboard',docs:'/survey/docs'};
+  document.querySelectorAll('[data-page]').forEach((a) => { a.href = routes[a.dataset.page]; a.classList.toggle('is-active', a.dataset.page === currentPage); });
+
+  const alternativesContainer = document.getElementById('alternativesContainer');
+  const saveNameInput = document.getElementById('saveName');
+  const paramCountAuto = document.getElementById('paramCountAuto');
+  const result = document.getElementById('recommendResult');
+  const configPreview = document.getElementById('configPreview');
+  const utilityPreview = document.getElementById('utilityPreview');
+  const viewGeneratedSpBtn = document.getElementById('viewGeneratedSpBtn');
+  const designTypeEl = document.getElementById('designType');
+  const savedConfigSelect = document.getElementById('savedConfigSelect');
+  let loadedFromSaveName = '';
+  let loadingMask = null;
+  viewGeneratedSpBtn.style.display = 'none';
+  if (localStorage.getItem('survey_sp_preview_bundle')) {
+    viewGeneratedSpBtn.style.display = 'inline-flex';
+  }
+
+  function bindCollapsible(toggleId, panelId, label) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    const text = toggle.querySelector('.collapse-toggle-text');
+    const setExpanded = (expanded) => {
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.setAttribute('aria-label', expanded ? `收起${label}` : `展开${label}`);
+      toggle.title = expanded ? '收起' : '展开';
+      if (text) text.textContent = expanded ? '收起' : '展开';
+      panel.hidden = !expanded;
+    };
+    setExpanded(false);
+    toggle.addEventListener('click', () => {
+      setExpanded(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  }
+
+  function safeName(s) {
+    return String(s || '').trim().replace(/\s+/g, '_');
+  }
+
+  function genAutoSaveName() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const ts = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    const r = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const t = String((designTypeEl && designTypeEl.value) || 'efficient').toLowerCase();
+    return `sp_${t}_${ts}_${r}`;
+  }
+
+  function ensureAutoSaveName() {
+    if (!saveNameInput) return;
+    const v = String(saveNameInput.value || '').trim();
+    if (!v) saveNameInput.value = genAutoSaveName();
+  }
+
+  function parseLevels(csv) {
+    return String(csv || '')
+      .split(',')
+      .map((x) => x.trim())
+      .filter((x) => x.length > 0);
+  }
+
+  function isAscVar(varName) {
+    const n = String(varName || '').trim().toLowerCase();
+    return n === 'asc' || n === 'intercept';
+  }
+
+  function varRowHtml(v) {
+    return `
+      <div class="trip-row variable-row">
+        <div class="grid">
+          <div class="field">
+            <label>变量名</label>
+            <input data-key="name" value="${v.name || ''}" placeholder="如 time / cost / wait_time" />
+          </div>
+          <div class="field">
+            <label>参数默认值（先验）</label>
+            <input data-key="beta_default" type="number" step="0.01" value="${v.beta_default ?? 0}" />
+          </div>
+          <div class="field">
+            <label>参数估计下界（可选）</label>
+            <input data-key="beta_min" type="number" step="0.01" value="${v.beta_min ?? ''}" placeholder="如 -1.50" />
+          </div>
+          <div class="field">
+            <label>参数估计上界（可选）</label>
+            <input data-key="beta_max" type="number" step="0.01" value="${v.beta_max ?? ''}" placeholder="如 0.00" />
+          </div>
+          <div class="field">
+            <label>attribute levels（逗号分隔）</label>
+            <input data-key="levels_csv" value="${v.levels_csv || ''}" placeholder="如 20,30,40" />
+          </div>
+          <div class="field">
+            <label>变量描述（用于SP题面展示）</label>
+            <input data-key="description" value="${v.description || ''}" placeholder="如 出行时间（分钟）" />
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="removeVarBtn">删除变量</button>
+        </div>
+      </div>`;
+  }
+
+  function altCardHtml(alt, idx) {
+    return `
+      <article class="member-card alt-card" data-alt-index="${idx}">
+        <h3>选项 ${idx + 1}</h3>
+        <div class="grid">
+          <div class="field">
+            <label>选项名称</label>
+            <input data-key="alt_name" value="${alt.name || ''}" placeholder="如 car / pt / ebike" />
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="addVarBtn">+ 添加变量</button>
+          <button type="button" class="removeAltBtn">删除选项</button>
+        </div>
+        <div class="varsContainer"></div>
+      </article>`;
+  }
+
+  function bindAltCardEvents(card) {
+    const varsContainer = card.querySelector('.varsContainer');
+
+    card.querySelector('.addVarBtn').addEventListener('click', () => {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = varRowHtml({name: '', beta_default: 0, levels_csv: '', description: ''});
+      varsContainer.appendChild(wrap.firstElementChild);
+      bindVarEvents(card);
+      refreshComputed();
+    });
+
+    card.querySelector('.removeAltBtn').addEventListener('click', () => {
+      card.remove();
+      refreshComputed();
+    });
+
+    card.querySelector('[data-key="alt_name"]').addEventListener('input', () => {
+      refreshComputed();
+    });
+  }
+
+  function bindVarEvents(card) {
+    card.querySelectorAll('.variable-row').forEach((row) => {
+      const delBtn = row.querySelector('.removeVarBtn');
+      if (delBtn && delBtn.dataset.bound !== '1') {
+        delBtn.dataset.bound = '1';
+        delBtn.addEventListener('click', () => {
+          row.remove();
+          refreshComputed();
+        });
+      }
+      row.querySelectorAll('[data-key]').forEach((el) => {
+        if (el.dataset.boundInput === '1') return;
+        el.dataset.boundInput = '1';
+        el.addEventListener('input', refreshComputed);
+        el.addEventListener('change', refreshComputed);
+      });
+    });
+  }
+
+  function addAlternative(alt) {
+    const idx = alternativesContainer.querySelectorAll('.alt-card').length;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = altCardHtml(alt, idx);
+    const card = wrap.firstElementChild;
+    alternativesContainer.appendChild(card);
+
+    const varsContainer = card.querySelector('.varsContainer');
+    (alt.variables || []).forEach((v) => {
+      const vw = document.createElement('div');
+      vw.innerHTML = varRowHtml(v);
+      varsContainer.appendChild(vw.firstElementChild);
+    });
+
+    bindAltCardEvents(card);
+    bindVarEvents(card);
+    syncAltIndexTitles();
+    refreshComputed();
+  }
+
+  function syncAltIndexTitles() {
+    alternativesContainer.querySelectorAll('.alt-card').forEach((card, i) => {
+      card.dataset.altIndex = String(i);
+      const h3 = card.querySelector('h3');
+      if (h3) h3.textContent = `选项 ${i + 1}`;
+    });
+  }
+
+  function collectDesignSpec() {
+    const alternatives = [];
+    const spIntroText = String(document.getElementById('spIntroText').value || '').trim();
+    const conditionsText = String(document.getElementById('designConditions').value || '').trim();
+    const conditions = conditionsText
+      .split(/\n|;/)
+      .map((x) => x.trim())
+      .filter((x) => x.length > 0);
+    alternativesContainer.querySelectorAll('.alt-card').forEach((card) => {
+      const altName = safeName(card.querySelector('[data-key="alt_name"]').value);
+      const variables = [];
+      card.querySelectorAll('.variable-row').forEach((row) => {
+        const name = safeName(row.querySelector('[data-key="name"]').value);
+        if (!name) return;
+        if (isAscVar(name)) return;
+        const betaDefault = Number(row.querySelector('[data-key="beta_default"]').value || 0);
+        const betaMinRaw = String(row.querySelector('[data-key="beta_min"]').value || '').trim();
+        const betaMaxRaw = String(row.querySelector('[data-key="beta_max"]').value || '').trim();
+        const levelsRaw = row.querySelector('[data-key="levels_csv"]').value;
+        const description = String(row.querySelector('[data-key="description"]').value || '').trim();
+        const levels = parseLevels(levelsRaw);
+        variables.push({
+          name,
+          description,
+          beta_default: betaDefault,
+          beta_min: betaMinRaw === '' ? null : Number(betaMinRaw),
+          beta_max: betaMaxRaw === '' ? null : Number(betaMaxRaw),
+          levels,
+        });
+      });
+      if (altName) alternatives.push({name: altName, variables});
+    });
+    const firstAltName = alternatives.length ? safeName(alternatives[0].name) : '';
+    return {
+      alternatives,
+      asc_base_alternative: firstAltName,
+      sp_intro_text: spIntroText,
+      conditions,
+    };
+  }
+
+  function fillSavedConfigOptions(data) {
+    const names = Array.isArray(data && data.available_save_names)
+      ? data.available_save_names
+      : [];
+    const old = savedConfigSelect.value;
+    savedConfigSelect.innerHTML = '<option value="">请选择保存名</option>';
+    names.forEach((name) => {
+      const n = String(name || '').trim();
+      if (!n) return;
+      const op = document.createElement('option');
+      op.value = n;
+      op.textContent = n;
+      savedConfigSelect.appendChild(op);
+    });
+    const latest = String((data && (data.latest_save_name || data.save_name)) || '').trim();
+    if (old && names.includes(old)) {
+      savedConfigSelect.value = old;
+    } else if (latest && names.includes(latest)) {
+      savedConfigSelect.value = latest;
+    }
+  }
+
+  async function refreshSavedConfigList() {
+    if (isFile) return;
+    const res = await fetch('/api/design/spec');
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || '读取保存列表失败');
+    fillSavedConfigOptions(data);
+  }
+
+  function setFormFromPayload(payload) {
+    if (!payload || typeof payload !== 'object') return;
+    const spec = payload.design_spec || {};
+    const type = String(payload.design_type || 'efficient').toLowerCase();
+    designTypeEl.value = type;
+
+    document.getElementById('sampleSize').value = String(payload.sample_size || 600);
+    document.getElementById('spIntroText').value = String(spec.sp_intro_text || '');
+    document.getElementById('designConditions').value = Array.isArray(spec.conditions) ? spec.conditions.join('\n') : '';
+
+    if (type === 'efficient') {
+      const eff = (payload.design_options && payload.design_options.efficient) || {};
+      document.getElementById('efficientTasksPerPerson').value = String(eff.tasks_per_person || (payload.tasks_per_person_candidates || [8])[0] || 8);
+      document.getElementById('minBlockSample').value = String(payload.min_block_sample || 80);
+      document.getElementById('targetBlockSample').value = String(payload.target_block_sample || 100);
+      document.getElementById('efficientIterations').value = String(eff.row_exchange_iterations || 200);
+    } else if (type === 'dyppo') {
+      const mo = (payload.design_options && payload.design_options.dyppo) || {};
+      document.getElementById('mappoTasksPerRound').value = String(mo.tasks_per_round || (payload.tasks_per_person_candidates || [6])[0] || 6);
+      document.getElementById('mappoBatchSize').value = String(mo.batch_size || 16);
+      document.getElementById('mappoExploreEps').value = String(mo.explore_epsilon || 0.2);
+      document.getElementById('mappoRewardDerr').value = String(mo.reward_weight_d_error || 1.0);
+    } else if (type === 'selfattention') {
+      const so = (payload.design_options && payload.design_options.selfattention) || {};
+      document.getElementById('selfAttnTasksPerRound').value = String(so.tasks_per_round || (payload.tasks_per_person_candidates || [6])[0] || 6);
+      document.getElementById('selfAttnBatchSize').value = String(so.batch_size || 16);
+      document.getElementById('selfAttnExploreEps').value = String(so.explore_epsilon || 0.15);
+      document.getElementById('selfAttnWindowL').value = String(so.window_length || payload.sample_size || 600);
+    }
+
+    alternativesContainer.innerHTML = '';
+    const alts = Array.isArray(spec.alternatives) ? spec.alternatives : [];
+    if (!alts.length) {
+      addAlternative({ name: '', variables: [] });
+    } else {
+      alts.forEach((alt) => {
+        const vars = Array.isArray(alt.variables) ? alt.variables.map((v) => ({
+          name: v.name || '',
+          beta_default: v.beta_default ?? 0,
+          beta_min: v.beta_min ?? '',
+          beta_max: v.beta_max ?? '',
+          levels_csv: Array.isArray(v.levels) ? v.levels.join(',') : '',
+          description: v.description || '',
+        })) : [];
+        addAlternative({ name: alt.name || '', variables: vars });
+      });
+    }
+    syncDesignTypeUI();
+    refreshComputed();
+  }
+
+  async function loadConfigByName(saveName) {
+    if (isFile) {
+      const raw = localStorage.getItem('survey_sp_design_payload');
+      if (!raw) throw new Error('本地没有可加载的设计');
+      setFormFromPayload(JSON.parse(raw));
+      loadedFromSaveName = String(saveName || '').trim();
+      return;
+    }
+    const res = await fetch(`/api/design/spec?save_name=${encodeURIComponent(saveName)}`);
+    const data = await res.json();
+    if (!res.ok || data.error || !data.payload) throw new Error(data.error || '加载配置失败');
+    setFormFromPayload(data.payload);
+    loadedFromSaveName = String(data.save_name || saveName || '').trim();
+  }
+
+  function buildPayload() {
+    const sampleSize = Number(document.getElementById('sampleSize').value || 600);
+    const designType = String(designTypeEl.value || 'efficient');
+    const saveName = String(document.getElementById('saveName').value || '').trim();
+
+    let minBlockSample = Number(document.getElementById('minBlockSample').value || 80);
+    let targetBlockSample = Number(document.getElementById('targetBlockSample').value || 100);
+    let taskCandidates = [];
+    let designOptions = {};
+    if (designType === 'efficient') {
+      const t = Number(document.getElementById('efficientTasksPerPerson').value || 8);
+      taskCandidates = [Math.max(1, t)];
+      designOptions = {
+        efficient: {
+          tasks_per_person: Math.max(1, t),
+          row_exchange_iterations: Number(document.getElementById('efficientIterations').value || 200),
+        },
+      };
+    } else if (designType === 'dyppo') {
+      const t = Number(document.getElementById('mappoTasksPerRound').value || 6);
+      taskCandidates = [Math.max(1, t)];
+      minBlockSample = 1;
+      targetBlockSample = sampleSize;
+      designOptions = {
+        dyppo: {
+          tasks_per_round: Math.max(1, t),
+          batch_size: Number(document.getElementById('mappoBatchSize').value || 16),
+          explore_epsilon: Number(document.getElementById('mappoExploreEps').value || 0.2),
+          reward_weight_d_error: Number(document.getElementById('mappoRewardDerr').value || 1.0),
+        },
+      };
+    } else if (designType === 'selfattention') {
+      const t = Number(document.getElementById('selfAttnTasksPerRound').value || 6);
+      taskCandidates = [Math.max(1, t)];
+      minBlockSample = 1;
+      targetBlockSample = sampleSize;
+      designOptions = {
+        selfattention: {
+          tasks_per_round: Math.max(1, t),
+          batch_size: Number(document.getElementById('selfAttnBatchSize').value || 16),
+          explore_epsilon: Number(document.getElementById('selfAttnExploreEps').value || 0.15),
+          window_length: Number(document.getElementById('selfAttnWindowL').value || sampleSize || 600),
+          use_self_attention: true,
+        },
+      };
+    }
+
+    const spec = collectDesignSpec();
+    const levelCountByVariable = {};
+    const betaDefaults = {};
+    const betaBounds = {};
+    let nParameters = 0;
+
+    spec.alternatives.forEach((alt) => {
+      const ascKey = `${alt.name}.asc`;
+      betaDefaults[ascKey] = 0;
+      if (alt.name !== spec.asc_base_alternative) {
+        nParameters += 1;
+      }
+
+      alt.variables.forEach((v) => {
+        const key = `${alt.name}.${v.name}`;
+        betaDefaults[key] = v.beta_default;
+        betaBounds[key] = { min: v.beta_min, max: v.beta_max };
+        nParameters += 1;
+
+        if (v.levels.length > 0) {
+          levelCountByVariable[key] = v.levels.length;
+        }
+      });
+    });
+
+    return {
+      save_name: saveName || null,
+      sample_size: sampleSize,
+      design_type: designType,
+      design_options: designOptions,
+      n_parameters: nParameters,
+      min_block_sample: minBlockSample,
+      target_block_sample: targetBlockSample,
+      tasks_per_person_candidates: taskCandidates,
+      level_count_by_variable: levelCountByVariable,
+      beta_defaults: betaDefaults,
+      beta_bounds: betaBounds,
+      design_spec: spec,
+    };
+  }
+
+  function buildUtilityFormulaText(payload) {
+    const lines = [];
+    const spec = payload.design_spec || { alternatives: [], asc_base_alternative: '' };
+    const baseAlt = safeName(spec.asc_base_alternative);
+    const altNames = (spec.alternatives || []).map((x) => safeName(x.name)).filter((x) => x);
+
+    function fmtCoef(v) {
+      const n = Number(v);
+      if (Number.isNaN(n)) return String(v);
+      return n < 0 ? `(${n})` : String(n);
+    }
+
+    spec.alternatives.forEach((alt) => {
+      const altName = safeName(alt.name);
+      const ascTerms = altNames.map((name) => {
+        if (name === baseAlt) return `0*ASC_${name}`;
+        return `${name === altName ? 1 : 0}*ASC_${name}`;
+      });
+      const varTerms = [];
+
+      (alt.variables || []).forEach((v) => {
+        const varName = safeName(v.name);
+        if (!varName) return;
+        const betaKey = `${altName}.${varName}`;
+        const beta = payload.beta_defaults && payload.beta_defaults[betaKey] !== undefined
+          ? Number(payload.beta_defaults[betaKey])
+          : 0;
+        const levels = Array.isArray(v.levels) ? v.levels : [];
+        const levelExpr = `[${levels.map((x) => String(x)).join(',')}]`;
+        varTerms.push(`${fmtCoef(beta)}*${varName}${levelExpr}`);
+      });
+
+      const rhsParts = [...ascTerms, ...varTerms];
+      const rhs = rhsParts.length ? rhsParts.join(' + ') : '0';
+      lines.push(`U_${altName} = ${rhs}`);
+    });
+
+    if (!lines.length) return '请先添加选项和变量';
+    lines.push('');
+    lines.push(`ASC基准备选项: ${baseAlt || '(未设置)'}`);
+    lines.push('说明: 展示为完整ASC展开；估计时等价于(n-1)维one-hot*对应ASC（基准项固定0）。');
+    return lines.join('\n');
+  }
+
+  function maybeToNumber(v) {
+    const n = Number(v);
+    return Number.isNaN(n) ? v : n;
+  }
+
+  function buildPreviewTasks(payload, tasksPerPerson, blocks) {
+    const spec = payload.design_spec || {};
+    const alts = Array.isArray(spec.alternatives) ? spec.alternatives : [];
+    const tpp = Math.max(1, Number(tasksPerPerson || 1));
+    const b = Math.max(1, Number(blocks || 1));
+    const nTasks = tpp * b;
+    const tasks = [];
+
+    for (let t = 0; t < nTasks; t += 1) {
+      const block = Math.floor(t / tpp) + 1;
+      const rowInBlock = (t % tpp) + 1;
+      const alternatives = {};
+      alts.forEach((alt, altIdx) => {
+        const altName = safeName(alt.name);
+        if (!altName) return;
+        const attrs = {};
+        (alt.variables || []).forEach((v, varIdx) => {
+          const varName = safeName(v.name);
+          const levels = Array.isArray(v.levels) ? v.levels : [];
+          if (!varName || !levels.length) return;
+          const lv = levels[(t + altIdx + varIdx) % levels.length];
+          attrs[varName] = maybeToNumber(lv);
+        });
+        alternatives[altName] = attrs;
+      });
+      tasks.push({
+        id: `preview_b${block}_r${rowInBlock}`,
+        block,
+        row_in_block: rowInBlock,
+        alternatives,
+      });
+    }
+    return tasks;
+  }
+
+  function renderComboTable(tasks, extra = {}) {
+    const taskList = Array.isArray(tasks) ? tasks : [];
+    if (!taskList.length) return '尚未生成comb';
+    const esc = (v) => String(v == null ? '' : v)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;');
+    const modeSet = new Set();
+    taskList.forEach((t) => {
+      Object.keys((t && t.alternatives) || {}).forEach((m) => modeSet.add(m));
+    });
+    const modes = Array.from(modeSet);
+    let html = '<div class="meta">';
+    html += `rows=${taskList.length}`;
+    if (Object.keys(extra || {}).length) {
+      html += '；' + Object.entries(extra).map(([k, v]) => `${esc(k)}=${esc(typeof v === 'object' ? JSON.stringify(v) : v)}`).join('；');
+    }
+    html += '</div>';
+    html += '<table><thead><tr><th>row</th><th>block</th><th>row_in_block</th>';
+    modes.forEach((m) => { html += `<th>${esc(m)}</th>`; });
+    html += '</tr></thead><tbody>';
+    taskList.forEach((task, idx) => {
+      html += '<tr>';
+      html += `<td>${idx + 1}</td>`;
+      html += `<td>${esc(task.block || 1)}</td>`;
+      html += `<td>${esc(task.row_in_block || (idx + 1))}</td>`;
+      modes.forEach((m) => {
+        const attrs = (task.alternatives && task.alternatives[m]) || {};
+        const txt = Object.entries(attrs).map(([k, v]) => `${k}=${v}`).join(', ');
+        html += `<td>${esc(txt)}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+
+  function persistPreviewBundle(payload, recommendation, computedTasks = null) {
+    const tasksPerPerson = Number(
+      (recommendation && recommendation.tasks_per_person) ||
+      payload.tasks_per_person_candidates[0] ||
+      1,
+    );
+    const blocks = Number((recommendation && recommendation.blocks) || 1);
+    const tasks = Array.isArray(computedTasks) && computedTasks.length
+      ? computedTasks
+      : buildPreviewTasks(payload, tasksPerPerson, blocks);
+    const bundle = {
+      created_at: new Date().toISOString(),
+      recommendation,
+      payload,
+      tasks,
+    };
+    localStorage.setItem('survey_sp_design_payload', JSON.stringify(payload));
+    localStorage.setItem('survey_sp_preview_bundle', JSON.stringify(bundle));
+    viewGeneratedSpBtn.style.display = 'inline-flex';
+    return bundle;
+  }
+
+  async function saveDesignBundleToServer(bundle) {
+    const saveName = String(document.getElementById('saveName').value || '').trim();
+    if (!saveName) throw new Error('请先填写保存名（配置文件名称）');
+    const fromName = String(loadedFromSaveName || '').trim();
+    const isCopyFromHistory = !!fromName && fromName !== saveName;
+    const listRes = await fetch('/api/design/spec');
+    const listData = await listRes.json();
+    if (!listRes.ok || listData.error) {
+      throw new Error(listData.error || '读取保存名列表失败');
+    }
+    const names = Array.isArray(listData.available_save_names) ? listData.available_save_names : [];
+    if (names.includes(saveName) && saveName !== fromName) {
+      throw new Error(`保存名“${saveName}”已存在，请重命名后再保存`);
+    }
+    const res = await fetch('/api/design/spec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        save_name: saveName,
+        source_save_name: fromName || null,
+        inherit_model_weights: Boolean(isCopyFromHistory && bundle && bundle.payload && (bundle.payload.design_type === 'dyppo' || bundle.payload.design_type === 'selfattention')),
+        payload: bundle.payload,
+        recommendation: bundle.recommendation,
+        preview_tasks: bundle.tasks,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      throw new Error(data.error || '保存设计到服务器失败');
+    }
+    loadedFromSaveName = saveName;
+    return data;
+  }
+
+  function showSaveAlert(saveOk, metaOrErr) {
+    if (saveOk) {
+      const n = metaOrErr && metaOrErr.save_name ? metaOrErr.save_name : '';
+      const replaced = metaOrErr && metaOrErr.replaced;
+      const actionText = replaced ? '已覆盖更新' : '已保存';
+      alert(`计算完成，配置${actionText}：${n}`);
+    } else {
+      alert(`计算完成，但保存失败：${String(metaOrErr || '')}`);
+    }
+  }
+
+  function validatePayloadForSubmit(payload) {
+    const spec = (payload && payload.design_spec) || {};
+    const alts = Array.isArray(spec.alternatives) ? spec.alternatives : [];
+    if (alts.length < 2) return '至少需要2个选项（alternatives）';
+    const nameSet = new Set();
+    for (const alt of alts) {
+      const altName = safeName(alt && alt.name);
+      if (!altName) return '存在未命名选项，请先补全选项名称';
+      if (nameSet.has(altName)) return `选项名称重复：${altName}`;
+      nameSet.add(altName);
+      const vars = Array.isArray(alt && alt.variables) ? alt.variables : [];
+      if (vars.length < 1) return `选项 ${altName} 至少需要1个变量`;
+      for (const v of vars) {
+        const varName = safeName(v && v.name);
+        if (!varName) return `选项 ${altName} 存在未命名变量`;
+        const levels = Array.isArray(v && v.levels) ? v.levels : [];
+        if (levels.length < 1) return `选项 ${altName} 变量 ${varName} 至少需要1个attribute level`;
+      }
+    }
+    if (Number(payload.sample_size || 0) <= 0) return 'sample_size必须大于0';
+    if (Number(payload.n_parameters || 0) <= 0) return 'n_parameters必须大于0';
+    if (payload.design_type === 'efficient') {
+      const eff = (payload.design_options && payload.design_options.efficient) || {};
+      if (Number(eff.tasks_per_person || 0) < 1) return 'efficient.tasks_per_person必须>=1';
+      if (Number(eff.row_exchange_iterations || 0) < 1) return 'efficient.row_exchange_iterations必须>=1';
+    }
+    if (payload.design_type === 'dyppo') {
+      const mo = (payload.design_options && payload.design_options.dyppo) || {};
+      const eps = Number(mo.explore_epsilon);
+      if (Number(mo.tasks_per_round || 0) < 1) return 'dynamicPPO(dyppo).tasks_per_round必须>=1';
+      if (!Number.isFinite(eps) || eps < 0 || eps > 1) return 'dynamicPPO(dyppo).explore_epsilon必须在[0,1]';
+    }
+    if (payload.design_type === 'selfattention') {
+      const so = (payload.design_options && payload.design_options.selfattention) || {};
+      const eps = Number(so.explore_epsilon);
+      if (Number(so.tasks_per_round || 0) < 1) return 'selfattention.tasks_per_round必须>=1';
+      if (!Number.isFinite(eps) || eps < 0 || eps > 1) return 'selfattention.explore_epsilon必须在[0,1]';
+      if (Number(so.window_length || 0) < 1) return 'selfattention.window_length必须>=1';
+    }
+    return '';
+  }
+
+  function showLoading(text) {
+    if (loadingMask) return;
+    const mask = document.createElement('div');
+    mask.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+    const box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border:1px solid #d6e1ee;border-radius:10px;min-width:280px;padding:14px;';
+    box.innerHTML = `<div style="font-weight:700;margin-bottom:8px;">计算中</div><div style="margin-bottom:8px;">${text || '请稍候...'}</div><div style="height:8px;background:#eef3f8;border-radius:999px;overflow:hidden;"><div style="width:100%;height:100%;background:#2b6cb0;animation:spLoadPulse 1.2s ease-in-out infinite;"></div></div>`;
+    const style = document.createElement('style');
+    style.id = 'spLoadPulseStyle';
+    style.textContent = '@keyframes spLoadPulse{0%{transform:translateX(-60%)}50%{transform:translateX(10%)}100%{transform:translateX(120%)}}';
+    document.head.appendChild(style);
+    mask.appendChild(box);
+    document.body.appendChild(mask);
+    loadingMask = mask;
+  }
+
+  function hideLoading() {
+    if (loadingMask) loadingMask.remove();
+    loadingMask = null;
+    const style = document.getElementById('spLoadPulseStyle');
+    if (style) style.remove();
+  }
+
+  async function runComputeAndPoll(payload) {
+    if (isFile) {
+      const t = payload.tasks_per_person_candidates[0] || 8;
+      const blocks = (payload.design_type === 'dyppo' || payload.design_type === 'selfattention')
+        ? 1
+        : Math.max(1, Math.round(payload.sample_size / Math.max(1, payload.target_block_sample)));
+      const rows = t * blocks;
+      const tasks = buildPreviewTasks(payload, t, blocks);
+      return {
+        mode: (payload.design_type === 'dyppo' || payload.design_type === 'selfattention') ? 'dyppo_compute_file' : 'efficient_compute_file',
+        recommendation: { tasks_per_person: t, blocks, rows },
+        comb: tasks,
+        d_error: { value: null, beta_draws: null },
+        iteration_log: [],
+        model_state: null,
+      };
+    }
+    const create = await fetch('/api/design/compute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const createData = await create.json();
+    if (!create.ok || createData.error || !createData.job_id) {
+      throw new Error(createData.error || '提交计算任务失败');
+    }
+    const jobId = createData.job_id;
+    const statusUrl = createData.status_url || `/api/design/compute/${encodeURIComponent(jobId)}`;
+    let resultUrl = `/api/design/compute/${encodeURIComponent(jobId)}/result`;
+    for (let i = 0; i < 240; i += 1) {
+      await new Promise((r) => setTimeout(r, 500));
+      const res = await fetch(statusUrl);
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || '读取计算进度失败');
+      }
+      if (data.result_url) resultUrl = data.result_url;
+      if (data.status === 'done') {
+        const rr = await fetch(resultUrl);
+        const rd = await rr.json();
+        if (!rr.ok || rd.error) throw new Error(rd.error || '拉取计算结果失败');
+        return rd || {};
+      }
+      if (data.status === 'failed') throw new Error(data.error || '计算失败');
+    }
+    throw new Error('计算超时，请重试');
+  }
+
+  function refreshComputed() {
+    syncAltIndexTitles();
+    const payload = buildPayload();
+    paramCountAuto.value = String(payload.n_parameters);
+    configPreview.textContent = JSON.stringify(payload, null, 2);
+    utilityPreview.textContent = buildUtilityFormulaText(payload);
+    localStorage.setItem('survey_sp_design_payload', JSON.stringify(payload));
+  }
+
+  function syncDesignTypeUI() {
+    const t = String(designTypeEl.value || 'efficient');
+    document.getElementById('efficientOptions').classList.toggle('hidden', t !== 'efficient');
+    document.getElementById('mappoOptions').classList.toggle('hidden', t !== 'dyppo');
+    document.getElementById('selfAttentionOptions').classList.toggle('hidden', t !== 'selfattention');
+  }
+
+  function loadDefaults() {
+    alternativesContainer.innerHTML = '';
+    addAlternative({ name: '', variables: [] });
+    loadedFromSaveName = '';
+    ensureAutoSaveName();
+    refreshComputed();
+  }
+
+  document.getElementById('addAltBtn').addEventListener('click', () => {
+    addAlternative({ name: '', variables: [] });
+  });
+
+  document.getElementById('buildDefaultsBtn').addEventListener('click', loadDefaults);
+  document.getElementById('refreshSavedConfigsBtn').addEventListener('click', async () => {
+    try {
+      await refreshSavedConfigList();
+    } catch (e) {
+      alert(String(e && e.message ? e.message : e));
+    }
+  });
+  document.getElementById('loadSavedConfigBtn').addEventListener('click', async () => {
+    const name = String(savedConfigSelect.value || '').trim();
+    if (!name) {
+      alert('请先选择保存名');
+      return;
+    }
+    try {
+      await loadConfigByName(name);
+      alert(`已加载配置：${name}`);
+    } catch (e) {
+      alert(String(e && e.message ? e.message : e));
+    }
+  });
+  designTypeEl.addEventListener('change', () => {
+    syncDesignTypeUI();
+    refreshComputed();
+  });
+  document.getElementById('spIntroText').addEventListener('input', refreshComputed);
+  document.getElementById('designConditions').addEventListener('input', refreshComputed);
+  ['efficientTasksPerPerson','minBlockSample','targetBlockSample','efficientIterations','mappoTasksPerRound','mappoBatchSize','mappoExploreEps','mappoRewardDerr','selfAttnTasksPerRound','selfAttnBatchSize','selfAttnExploreEps','selfAttnWindowL']
+    .forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', refreshComputed);
+    });
+
+  document.getElementById('recommendBtn').addEventListener('click', async () => {
+    const payload = buildPayload();
+    if (!payload.tasks_per_person_candidates.length) {
+      alert('每人题数不能为空');
+      return;
+    }
+    if (payload.n_parameters <= 0) {
+      alert('参数数量K必须大于0，请检查变量与ASC设置');
+      return;
+    }
+    const validErr = validatePayloadForSubmit(payload);
+    if (validErr) {
+      alert(validErr);
+      return;
+    }
+
+    configPreview.textContent = JSON.stringify(payload, null, 2);
+    showLoading((payload.design_type === 'dyppo' || payload.design_type === 'selfattention') ? '正在按RL配置生成题组与参数...' : '正在按Efficient配置生成题组与参数...');
+
+    try {
+      const computeOut = await runComputeAndPoll(payload);
+      const recommendation = computeOut && computeOut.recommendation ? computeOut.recommendation : null;
+      const comb = Array.isArray(computeOut && computeOut.comb) ? computeOut.comb : [];
+      const bundle = persistPreviewBundle(payload, recommendation, comb);
+      result.innerHTML = renderComboTable(bundle.tasks, {
+        mode: computeOut && computeOut.mode ? computeOut.mode : payload.design_type,
+        tasks_per_person: recommendation && recommendation.tasks_per_person,
+        rows: recommendation && recommendation.rows,
+        blocks: recommendation && recommendation.blocks,
+        d_error: computeOut && computeOut.d_error ? computeOut.d_error.value : null,
+      });
+      if (!isFile) {
+        try {
+          const saved = await saveDesignBundleToServer(bundle);
+          showSaveAlert(true, saved);
+        } catch (e) {
+          showSaveAlert(false, String(e && e.message ? e.message : e));
+        }
+      } else {
+        alert('计算完成，已保存到本地预览缓存');
+      }
+    } finally {
+      hideLoading();
+    }
+  });
+
+  syncDesignTypeUI();
+  ensureAutoSaveName();
+  loadDefaults();
+  if (!isFile) {
+    refreshSavedConfigList().catch(() => {});
+  }
+  bindCollapsible('utilityPreviewToggle', 'utilityPreviewWrap', '实时 Utility 公式预览');
+  bindCollapsible('configPreviewToggle', 'configPreviewWrap', '提交参数摘要');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+{
+  "respondent_id": "R_TEST_PPO2",
+  "created_at": "2026-03-24T03:49:07.846830+00:00",
+  "updated_at": "2026-03-24T03:49:07.846830+00:00",
+  "profile": null,
+  "trip_diary": null,
+  "sp": {
+    "submissions": [
+      {
+        "submission_id": "sp_0c18fa3c56d7",
+        "assignment_id": "ASSIGN_TEST_PPO2",
+        "respondent_id": "R_TEST_PPO2",
+        "design_save_name": "ppo_test_design",
+        "choices": {
+          "preview_b1_r1": "car",
+          "preview_b1_r2": "car",
+          "preview_b1_r3": "car"
+        },
+        "choice_details": [
+          {
+            "task_id": "preview_b1_r1",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "cost": 3,
+              "time": 30
+            },
+            "alternatives": {
+              "car": {
+                "cost": 3,
+                "time": 30
+              },
+              "pt": {
+                "cost": 2,
+                "time": 12
+              }
+            }
+          },
+          {
+            "task_id": "preview_b1_r2",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "cost": 4,
+              "time": 30
+            },
+            "alternatives": {
+              "car": {
+                "cost": 4,
+                "time": 30
+              },
+              "pt": {
+                "cost": 3,
+                "time": 28
+              }
+            }
+          },
+          {
+            "task_id": "preview_b1_r3",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "cost": 4,
+              "time": 10
+            },
+            "alternatives": {
+              "car": {
+                "cost": 4,
+                "time": 10
+              },
+              "pt": {
+                "cost": 2,
+                "time": 12
+              }
+            }
+          }
+        ],
+        "tasks": [
+          {
+            "alternatives": {
+              "car": {
+                "cost": 3,
+                "time": 30
+              },
+              "pt": {
+                "cost": 2,
+                "time": 12
+              }
+            },
+            "block": 1,
+            "id": "preview_b1_r1",
+            "row_in_block": 1,
+            "sig": "dc283d4156b523cd"
+          },
+          {
+            "alternatives": {
+              "car": {
+                "cost": 4,
+                "time": 30
+              },
+              "pt": {
+                "cost": 3,
+                "time": 28
+              }
+            },
+            "block": 1,
+            "id": "preview_b1_r2",
+            "row_in_block": 2,
+            "sig": "32142e563c12b107"
+          },
+          {
+            "alternatives": {
+              "car": {
+                "cost": 4,
+                "time": 10
+              },
+              "pt": {
+                "cost": 2,
+                "time": 12
+              }
+            },
+            "block": 1,
+            "id": "preview_b1_r3",
+            "row_in_block": 3,
+            "sig": "44e427ad6a07a20a"
+          }
+        ],
+        "submitted_at": "2026-03-24T03:49:07.846765+00:00"
+      }
+    ],
+    "last_response": {
+      "submission_id": "sp_0c18fa3c56d7",
+      "assignment_id": "ASSIGN_TEST_PPO2",
+      "respondent_id": "R_TEST_PPO2",
+      "design_save_name": "ppo_test_design",
+      "choices": {
+        "preview_b1_r1": "car",
+        "preview_b1_r2": "car",
+        "preview_b1_r3": "car"
+      },
+      "choice_details": [
+        {
+          "task_id": "preview_b1_r1",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "cost": 3,
+            "time": 30
+          },
+          "alternatives": {
+            "car": {
+              "cost": 3,
+              "time": 30
+            },
+            "pt": {
+              "cost": 2,
+              "time": 12
+            }
+          }
+        },
+        {
+          "task_id": "preview_b1_r2",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "cost": 4,
+            "time": 30
+          },
+          "alternatives": {
+            "car": {
+              "cost": 4,
+              "time": 30
+            },
+            "pt": {
+              "cost": 3,
+              "time": 28
+            }
+          }
+        },
+        {
+          "task_id": "preview_b1_r3",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "cost": 4,
+            "time": 10
+          },
+          "alternatives": {
+            "car": {
+              "cost": 4,
+              "time": 10
+            },
+            "pt": {
+              "cost": 2,
+              "time": 12
+            }
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "alternatives": {
+            "car": {
+              "cost": 3,
+              "time": 30
+            },
+            "pt": {
+              "cost": 2,
+              "time": 12
+            }
+          },
+          "block": 1,
+          "id": "preview_b1_r1",
+          "row_in_block": 1,
+          "sig": "dc283d4156b523cd"
+        },
+        {
+          "alternatives": {
+            "car": {
+              "cost": 4,
+              "time": 30
+            },
+            "pt": {
+              "cost": 3,
+              "time": 28
+            }
+          },
+          "block": 1,
+          "id": "preview_b1_r2",
+          "row_in_block": 2,
+          "sig": "32142e563c12b107"
+        },
+        {
+          "alternatives": {
+            "car": {
+              "cost": 4,
+              "time": 10
+            },
+            "pt": {
+              "cost": 2,
+              "time": 12
+            }
+          },
+          "block": 1,
+          "id": "preview_b1_r3",
+          "row_in_block": 3,
+          "sig": "44e427ad6a07a20a"
+        }
+      ],
+      "submitted_at": "2026-03-24T03:49:07.846765+00:00"
+    }
+  }
+}

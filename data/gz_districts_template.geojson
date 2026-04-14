@@ -1,0 +1,133 @@
+{
+  "type": "FeatureCollection",
+  "name": "guangzhou_districts_template",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440103",
+        "zone_name": "Liwan",
+        "zone_name_cn": "荔湾区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440104",
+        "zone_name": "Yuexiu",
+        "zone_name_cn": "越秀区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440105",
+        "zone_name": "Haizhu",
+        "zone_name_cn": "海珠区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440106",
+        "zone_name": "Tianhe",
+        "zone_name_cn": "天河区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440111",
+        "zone_name": "Baiyun",
+        "zone_name_cn": "白云区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440112",
+        "zone_name": "Huangpu",
+        "zone_name_cn": "黄埔区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440113",
+        "zone_name": "Panyu",
+        "zone_name_cn": "番禺区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440114",
+        "zone_name": "Huadu",
+        "zone_name_cn": "花都区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440115",
+        "zone_name": "Nansha",
+        "zone_name_cn": "南沙区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440117",
+        "zone_name": "Conghua",
+        "zone_name_cn": "从化区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zone_id": "440118",
+        "zone_name": "Zengcheng",
+        "zone_name_cn": "增城区",
+        "level": "district",
+        "city": "Guangzhou"
+      },
+      "geometry": null
+    }
+  ]
+}

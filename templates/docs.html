@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>算法文档</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">城市居民出行调查<sup>V-0.01:20260309</sup></div>
+      <nav class="nav-links">
+        <a data-page="index">首页</a>
+        <a data-page="profile">1 基础信息</a>
+        <a data-page="trip">2 日常出行</a>
+        <a data-page="sp">3 出行意向调查</a>
+        <a data-page="design">4 SP设计</a>
+        <a data-page="overview">查看收集情况</a>
+        <a data-page="docs">算法文档</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container docs-layout">
+    <aside class="card docs-sidebar">
+      <h2>文档目录</h2>
+      <p class="hint">本页会在刷新时直接读取 `docs` 目录下的 Markdown 内容，并支持 LaTeX 公式渲染。</p>
+      <div class="hint" style="margin-top:12px;">
+        已补充本项目里 encoder-decoder + PPO 的训练闭环说明：
+        `state / action / reward / rollout / GAE / PPO-clip`。
+      </div>
+      <div class="hint" style="margin-top:8px;">
+        当前文档也同步补充了：`adjusted pseudo R^2` 的 block 级奖励接入方式，以及参数估计越界后的惩罚与候选题降权逻辑。
+      </div>
+      <div class="docs-toc">
+        {% for doc in docs %}
+        <a class="docs-toc-link" href="#{{ doc.anchor }}">
+          <span class="docs-toc-title">{{ doc.title }}</span>
+          <span class="docs-toc-meta">{{ doc.name }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <section class="docs-main">
+      {% if docs %}
+        {% for doc in docs %}
+        <article class="card doc-article" id="{{ doc.anchor }}">
+          <div class="doc-header">
+            <div class="doc-badge">{{ doc.name }}</div>
+            <div class="doc-updated">更新于 {{ doc.updated_at }}</div>
+          </div>
+          <div class="doc-content">{{ doc.html | safe }}</div>
+        </article>
+        {% endfor %}
+      {% else %}
+        <section class="card">
+          <h2>暂无文档</h2>
+          <p>当前 `docs` 目录下没有可展示的 Markdown 文件。</p>
+        </section>
+      {% endif %}
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const isFile = location.protocol === 'file:';
+      const currentPage = 'docs';
+      const routes = isFile
+        ? {
+            index: 'index.html', profile: 'profile.html', trip: 'trip_diary.html',
+            sp: 'sp_questionnaire.html', design: 'sp_design.html', map: 'web_map.html',
+            overview: 'collection_dashboard.html', docs: 'docs.html'
+          }
+        : {
+            index: '/', profile: '/survey/profile', trip: '/survey/trip-diary',
+            sp: '/survey/sp', design: '/survey/sp-design', map: '/survey/map',
+            overview: '/survey/collection-dashboard', docs: '/survey/docs'
+          };
+      document.querySelectorAll('[data-page]').forEach((a) => {
+        a.setAttribute('href', routes[a.dataset.page]);
+        a.classList.toggle('is-active', a.dataset.page === currentPage);
+      });
+    })();
+  </script>
+</body>
+</html>

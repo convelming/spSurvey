@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>地图定位</title><link id="appCss" rel="stylesheet" href="/static/style.css" /><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" /><script>if(location.protocol==='file:'){document.addEventListener('DOMContentLoaded',()=>{document.getElementById('appCss').href='../static/style.css';});}</script>
+<style>
+html, body { height: 100%; margin: 0; }
+body { overflow: hidden; }
+.map-page { position: relative; width: 100vw; height: 100vh; }
+#map { width: 100%; height: 100%; }
+.map-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 500;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255,255,255,0.94);
+  border: 1px solid #d4deea;
+  border-radius: 10px;
+}
+.map-overlay input {
+  width: 15em;
+  min-width: 15em;
+  max-width: 15em;
+  min-height: 40px;
+}
+.map-overlay button { min-height: 40px; white-space: nowrap; }
+@media (max-width: 768px) {
+  .map-overlay {
+    left: 12px;
+    right: 12px;
+    flex-wrap: wrap;
+  }
+  .map-overlay input {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .map-overlay button { flex: 1; }
+}
+</style>
+</head>
+<body>
+<main class="map-page">
+  <div id="map"></div>
+  <div class="map-overlay">
+    <input id="searchBox" placeholder="输入地址或地名" />
+    <button id="searchBtn" type="button">搜索</button>
+    <button id="confirmBtn" type="button">确认并回填</button>
+  </div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function(){
+// Map provider switch (comment/uncomment to choose):
+//const MAP_PROVIDER = 'osm';
+const MAP_PROVIDER = 'amap';
+// AMap key for geocoding search (only used when MAP_PROVIDER='amap').
+// You can replace this literal, or set window.AMAP_KEY / localStorage('survey_amap_key').
+//const AMAP_KEY_FALLBACK = 'bfb3a12be845c3ca36a1cc7db851ad10';
+const AMAP_KEY_FALLBACK = 'fde2ade9f7929ff8abf0b7917e31cafc'; //子公司
+
+const map=L.map('map').setView([23.14,113.27],12);
+let tileLayer=null;
+if (MAP_PROVIDER === 'amap') {
+  tileLayer=L.tileLayer(
+    'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+    {
+      subdomains: ['1', '2', '3', '4'],
+      maxZoom: 19,
+      attribution: '&copy; AMap'
+    }
+  );
+} else {
+  tileLayer=L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }
+  );
+}
+tileLayer.addTo(map);
+tileLayer.on('tileerror', (e) => console.log('tileerror', e));
+
+const ctxRaw=localStorage.getItem('survey_map_picker_context');
+const pickerCtx=ctxRaw?JSON.parse(ctxRaw):null;
+const AMAP_KEY = (window.AMAP_KEY || localStorage.getItem('survey_amap_key') || AMAP_KEY_FALLBACK).trim();
+
+let selected=null;
+let currentLayer=null;
+
+function clearLayer(){ if(currentLayer){ map.removeLayer(currentLayer); currentLayer=null; } }
+function drawPoint(lat,lng,label){
+  const coordLabel = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  const finalLabel = (label && label.trim()) ? label : coordLabel;
+  clearLayer();
+  currentLayer=L.marker([lat,lng]).addTo(map).bindPopup(finalLabel);
+  selected={type:'point',lat,lng,label:finalLabel,value:`POINT(${lat.toFixed(6)},${lng.toFixed(6)})`};
+}
+
+map.on('click',(e)=>{ drawPoint(e.latlng.lat,e.latlng.lng,''); });
+
+document.getElementById('searchBtn').addEventListener('click',async()=>{
+  const q=document.getElementById('searchBox').value.trim();
+  if(!q) return;
+  if (MAP_PROVIDER === 'amap') {
+    if(!AMAP_KEY){
+      // Ignore geocode when key is not configured.
+      return;
+    }
+    const url=`https://restapi.amap.com/v3/geocode/geo?key=${encodeURIComponent(AMAP_KEY)}&address=${encodeURIComponent(q)}`;
+    const res=await fetch(url); const data=await res.json();
+    const geocodes = data && Array.isArray(data.geocodes) ? data.geocodes : [];
+    if(!geocodes.length || !geocodes[0].location){ return; }
+    const first=geocodes[0];
+    const parts = String(first.location).split(',');
+    const lng=Number(parts[0]), lat=Number(parts[1]);
+    if(!Number.isFinite(lat) || !Number.isFinite(lng)){ return; }
+    map.setView([lat,lng],15);
+    drawPoint(lat,lng,first.formatted_address||q);
+    return;
+  }
+
+  const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}`;
+  const res=await fetch(url); const data=await res.json();
+  if(!data.length){ alert('未搜索到结果'); return; }
+  const first=data[0];
+  const lat=Number(first.lat), lng=Number(first.lon);
+  if(!Number.isFinite(lat) || !Number.isFinite(lng)){ alert('搜索结果坐标异常'); return; }
+  map.setView([lat,lng],15);
+  drawPoint(lat,lng,first.display_name||q);
+});
+
+document.getElementById('confirmBtn').addEventListener('click',()=>{
+  if(!selected){ alert('请先在地图上点选坐标'); return; }
+  const payload={
+    targetId: pickerCtx && pickerCtx.targetId ? pickerCtx.targetId : null,
+    value: selected.value,
+    label: selected.value,
+    geometry: selected,
+    at: new Date().toISOString(),
+  };
+  localStorage.setItem('survey_map_picker_result', JSON.stringify(payload));
+  if(pickerCtx && pickerCtx.returnPage){
+    const to=pickerCtx.returnPage;
+    localStorage.removeItem('survey_map_picker_context');
+    location.href=to;
+  } else {
+    alert('已回填到本地缓存，可返回来源页面');
+  }
+});
+
+})();
+</script>
+</body></html>

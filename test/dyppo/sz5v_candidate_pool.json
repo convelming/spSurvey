@@ -1,0 +1,1223 @@
+{
+  "design_save_name": "sp_efficient_20260324_175903_SZ5V",
+  "candidate_pool_size": 81,
+  "expert_preview_size": 8,
+  "overlap_with_expert": 8,
+  "candidate_pool": [
+    {
+      "idx": 1,
+      "sig": "a3c6a4ddd5a7dc72",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 2,
+      "sig": "cf4a31d39d722fb3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 3,
+      "sig": "3349601e2032e2e8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 4,
+      "sig": "b69c4bbe05455720",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 5,
+      "sig": "6101896f5a6c34d3",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 6,
+      "sig": "afdbe107c16552a8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 7,
+      "sig": "610e83fb2858edda",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 8,
+      "sig": "f9d27a90d3cbe207",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 9,
+      "sig": "5f3237de10d281d2",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 10,
+      "sig": "609043f9920a6d14",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 11,
+      "sig": "9785a5d2dc94d6c5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 12,
+      "sig": "fe7a3a03ec3edccf",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 13,
+      "sig": "ca052608fbeac71f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 14,
+      "sig": "a68cef1249bf0e5d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 15,
+      "sig": "5c22c96738d016f0",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 16,
+      "sig": "c95072371c60556c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 17,
+      "sig": "0d75bd01ef368bc1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 18,
+      "sig": "a34594ca1e7ec542",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 19,
+      "sig": "bf4eb1998064755d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 20,
+      "sig": "33556732ef66c042",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 21,
+      "sig": "62514e35d346f6a5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 22,
+      "sig": "c21fe4afe42cbe09",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 23,
+      "sig": "a0ae669157f60ca6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 24,
+      "sig": "25f770a77e49ecbe",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 25,
+      "sig": "7f4992b7cf001fb8",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 26,
+      "sig": "6b944c15ffdf7f32",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 27,
+      "sig": "636d88def506003d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 28,
+      "sig": "ffe0bf241fbc0a04",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 29,
+      "sig": "28c4caa224a5e836",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 30,
+      "sig": "d5bdd621b4ef0c9c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 31,
+      "sig": "9fa1a88f4b3575a8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 32,
+      "sig": "cefa25be4e4a0527",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 33,
+      "sig": "7fdd29d27f76a05c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 34,
+      "sig": "306338e94c2751f8",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 35,
+      "sig": "536dd760ae93290f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 36,
+      "sig": "27e800a4a22dfa55",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 37,
+      "sig": "e3a384b792813361",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 38,
+      "sig": "e853e18b7cd564b5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 39,
+      "sig": "08c5cbfa9b1ad860",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 40,
+      "sig": "46dd02da763855cd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 41,
+      "sig": "751bc5ef61e97002",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 42,
+      "sig": "1b41d1aa7f3472e0",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 43,
+      "sig": "40f2ef319ea74c94",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 44,
+      "sig": "8445f5a7e0d41033",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 45,
+      "sig": "183a70243ac5f8ac",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 46,
+      "sig": "3079ebe86f803cd8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 47,
+      "sig": "4c4cc39dccabc17d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 48,
+      "sig": "9765af826a10351b",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 49,
+      "sig": "3f6d6730f9199410",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 50,
+      "sig": "a278a9e9c92703e5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 51,
+      "sig": "027fccf46e7584c7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 52,
+      "sig": "e898b44ec655d0cc",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 53,
+      "sig": "843e7e082d780759",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 54,
+      "sig": "14c85fd4d52429be",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 55,
+      "sig": "1efe0f7e1539790c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 56,
+      "sig": "0be6537435159bdd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 57,
+      "sig": "e14b5a72491e442a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 58,
+      "sig": "916ead7f11014d35",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 59,
+      "sig": "7cd4f5d83064e9c2",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 60,
+      "sig": "3d995994bf8ba171",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 61,
+      "sig": "62a2d8df135adf85",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 62,
+      "sig": "28c7d55ea3ea5d12",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 63,
+      "sig": "79c32d37ebf05f7a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 64,
+      "sig": "b4c6a9f76de77a25",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 65,
+      "sig": "e02a6123a458a592",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 66,
+      "sig": "bbc82ea8a18b31e9",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 67,
+      "sig": "d3a3707480904b13",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 68,
+      "sig": "3dd96dcbb516f967",
+      "is_in_expert_preview": true,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 69,
+      "sig": "135320d4b43c4f57",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 70,
+      "sig": "760d33655ed1f6a8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 71,
+      "sig": "00ac6547a13b5d85",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 72,
+      "sig": "9fd049a053c90985",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "20",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 73,
+      "sig": "ab701c5b5dd40ae5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 74,
+      "sig": "eebfd043bd946eca",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 75,
+      "sig": "98f10e3ef3ade8a3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 76,
+      "sig": "de22100adf6fba58",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "28",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 77,
+      "sig": "cb8758d6c3ae8f0d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "3"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    },
+    {
+      "idx": 78,
+      "sig": "31ec6daf7279bc7a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "3"
+        }
+      }
+    },
+    {
+      "idx": 79,
+      "sig": "dc7cc02955c0d4b1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 80,
+      "sig": "4babe43075480a8d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "30",
+          "cost": "2"
+        },
+        "pt": {
+          "time": "18",
+          "cost": "1"
+        }
+      }
+    },
+    {
+      "idx": 81,
+      "sig": "e6e476655c36e7ee",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "car": {
+          "time": "10",
+          "cost": "4"
+        },
+        "pt": {
+          "time": "12",
+          "cost": "2"
+        }
+      }
+    }
+  ]
+}

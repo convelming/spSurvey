@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>基础信息</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">广州街头出行和意愿调查</div>
+      <nav class="nav-links">
+        <a data-page="index">首页</a>
+        <a data-page="profile">1 基础信息</a>
+        <a data-page="trip">2 Trip Diary</a>
+        <a data-page="sp">3 SP问题</a>
+        <a data-page="design">4 SP设计</a>
+        <a data-page="overview">查看收集情况</a>
+        <a data-page="docs">算法文档</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>1. 基础信息调查</h1>
+      <p class="hint">调查说明：本次调查将对您提供的所有信息严格保密，不作统计分析以外用途。</p>
+      <p class="hint">说明：个人信息统一在“家庭成员个人信息”中填写，不在上方单独重复填写。</p>
+    </section>
+
+    <form class="card" id="profileForm">
+      <h2>家庭总体信息</h2>
+      <div class="grid">
+        <div class="field"><label>受访者编号（自动）</label><input id="respondent_id_display" name="respondent_id" readonly /></div>
+        <div class="field"><label>住房情况<span class="required-star">*</span></label><select name="housing_status" required ><option>自有住房，独居或单身</option><option selected>自有住房，家庭同住</option><option>租房，独居或单身</option><option>租房，家庭同住</option><option>与他人合租</option></select></div>
+        <div class="field"><label>家庭总人数<span class="required-star">*</span></label><input type="number" min="1" max="12" name="family_total" value="3" required /></div>
+        <div class="field"><label>无独立出行能力人数<span class="required-star">*</span></label><input type="number" min="0" max="8" name="dependent_children_count" value="0" required /></div>
+        <div class="field"><label>小汽车（辆）<span class="required-star">*</span></label><input type="number" min="0" max="8" name="household_vehicle_count" value="0" required /></div>
+        <div class="field"><label>电动自行车（辆）<span class="required-star">*</span></label><input type="number" min="0" max="12" name="household_ebike_count" value="0" required /></div>
+        <div class="field"><label>家庭总收入（可选）</label><select name="household_income_annual"><option value="">未填写</option><option>暂无收入</option><option>0~6万</option><option>6~12万</option><option>12~24万</option><option>24~36万</option><option>36~48万</option><option>48~72万</option><option>72万及以上</option></select></div>
+        <div class="field"><label>家庭位置（地址/区域）<span class="required-star">*</span></label><input id="home_location" name="home_location" placeholder="可填写地址、网格或区域描述" required />
+              <div class="actions"><button type="button" id="pickHomeLocationBtn">地图选址家庭位置</button></div>
+        </div>
+      </div>
+
+      <h2>家庭成员个人信息（按家庭人数填写）</h2>
+      <p class="hint">成员1默认设为受访者本人（P1）。</p>
+      <p class="hint">当前需填写成员数：<strong id="collectableCount">1</strong> 人</p>
+      <section id="rosterContainer"></section>
+
+      <div class="actions">
+        <button type="button" id="saveProfile">保存到本地浏览器</button>
+        <button type="button" id="saveProfileServer">保存到服务器</button>
+        <a class="btn-link" data-page="trip" id="nextToTripBtn">下一步：Trip Diary</a>
+      </div>
+    </form>
+
+    <section class="card">
+      <div class="collapsible-panel">
+        <div class="collapsible-panel-header">
+          <h2>当前保存结果</h2>
+          <button type="button" class="collapse-toggle" id="profilePreviewToggle" aria-expanded="false" aria-controls="profilePreviewWrap" aria-label="展开当前保存结果" title="展开">
+            <span class="collapse-toggle-icon">▶</span>
+            <span class="collapse-toggle-text">展开</span>
+          </button>
+        </div>
+        <div class="collapsible-panel-body" id="profilePreviewWrap" hidden>
+          <pre id="profilePreview">尚未保存</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function () {
+  const isFile = location.protocol === 'file:';
+  const currentPage = 'profile';
+  const routes = isFile
+    ? {index:'index.html',profile:'profile.html',trip:'trip_diary.html',sp:'sp_questionnaire.html',design:'sp_design.html',map:'web_map.html',overview:'collection_dashboard.html',docs:'docs.html'}
+    : {index:'/',profile:'/survey/profile',trip:'/survey/trip-diary',sp:'/survey/sp',design:'/survey/sp-design',map:'/survey/map',overview:'/survey/collection-dashboard',docs:'/survey/docs'};
+  document.querySelectorAll('[data-page]').forEach(a => { a.href = routes[a.dataset.page]; a.classList.toggle('is-active', a.dataset.page === currentPage); });
+
+  const form = document.getElementById('profileForm');
+  const preview = document.getElementById('profilePreview');
+  const key = 'survey_profile_data';
+  const respondentKey = 'survey_respondent_id';
+  const deviceKey = 'survey_device_tag';
+  const rosterContainer = document.getElementById('rosterContainer');
+
+  function bindCollapsible(toggleId, panelId) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    const text = toggle.querySelector('.collapse-toggle-text');
+    const setExpanded = (expanded) => {
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.setAttribute('aria-label', expanded ? '收起当前保存结果' : '展开当前保存结果');
+      toggle.title = expanded ? '收起' : '展开';
+      if (text) text.textContent = expanded ? '收起' : '展开';
+      panel.hidden = !expanded;
+    };
+    setExpanded(false);
+    toggle.addEventListener('click', () => {
+      setExpanded(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  }
+
+  function detectDeviceBaseTag() {
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const platform = (navigator.platform || '').toLowerCase();
+    const os = platform.includes('mac') ? 'MAC' : (platform.includes('win') ? 'WIN' : (platform.includes('linux') ? 'LNX' : 'UNK'));
+    const browser = ua.includes('edg') ? 'EDG' : (ua.includes('chrome') ? 'CHR' : (ua.includes('safari') ? 'SAF' : (ua.includes('firefox') ? 'FF' : 'BRW')));
+    const form = /iphone|ipad|android|mobile/.test(ua) ? 'MOB' : 'PC';
+    return `${os}${browser}${form}`;
+  }
+
+  function getOrCreateDeviceTag() {
+    const old = String(localStorage.getItem(deviceKey) || '').trim();
+    if (old) return old;
+    const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const tag = `${detectDeviceBaseTag()}_${rand}`;
+    localStorage.setItem(deviceKey, tag);
+    return tag;
+  }
+
+  function genRespondentId() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const ts = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    const r = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `R${ts}_${getOrCreateDeviceTag()}_${r}`;
+  }
+
+  function getOrCreateRespondentId() {
+    const old = String(localStorage.getItem(respondentKey) || '').trim();
+    if (old) return old;
+    const id = genRespondentId();
+    localStorage.setItem(respondentKey, id);
+    return id;
+  }
+
+  function syncRespondentIdToForm() {
+    form.elements.respondent_id.value = getOrCreateRespondentId();
+  }
+
+  function clearRespondentLocalCache() {
+    ['survey_profile_data', 'survey_trip_diary', 'survey_map_picker_result', 'survey_map_picker_context', 'survey_sp_current_assignment'].forEach((k) => {
+      localStorage.removeItem(k);
+    });
+  }
+
+  function showActionDialog(title, message, actions) {
+    return new Promise((resolve) => {
+      const mask = document.createElement('div');
+      mask.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+      const box = document.createElement('div');
+      box.style.cssText = 'background:#fff;max-width:520px;width:100%;border-radius:10px;padding:14px 14px 12px;border:1px solid #d6e1ee;';
+      const h = document.createElement('h3');
+      h.textContent = title;
+      h.style.margin = '0 0 8px';
+      const p = document.createElement('p');
+      p.textContent = message;
+      p.style.margin = '0 0 12px';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;';
+      actions.forEach((a) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = a.label;
+        b.style.cssText = 'min-height:38px;padding:8px 12px;';
+        b.addEventListener('click', () => {
+          mask.remove();
+          resolve(a.id);
+        });
+        row.appendChild(b);
+      });
+      box.appendChild(h);
+      box.appendChild(p);
+      box.appendChild(row);
+      mask.appendChild(box);
+      document.body.appendChild(mask);
+    });
+  }
+
+  function resetForNextRespondent() {
+    clearRespondentLocalCache();
+    const nextId = genRespondentId();
+    localStorage.setItem(respondentKey, nextId);
+    form.reset();
+    form.elements.family_total.value = 3;
+    form.elements.dependent_children_count.value = 0;
+    form.elements.household_vehicle_count.value = 0;
+    form.elements.household_ebike_count.value = 0;
+    buildRoster(getCollectableMemberCount(), []);
+    syncRespondentIdToForm();
+    preview.textContent = '已切换到下一位受访者，请开始填写。';
+  }
+
+  function applyMapPickerResult() {
+    const raw = localStorage.getItem('survey_map_picker_result');
+    if (!raw) return;
+    const result = JSON.parse(raw);
+    if (!result.targetId) return;
+    const el = document.getElementById(result.targetId);
+    if (el) {
+      el.value = result.label || result.value || '';
+      localStorage.removeItem('survey_map_picker_result');
+      const focusNode = el.closest('.field') || el;
+      setTimeout(() => {
+        focusNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 0);
+    }
+  }
+
+  function optionHtml(items, selected) {
+    return items.map(v => `<option value="${v}" ${v === selected ? 'selected' : ''}>${v || '未填写'}</option>`).join('');
+  }
+
+  function memberCard(idx, member = {}) {
+    const genderOpts = ['男','女'];
+    const ageOpts = ['6~18岁','18~30岁','30~45岁','45~60岁','60及以上'];
+    const occOpts = ['待业','灵活就业','学生','工厂工人','个体经营者','离退休人员','专业技术和科研人员（教师/医生/工程师等）','机关行政单位工作人员','市场营销人员','服务业人员（餐饮、酒店、商场就业人员）','其它'];
+    const eduOpts = ['初中及以下','高中','中专','大专','本科','硕士研究生','博士研究生'];
+    const incomeOpts = ['','暂无收入','0~6万','6~12万','12~24万','24~36万','36~48万','48万及以上'];
+    const modeOpts = ['地铁','公交','网约车/出租车','私家车（驾驶员）','私家车（乘客）','共享单车','电动自行车','步行','其他'];
+    const driverOpts = ['无驾照','有驾照'];
+    const passOpts = ['无','有'];
+    const relation = idx === 0 ? '本人' : (member.relationship || '配偶');
+    const memberId = idx === 0 ? 'P1' : (member.member_id || `P${idx + 1}`);
+
+    return `
+      <article class="member-card" data-member-index="${idx}">
+        <h3>成员 ${idx + 1}</h3>
+        <div class="grid">
+          <div class="field"><label>成员ID</label><input data-key="member_id" value="${memberId}" ${idx===0?'readonly':''} /></div>
+          <div class="field"><label>与受访者关系</label><select data-key="relationship" ${idx===0?'disabled':''}><option ${relation==='本人'?'selected':''}>本人</option><option ${relation==='配偶'?'selected':''}>配偶</option><option ${relation==='子女'?'selected':''}>子女</option><option ${relation==='父母'?'selected':''}>父母</option><option ${relation==='其他'?'selected':''}>其他</option></select></div>
+          <div class="field"><label>性别</label><select data-key="gender">${optionHtml(genderOpts, member.gender || '男')}</select></div>
+          <div class="field"><label>年龄</label><select data-key="age_group">${optionHtml(ageOpts, member.age_group || '30~45岁')}</select></div>
+          <div class="field"><label>职业</label><select data-key="occupation">${optionHtml(occOpts, member.occupation || '其它')}</select></div>
+          <div class="field"><label>教育程度</label><select data-key="education">${optionHtml(eduOpts, member.education || '本科')}</select></div>
+          <div class="field"><label>税前年收入（可选）</label><select data-key="income_pre_tax">${optionHtml(incomeOpts, member.income_pre_tax || '')}</select></div>
+          <div class="field"><label>驾照情况</label><select data-key="driver_license">${optionHtml(driverOpts, member.driver_license || '无驾照')}</select></div>
+          <div class="field"><label>日常主要出行方式</label><select data-key="main_mode">${optionHtml(modeOpts, member.main_mode || '公交')}</select></div>
+          <div class="field"><label>家庭拥车/使用情况</label><select data-key="car_usage"><option ${(member.car_usage||'')==='无小汽车'?'selected':''}>无小汽车</option><option ${(member.car_usage||'')==='有小汽车，较少使用'?'selected':''}>有小汽车，较少使用</option><option ${(member.car_usage||'')==='有小汽车，有时使用'?'selected':''}>有小汽车，有时使用</option><option ${(member.car_usage||'')==='有小汽车，经常使用'?'selected':''}>有小汽车，经常使用</option></select></div>
+          <div class="field"><label>是否有公交月卡</label><select data-key="transit_month_pass">${optionHtml(passOpts, member.transit_month_pass || '无')}</select></div>
+          <div class="field"><label>是否有共享单车月卡</label><select data-key="bike_share_month_pass">${optionHtml(passOpts, member.bike_share_month_pass || '无')}</select></div>
+        </div>
+      </article>`;
+  }
+
+  function getCollectableMemberCount() {
+    const familyTotal = Number(form.elements.family_total.value || 1);
+    return Math.max(1, familyTotal);
+  }
+
+  function buildRoster(n, members = []) {
+    const normalized = members.slice(0, n);
+    while (normalized.length < n) normalized.push({});
+
+    rosterContainer.innerHTML = '';
+    for (let i = 0; i < n; i += 1) {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = memberCard(i, normalized[i] || {});
+      const card = wrapper.firstElementChild;
+      rosterContainer.appendChild(card);
+      if (i === 0) {
+        const relHidden = document.createElement('input');
+        relHidden.type = 'hidden';
+        relHidden.dataset.key = 'relationship';
+        relHidden.value = '本人';
+        card.appendChild(relHidden);
+      }
+    }
+
+    document.getElementById('collectableCount').textContent = String(n);
+  }
+
+  function collectRoster() {
+    const members = [];
+    rosterContainer.querySelectorAll('.member-card').forEach((card) => {
+      const m = {};
+      card.querySelectorAll('[data-key]').forEach((el) => {
+        const keyName = el.dataset.key;
+        if (el.tagName === 'SELECT' && el.disabled) {
+          m[keyName] = '本人';
+        } else {
+          m[keyName] = el.value;
+        }
+      });
+      members.push(m);
+    });
+    return members;
+  }
+
+  function collectProfileData() {
+    const data = Object.fromEntries(new FormData(form).entries());
+    ['family_total','dependent_children_count','household_vehicle_count','household_ebike_count'].forEach((k) => {
+      data[k] = Number(data[k] || 0);
+    });
+    data.household_members = collectRoster();
+    data.respondent_id = form.elements.respondent_id.value || getOrCreateRespondentId();
+    return data;
+  }
+
+  const old = localStorage.getItem(key);
+  if (old) {
+    const data = JSON.parse(old);
+    if (data.respondent_id) localStorage.setItem(respondentKey, String(data.respondent_id));
+    for (const [k, v] of Object.entries(data)) {
+      if (form.elements[k]) form.elements[k].value = v;
+    }
+    const n = Number((data.household_members || []).length || getCollectableMemberCount());
+    buildRoster(n, data.household_members || []);
+    preview.textContent = JSON.stringify(data, null, 2);
+  } else {
+    buildRoster(getCollectableMemberCount(), []);
+  }
+  syncRespondentIdToForm();
+
+  document.getElementById('saveProfile').addEventListener('click', () => {
+    if (!form.reportValidity()) return;
+    syncRespondentIdToForm();
+    const data = collectProfileData();
+    localStorage.setItem(key, JSON.stringify(data));
+    preview.textContent = JSON.stringify(data, null, 2);
+  });
+
+  document.getElementById('saveProfileServer').addEventListener('click', async () => {
+    if (!form.reportValidity()) return;
+    syncRespondentIdToForm();
+    const data = collectProfileData();
+    localStorage.setItem(key, JSON.stringify(data));
+    try {
+      const res = await fetch('/api/survey/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json();
+      if (!res.ok || out.error) {
+        alert(out.error || '保存失败');
+        return;
+      }
+      preview.textContent = JSON.stringify({ server_saved: true, submission_id: out.submission_id, payload: data }, null, 2);
+      const action = await showActionDialog(
+        '保存成功',
+        `已保存到服务器，提交ID: ${out.submission_id}`,
+        [
+          { id: 'confirm_switch', label: '确认并切换下一位' },
+          { id: 'go_trip', label: '进入出行日记页面' },
+          { id: 'back', label: '返回' },
+        ],
+      );
+      if (action === 'confirm_switch') {
+        resetForNextRespondent();
+      } else if (action === 'go_trip') {
+        location.href = routes.trip;
+      }
+    } catch (_e) {
+      alert('保存到服务器失败，请检查后端是否启动');
+    }
+  });
+
+  document.getElementById('nextToTripBtn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    syncRespondentIdToForm();
+    const data = collectProfileData();
+    localStorage.setItem(key, JSON.stringify(data));
+
+    if (isFile) {
+      location.href = routes.trip;
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/survey/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json();
+      if (!res.ok || out.error) {
+        alert(out.error || '保存到服务器失败，未跳转');
+        return;
+      }
+      location.href = routes.trip;
+    } catch (_e) {
+      alert('保存到服务器失败，请检查后端是否启动');
+    }
+  });
+
+  form.elements.family_total.addEventListener('change', () => {
+    buildRoster(getCollectableMemberCount(), collectRoster());
+  });
+
+  document.getElementById('pickHomeLocationBtn').addEventListener('click', () => {
+    localStorage.setItem('survey_map_picker_context', JSON.stringify({
+      targetId: 'home_location',
+      returnPage: routes.profile,
+      note: '家庭位置（点选坐标）',
+    }));
+    location.href = routes.map;
+  });
+
+  applyMapPickerResult();
+  bindCollapsible('profilePreviewToggle', 'profilePreviewWrap');
+})();
+</script>
+</body>
+</html>

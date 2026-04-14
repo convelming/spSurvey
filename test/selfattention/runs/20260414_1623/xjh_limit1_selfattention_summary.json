@@ -1,0 +1,210 @@
+{
+  "source_design_save_name": "中途_xjh_限制1",
+  "effective_design_type": "selfattention",
+  "generated_rows": 300,
+  "rows_loaded_for_train": 300,
+  "candidate_pool_size": 120,
+  "candidate_pool_target": 120,
+  "expert_preview_size": 6,
+  "candidate_expert_overlap": 0,
+  "train_model_state": {
+    "trained": true,
+    "backend": "pytorch_selfattention",
+    "input_dim": 22,
+    "output_dim": 120,
+    "candidate_pool_size": 120,
+    "training_data_source": "synthetic_popsim_rollout",
+    "rows_used": 0,
+    "rollout_episodes": 300,
+    "rollout_steps": 1800,
+    "mean_episode_reward": 0.12358646377594561,
+    "train_samples": 1800,
+    "train_epochs": 200,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.01,
+    "batch_size": 128,
+    "target_kl": 0.03,
+    "epsilon": 0.2,
+    "seq_len": 16,
+    "hidden_dim": 64,
+    "num_heads": 4,
+    "expert_overlap": 0,
+    "expert_prior_weight": 0.0,
+    "active_bound_mask_params": 4,
+    "bound_masked_candidates": 120,
+    "bound_mask_min_factor": 0.417372,
+    "scoring_state_source": "current_respondent",
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "zone_categories": [
+      "440103",
+      "440104",
+      "440105",
+      "440106",
+      "440111",
+      "440112",
+      "440113",
+      "440114",
+      "440115",
+      "440117",
+      "440118",
+      "__missing__"
+    ],
+    "policy_version": 1,
+    "current_mnl_signal": {
+      "n_observations": 1800,
+      "adjusted_pseudo_r2": 0.990358,
+      "estimated_beta_raw": {
+        "car.asc": -0.01603,
+        "taxi.asc": -0.005007,
+        "pt.walk_time": 0.195185,
+        "pt.wait_time": 0.031237,
+        "pt.travel_time": 0.349511,
+        "pt.delay": 0.123191,
+        "pt.cost": -0.122543,
+        "car.travel_time": -0.263064,
+        "car.delay": -0.103903,
+        "car.cost": -0.364359,
+        "car.park_time": -0.071556,
+        "taxi.wait_time": -0.066113,
+        "taxi.travel_time": -0.072937,
+        "taxi.delay": -0.059045,
+        "taxi.cost": -0.256415
+      },
+      "estimated_beta": {
+        "car.asc": -0.01603,
+        "taxi.asc": -0.005007,
+        "pt.walk_time": 0.0,
+        "pt.wait_time": 0.0,
+        "pt.travel_time": 0.0,
+        "pt.delay": 0.0,
+        "pt.cost": -0.122543,
+        "car.travel_time": -0.263064,
+        "car.delay": -0.103903,
+        "car.cost": -0.364359,
+        "car.park_time": -0.071556,
+        "taxi.wait_time": -0.066113,
+        "taxi.travel_time": -0.072937,
+        "taxi.delay": -0.059045,
+        "taxi.cost": -0.256415
+      },
+      "bound_violation": {
+        "penalty": 0.04660821211248716,
+        "violating_count": 4,
+        "violating_params": [
+          {
+            "key": "pt.walk_time",
+            "value_raw": 0.195185,
+            "min": null,
+            "max": 0.0,
+            "gap": 0.195185,
+            "severity": 0.195185,
+            "side": "above_max",
+            "candidate_multiplier": 0.613876
+          },
+          {
+            "key": "pt.wait_time",
+            "value_raw": 0.031237,
+            "min": null,
+            "max": 0.0,
+            "gap": 0.031237,
+            "severity": 0.031237,
+            "side": "above_max",
+            "candidate_multiplier": 0.92488
+          },
+          {
+            "key": "pt.travel_time",
+            "value_raw": 0.349511,
+            "min": null,
+            "max": 0.0,
+            "gap": 0.349511,
+            "severity": 0.349511,
+            "side": "above_max",
+            "candidate_multiplier": 0.417372
+          },
+          {
+            "key": "pt.delay",
+            "value_raw": 0.123191,
+            "min": null,
+            "max": 0.0,
+            "gap": 0.123191,
+            "severity": 0.123191,
+            "side": "above_max",
+            "candidate_multiplier": 0.734933
+          }
+        ],
+        "param_multipliers": {
+          "pt.walk_time": 0.6138758983888178,
+          "pt.wait_time": 0.9248797832739213,
+          "pt.travel_time": 0.4173719058062304,
+          "pt.delay": 0.7349326953500733
+        }
+      }
+    }
+  },
+  "train_iteration_log": [
+    {
+      "epoch": 1,
+      "loss": 1.160366,
+      "policy_loss": 0.381073,
+      "value_loss": 1.616702,
+      "entropy": 2.905851,
+      "approx_kl": 2.818841,
+      "clip_frac": 0.856771,
+      "mean_reward": 0.370361,
+      "episodes": 300,
+      "steps": 1800
+    },
+    {
+      "epoch": 1,
+      "event": "early_stop_target_kl",
+      "target_kl": 0.03,
+      "approx_kl": 2.818841
+    }
+  ],
+  "online_update_steps": 300,
+  "final_policy_version": 0,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 300,
+    "n_rows_source": "selfattention.train_respondents"
+  },
+  "outputs": {
+    "rows_jsonl": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1623/xjh_limit1_selfattention_rows.jsonl",
+    "trace_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1623/xjh_limit1_selfattention_trace.json",
+    "summary_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1623/xjh_limit1_selfattention_summary.json",
+    "candidate_pool_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260414_1623/xjh_limit1_selfattention_candidate_pool.json"
+  }
+}

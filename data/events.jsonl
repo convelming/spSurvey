@@ -1,0 +1,15 @@
+{"event": "proposal_created", "assignment_id": "assign_8708f343587a", "respondent_id": "test_user", "policy_version": 1, "task_ids": ["task_0080", "task_0132", "task_0087"], "at": "2026-03-04T08:48:53.921542+00:00"}
+{"event": "response_saved", "assignment_id": "assign_8708f343587a", "respondent_id": "test_user", "publish": false, "policy_version": 1, "at": "2026-03-04T08:48:53.933265+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_eee6c70fca08", "respondent_id": "web_1772614545272", "policy_version": 1, "task_ids": ["task_0174", "task_0184", "task_0120"], "at": "2026-03-04T08:55:45.322240+00:00"}
+{"event": "response_saved", "assignment_id": "assign_eee6c70fca08", "respondent_id": "web_1772614545272", "publish": false, "policy_version": 1, "at": "2026-03-04T08:56:04.334882+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_7a291eb3d11d", "respondent_id": "web_1772614587661", "policy_version": 1, "task_ids": ["task_0208", "task_0068", "task_0056"], "at": "2026-03-04T08:56:27.676421+00:00"}
+{"event": "response_saved", "assignment_id": "assign_7a291eb3d11d", "respondent_id": "web_1772614587661", "publish": true, "policy_version": 2, "at": "2026-03-04T08:56:35.561785+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_798670fd226f", "respondent_id": "web_1772614866851", "policy_version": 2, "task_ids": ["task_0136", "task_0126", "task_0113"], "at": "2026-03-04T09:01:06.899349+00:00"}
+{"event": "response_saved", "assignment_id": "assign_798670fd226f", "respondent_id": "web_1772614866851", "publish": false, "policy_version": 2, "at": "2026-03-04T09:01:13.204531+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_b74c4d3ed3af", "respondent_id": "web_1772614899479", "policy_version": 2, "task_ids": ["task_0003", "task_0158", "task_0074"], "at": "2026-03-04T09:01:39.525753+00:00"}
+{"event": "response_saved", "assignment_id": "assign_b74c4d3ed3af", "respondent_id": "web_1772614899479", "publish": false, "policy_version": 2, "at": "2026-03-04T09:01:45.525918+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_e687752fda34", "respondent_id": "web_1772614919401", "policy_version": 2, "task_ids": ["task_0050", "task_0115", "task_0018"], "at": "2026-03-04T09:01:59.448867+00:00"}
+{"event": "response_saved", "assignment_id": "assign_e687752fda34", "respondent_id": "web_1772614919401", "publish": true, "policy_version": 3, "at": "2026-03-04T09:02:05.848422+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_617ed3ff284d", "respondent_id": "web_1772615520910", "policy_version": 3, "task_ids": ["task_0184", "task_0193", "task_0048"], "at": "2026-03-04T09:12:00.959077+00:00"}
+{"event": "response_saved", "assignment_id": "assign_617ed3ff284d", "respondent_id": "web_1772615520910", "publish": false, "policy_version": 3, "at": "2026-03-04T09:12:06.599395+00:00"}
+{"event": "proposal_created", "assignment_id": "assign_a2199bc95b95", "respondent_id": "web_1773044462654", "policy_version": 3, "task_ids": ["task_0160", "task_0004", "task_0216"], "at": "2026-03-09T08:21:02.704537+00:00"}

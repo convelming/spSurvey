@@ -1,0 +1,513 @@
+{
+  "save_name": "sp_efficient_20260320_144824_XJ9V",
+  "type": "efficient",
+  "saved_at": "2026-03-20T07:01:59.573440+00:00",
+  "payload": {
+    "sample_size": 600,
+    "design_type": "efficient",
+    "design_options": {
+      "efficient": {
+        "tasks_per_person": 8,
+        "row_exchange_iterations": 200
+      }
+    },
+    "n_parameters": 15,
+    "min_block_sample": 80,
+    "target_block_sample": 100,
+    "tasks_per_person_candidates": [
+      8
+    ],
+    "level_count_by_variable": {
+      "pt.walk_time": 3,
+      "pt.wait_time": 3,
+      "pt.travel_time": 3,
+      "pt.delay": 3,
+      "pt.cost": 3,
+      "car.travel_time": 3,
+      "car.delay": 3,
+      "car.cost": 3,
+      "car.park_time": 5,
+      "taxi.wait_time": 3,
+      "taxi.travel_time": 3,
+      "taxi.delay": 3,
+      "taxi.cost": 3
+    },
+    "beta_defaults": {
+      "pt.asc": 0,
+      "pt.walk_time": -0.012224,
+      "pt.wait_time": -0.055461,
+      "pt.travel_time": -0.001475,
+      "pt.delay": -0.040316,
+      "pt.cost": -0.160325,
+      "car.asc": 0,
+      "car.travel_time": -0.001475,
+      "car.delay": -0.040316,
+      "car.cost": -0.160325,
+      "car.park_time": -0.004253,
+      "taxi.asc": 0,
+      "taxi.wait_time": -0.055461,
+      "taxi.travel_time": -0.001475,
+      "taxi.delay": -0.040316,
+      "taxi.cost": -0.160325
+    },
+    "beta_bounds": {
+      "pt.walk_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt.delay": {
+        "min": null,
+        "max": 0
+      },
+      "pt.cost": {
+        "min": null,
+        "max": 0
+      },
+      "car.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "car.delay": {
+        "min": null,
+        "max": 0
+      },
+      "car.cost": {
+        "min": null,
+        "max": 0
+      },
+      "car.park_time": {
+        "min": null,
+        "max": 0
+      },
+      "taxi.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "taxi.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "taxi.delay": {
+        "min": null,
+        "max": 0
+      },
+      "taxi.cost": {
+        "min": null,
+        "max": 0
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "pt",
+          "variables": [
+            {
+              "name": "walk_time",
+              "description": "步行时长",
+              "beta_default": -0.012224,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "8",
+                "10",
+                "12"
+              ]
+            },
+            {
+              "name": "wait_time",
+              "description": "候车时长",
+              "beta_default": -0.055461,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5"
+              ]
+            },
+            {
+              "name": "travel_time",
+              "description": "在途时长",
+              "beta_default": -0.001475,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "14",
+                "16",
+                "18"
+              ]
+            },
+            {
+              "name": "delay",
+              "description": "可能延误时长",
+              "beta_default": -0.040316,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "5",
+                "7",
+                "9"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "费用",
+              "beta_default": -0.160325,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "car",
+          "variables": [
+            {
+              "name": "travel_time",
+              "description": "在途时长",
+              "beta_default": -0.001475,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "13",
+                "15",
+                "17"
+              ]
+            },
+            {
+              "name": "delay",
+              "description": "可能延误时长",
+              "beta_default": -0.040316,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "费用",
+              "beta_default": -0.160325,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "12",
+                "13",
+                "14"
+              ]
+            },
+            {
+              "name": "park_time",
+              "description": "寻停车位时长",
+              "beta_default": -0.004253,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5",
+                "6",
+                "7"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "taxi",
+          "variables": [
+            {
+              "name": "wait_time",
+              "description": "候车时长",
+              "beta_default": -0.055461,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3"
+              ]
+            },
+            {
+              "name": "travel_time",
+              "description": "在途时长",
+              "beta_default": -0.001475,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "13",
+                "14",
+                "15"
+              ]
+            },
+            {
+              "name": "delay",
+              "description": "可能延误时长",
+              "beta_default": -0.040316,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "费用",
+              "beta_default": -0.160325,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "17",
+                "19",
+                "21"
+              ]
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "pt",
+      "sp_intro_text": "若您要去地点B（约5公里），在正常天气、非紧急情况等同等条件下，以下出行方式您会如何选择？",
+      "conditions": [
+        "car.travel_time/car.cost>taxt.travel_time/taxi.cost"
+      ]
+    }
+  },
+  "recommendation": {
+    "blocks": 1,
+    "row_exchange_iterations": 200,
+    "rows": 8,
+    "tasks_per_person": 8
+  },
+  "preview_tasks": [
+    {
+      "alternatives": {
+        "car": {
+          "cost": "13",
+          "delay": "4",
+          "park_time": "3",
+          "travel_time": "13"
+        },
+        "pt": {
+          "cost": "3",
+          "delay": "5",
+          "travel_time": "14",
+          "wait_time": "5",
+          "walk_time": "10"
+        },
+        "taxi": {
+          "cost": "21",
+          "delay": "5",
+          "travel_time": "13",
+          "wait_time": "2"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r1",
+      "row_in_block": 1
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "12",
+          "delay": "3",
+          "park_time": "6",
+          "travel_time": "17"
+        },
+        "pt": {
+          "cost": "1",
+          "delay": "7",
+          "travel_time": "14",
+          "wait_time": "3",
+          "walk_time": "8"
+        },
+        "taxi": {
+          "cost": "19",
+          "delay": "3",
+          "travel_time": "14",
+          "wait_time": "3"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r2",
+      "row_in_block": 2
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "13",
+          "delay": "4",
+          "park_time": "5",
+          "travel_time": "17"
+        },
+        "pt": {
+          "cost": "2",
+          "delay": "5",
+          "travel_time": "14",
+          "wait_time": "3",
+          "walk_time": "10"
+        },
+        "taxi": {
+          "cost": "17",
+          "delay": "3",
+          "travel_time": "13",
+          "wait_time": "2"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r3",
+      "row_in_block": 3
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "13",
+          "delay": "5",
+          "park_time": "3",
+          "travel_time": "17"
+        },
+        "pt": {
+          "cost": "1",
+          "delay": "9",
+          "travel_time": "14",
+          "wait_time": "5",
+          "walk_time": "10"
+        },
+        "taxi": {
+          "cost": "17",
+          "delay": "5",
+          "travel_time": "13",
+          "wait_time": "3"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r4",
+      "row_in_block": 4
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "13",
+          "delay": "5",
+          "park_time": "4",
+          "travel_time": "15"
+        },
+        "pt": {
+          "cost": "3",
+          "delay": "5",
+          "travel_time": "18",
+          "wait_time": "5",
+          "walk_time": "12"
+        },
+        "taxi": {
+          "cost": "21",
+          "delay": "4",
+          "travel_time": "14",
+          "wait_time": "2"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r5",
+      "row_in_block": 5
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "14",
+          "delay": "3",
+          "park_time": "7",
+          "travel_time": "13"
+        },
+        "pt": {
+          "cost": "2",
+          "delay": "9",
+          "travel_time": "18",
+          "wait_time": "5",
+          "walk_time": "12"
+        },
+        "taxi": {
+          "cost": "21",
+          "delay": "4",
+          "travel_time": "14",
+          "wait_time": "2"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r6",
+      "row_in_block": 6
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "12",
+          "delay": "3",
+          "park_time": "4",
+          "travel_time": "13"
+        },
+        "pt": {
+          "cost": "2",
+          "delay": "7",
+          "travel_time": "18",
+          "wait_time": "5",
+          "walk_time": "10"
+        },
+        "taxi": {
+          "cost": "21",
+          "delay": "3",
+          "travel_time": "13",
+          "wait_time": "1"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r7",
+      "row_in_block": 7
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": "13",
+          "delay": "5",
+          "park_time": "3",
+          "travel_time": "15"
+        },
+        "pt": {
+          "cost": "2",
+          "delay": "7",
+          "travel_time": "16",
+          "wait_time": "5",
+          "walk_time": "10"
+        },
+        "taxi": {
+          "cost": "21",
+          "delay": "3",
+          "travel_time": "15",
+          "wait_time": "2"
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r8",
+      "row_in_block": 8
+    }
+  ],
+  "runtime": {
+    "distribution_log": [],
+    "distribution_count": 0,
+    "task_issue_counts": {},
+    "choice_counts": {},
+    "last_distributed_at": null
+  }
+}

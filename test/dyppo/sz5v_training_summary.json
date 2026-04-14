@@ -1,0 +1,112 @@
+{
+  "design_save_name": "sp_efficient_20260324_175903_SZ5V",
+  "generated_rows": 300,
+  "rows_loaded_for_train": 300,
+  "policy_state_loaded": true,
+  "candidate_pool_size": 81,
+  "expert_preview_size": 8,
+  "candidate_expert_overlap": 8,
+  "train_model_state": {
+    "trained": true,
+    "backend": "pytorch",
+    "input_dim": 22,
+    "output_dim": 81,
+    "candidate_pool_size": 81,
+    "training_data_source": "rows_jsonl_rollout",
+    "rows_used": 300,
+    "rollout_episodes": 300,
+    "rollout_steps": 2400,
+    "mean_episode_reward": 0.24763765296652934,
+    "train_samples": 2400,
+    "train_epochs": 200,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.01,
+    "batch_size": 200,
+    "target_kl": 0.03,
+    "epsilon": 0.2,
+    "expert_overlap": 8,
+    "expert_prior_weight": 0.1,
+    "scoring_state_source": "current_respondent",
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "zone_categories": [
+      "440103",
+      "440104",
+      "440105",
+      "440106",
+      "440111",
+      "440112",
+      "440113",
+      "440114",
+      "440115",
+      "440117",
+      "440118",
+      "__missing__"
+    ],
+    "policy_version": 1
+  },
+  "train_iteration_log": [
+    {
+      "epoch": 1,
+      "loss": 0.287894,
+      "policy_loss": -0.157823,
+      "value_loss": 0.958994,
+      "entropy": 3.377995,
+      "approx_kl": -0.038845,
+      "clip_frac": 0.884583,
+      "mean_reward": 0.430955,
+      "episodes": 300,
+      "steps": 2400
+    },
+    {
+      "epoch": 2,
+      "event": "early_stop_target_kl",
+      "target_kl": 0.03,
+      "approx_kl": 1.31999
+    }
+  ],
+  "online_update_steps": 300,
+  "final_policy_version": 300,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 300,
+    "n_rows_source": "config.dynamic_ppo.train_respondents"
+  },
+  "outputs": {
+    "rows_jsonl": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/sz5v_respondent_rows.jsonl",
+    "trace_json": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/sz5v_flow_trace.json",
+    "candidate_pool_json": "/Users/convel/PycharmProjects/mappoQuestinnaire/test/sz5v_candidate_pool.json"
+  }
+}

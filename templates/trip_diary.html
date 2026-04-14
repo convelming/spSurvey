@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trip Diary</title>
+  <link id="appCss" rel="stylesheet" href="/static/style.css" />
+  <script>
+    if (location.protocol === 'file:') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('appCss').href = '../static/style.css';
+      });
+    }
+  </script>
+  <style>
+    .trip-row-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .delTripBtn {
+      background: #c0392b;
+    }
+    .delTripBtn:hover {
+      background: #a93226;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">街头出行日记和意愿调查</div>
+      <nav class="nav-links">
+        <a data-page="index">首页</a>
+        <a data-page="profile">1 基础信息</a>
+        <a data-page="trip">2 Trip Diary</a>
+        <a data-page="sp">3 SP问题</a>
+        <a data-page="design">4 SP设计</a>
+        <a data-page="overview">查看收集情况</a>
+        <a data-page="docs">算法文档</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h1>2. 个人工作日典型出行调查（Trip Diary）</h1>
+      <p class="hint">请回忆近期工作日（周一至周五）最典型一天，从家出发到当天下班回家为止连续记录。</p>
+      <p class="hint">时间格式采用HHMM（24小时制），例如08:30填写为0830，21:30填写为2130。</p>
+      <p class="hint">说明：该页自动继承基础信息中的家庭成员，并排除“无独立行动能力小孩”对应成员。</p>
+      <p class="hint">规则：每位成员第一次出行的出发地默认家庭住址；后续出发地默认继承上一次目的地（均可手动修改）。</p>
+      <p class="hint">规则：每次出行目的地默认填家庭住址（可手动修改）。</p>
+      <p class="hint" id="tripInheritBanner">继承检查：加载中...</p>
+    </section>
+
+    <section class="card">
+      <p class="hint" id="profileSummaryText">受访者信息继承摘要：加载中...</p>
+      <div class="grid">
+        <input type="hidden" id="householdSize" value="0" />
+        <input type="hidden" id="residence" value="" />
+      </div>
+      <div class="actions">
+        <button id="saveDiaryBtn" type="button">保存Trip Diary（含服务器）</button>
+        <button id="exportRespondentJsonBtn" type="button">导出当前受访者JSON</button>
+      </div>
+    </section>
+
+    <section class="card" id="membersContainer"></section>
+    <section class="card">
+      <div class="collapsible-panel">
+        <div class="collapsible-panel-header">
+          <h2>Trip Diary JSON</h2>
+          <button type="button" class="collapse-toggle" id="diaryPreviewToggle" aria-expanded="false" aria-controls="diaryPreviewWrap" aria-label="展开 Trip Diary JSON" title="展开">
+            <span class="collapse-toggle-icon">▶</span>
+            <span class="collapse-toggle-text">展开</span>
+          </button>
+        </div>
+        <div class="collapsible-panel-body" id="diaryPreviewWrap" hidden>
+          <pre id="diaryPreview">尚未生成</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function () {
+  const isFile = location.protocol === 'file:';
+  const currentPage = 'trip';
+  const routes = isFile
+    ? {index:'index.html',profile:'profile.html',trip:'trip_diary.html',sp:'sp_questionnaire.html',design:'sp_design.html',map:'web_map.html',overview:'collection_dashboard.html',docs:'docs.html'}
+    : {index:'/',profile:'/survey/profile',trip:'/survey/trip-diary',sp:'/survey/sp',design:'/survey/sp-design',map:'/survey/map',overview:'/survey/collection-dashboard',docs:'/survey/docs'};
+  document.querySelectorAll('[data-page]').forEach(a => { a.href = routes[a.dataset.page]; a.classList.toggle('is-active', a.dataset.page === currentPage); });
+
+  const membersContainer = document.getElementById('membersContainer');
+  const preview = document.getElementById('diaryPreview');
+  const storageKey = 'survey_trip_diary';
+  const respondentKey = 'survey_respondent_id';
+  const deviceKey = 'survey_device_tag';
+  let hasUnsavedChanges = false;
+
+  const purposeOptions = ['工作','上学','接送','购物','日常办事','外出就餐','社交','休闲娱乐','工作跑腿','回家'];
+  const modeOptions = ['地铁','公交','网约车/出租车','私家车（驾驶员）','私家车（乘客）','共享单车','电动自行车','步行','其他'];
+
+  function bindCollapsible(toggleId, panelId, label) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    const text = toggle.querySelector('.collapse-toggle-text');
+    const setExpanded = (expanded) => {
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.setAttribute('aria-label', expanded ? `收起${label}` : `展开${label}`);
+      toggle.title = expanded ? '收起' : '展开';
+      if (text) text.textContent = expanded ? '收起' : '展开';
+      panel.hidden = !expanded;
+    };
+    setExpanded(false);
+    toggle.addEventListener('click', () => {
+      setExpanded(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  }
+
+  function detectDeviceBaseTag() {
+    const ua = (navigator.userAgent || '').toLowerCase();
+    const platform = (navigator.platform || '').toLowerCase();
+    const os = platform.includes('mac') ? 'MAC' : (platform.includes('win') ? 'WIN' : (platform.includes('linux') ? 'LNX' : 'UNK'));
+    const browser = ua.includes('edg') ? 'EDG' : (ua.includes('chrome') ? 'CHR' : (ua.includes('safari') ? 'SAF' : (ua.includes('firefox') ? 'FF' : 'BRW')));
+    const form = /iphone|ipad|android|mobile/.test(ua) ? 'MOB' : 'PC';
+    return `${os}${browser}${form}`;
+  }
+
+  function getOrCreateDeviceTag() {
+    const old = String(localStorage.getItem(deviceKey) || '').trim();
+    if (old) return old;
+    const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const tag = `${detectDeviceBaseTag()}_${rand}`;
+    localStorage.setItem(deviceKey, tag);
+    return tag;
+  }
+
+  function genRespondentId() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const ts = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    const r = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `R${ts}_${getOrCreateDeviceTag()}_${r}`;
+  }
+
+  function getOrCreateRespondentId() {
+    const old = String(localStorage.getItem(respondentKey) || '').trim();
+    if (old) return old;
+    const id = genRespondentId();
+    localStorage.setItem(respondentKey, id);
+    return id;
+  }
+
+  function syncRespondentIdDisplay() {
+    renderProfileSummary();
+  }
+
+  function renderProfileSummary(profile = null) {
+    const summaryEl = document.getElementById('profileSummaryText');
+    if (!summaryEl) return;
+    const p = profile || (localStorage.getItem('survey_profile_data') ? JSON.parse(localStorage.getItem('survey_profile_data')) : {});
+    const respondentId = getOrCreateRespondentId();
+    const familyTotal = asNonNegativeInt(p.family_total, 0);
+    const dependentKids = asNonNegativeInt(p.dependent_children_count, 0);
+    const housing = p.housing_status || '-';
+    const vehicle = asNonNegativeInt(p.household_vehicle_count, 0);
+    const ebike = asNonNegativeInt(p.household_ebike_count, 0);
+    const income = p.household_income_annual || '未填写';
+    const home = p.home_location || document.getElementById('residence').value || '-';
+    summaryEl.textContent = `受访者编号：${respondentId}；家庭人数：${familyTotal}，其中无独立出行人数：${dependentKids}；住房情况：${housing}；小汽车：${vehicle}辆；电动自行车：${ebike}辆；家庭总收入：${income}；居住地：${home}`;
+  }
+
+  function clearRespondentLocalCache() {
+    ['survey_profile_data', 'survey_trip_diary', 'survey_map_picker_result', 'survey_map_picker_context', 'survey_sp_current_assignment'].forEach((k) => {
+      localStorage.removeItem(k);
+    });
+  }
+
+  function updateTripInheritBanner() {
+    const banner = document.getElementById('tripInheritBanner');
+    if (!banner) return;
+    const rid = String(localStorage.getItem(respondentKey) || '').trim() || '(未分配)';
+    const hasProfile = !!localStorage.getItem('survey_profile_data');
+    const hasTrip = !!localStorage.getItem('survey_trip_diary');
+    let src = '无';
+    if (hasProfile && hasTrip) src = 'Profile + TripDiary';
+    else if (hasProfile) src = 'Profile';
+    else if (hasTrip) src = 'TripDiary(本地历史)';
+    banner.textContent = `继承检查：来源=${src}；respondent_id=${rid}`;
+  }
+
+  function exportCurrentRespondentJson() {
+    const profileRaw = localStorage.getItem('survey_profile_data');
+    const tripRaw = localStorage.getItem('survey_trip_diary');
+    const spAssignmentRaw = localStorage.getItem('survey_sp_current_assignment');
+    const spSubmitRaw = localStorage.getItem('survey_sp_last_submission');
+    const payload = {
+      respondent_id: getOrCreateRespondentId(),
+      exported_at: new Date().toISOString(),
+      profile: profileRaw ? JSON.parse(profileRaw) : null,
+      trip_diary: collectDiary(),
+      sp: {
+        current_assignment: spAssignmentRaw ? JSON.parse(spAssignmentRaw) : null,
+        last_submission: spSubmitRaw ? JSON.parse(spSubmitRaw) : null,
+      },
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${payload.respondent_id || 'respondent'}_survey_export.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function showActionDialog(title, message, actions) {
+    return new Promise((resolve) => {
+      const mask = document.createElement('div');
+      mask.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+      const box = document.createElement('div');
+      box.style.cssText = 'background:#fff;max-width:560px;width:100%;border-radius:10px;padding:14px 14px 12px;border:1px solid #d6e1ee;';
+      const h = document.createElement('h3');
+      h.textContent = title;
+      h.style.margin = '0 0 8px';
+      const p = document.createElement('p');
+      p.textContent = message;
+      p.style.margin = '0 0 12px';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;';
+      actions.forEach((a) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = a.label;
+        b.style.cssText = 'min-height:38px;padding:8px 12px;';
+        b.addEventListener('click', () => {
+          mask.remove();
+          resolve(a.id);
+        });
+        row.appendChild(b);
+      });
+      box.appendChild(h);
+      box.appendChild(p);
+      box.appendChild(row);
+      mask.appendChild(box);
+      document.body.appendChild(mask);
+    });
+  }
+
+  function optionHtml(items, selected) {
+    return items.map(v => `<option value="${v}" ${v===selected?'selected':''}>${v}</option>`).join('');
+  }
+
+  function asNonNegativeInt(value, fallback = 0) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.max(0, Math.floor(n));
+  }
+
+  function todayLocalYmd() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  function fillInheritedHouseholdInfo(profile) {
+    renderProfileSummary(profile);
+  }
+
+  function tripRow(memberIdx, tripIdx, trip = {}) {
+    const originId = `origin_${memberIdx}_${tripIdx}`;
+    const destId = `dest_${memberIdx}_${tripIdx}`;
+    return `
+      <div class="trip-row" data-member="${memberIdx}">
+        <h4>第${tripIdx + 1}次出行</h4>
+        <div class="grid">
+          <div class="field"><label>出发地</label><input id="${originId}" value="${trip.origin || ''}" data-key="origin" /><button type="button" class="pickMapBtn" data-target="${originId}" data-note="出发地选址">地图选址</button></div>
+          <div class="field"><label>出发时间(HHMM)</label><input value="${trip.depart_hhmm || ''}" data-key="depart_hhmm" placeholder="0830" /></div>
+          <div class="field"><label>目的地</label><input id="${destId}" value="${trip.destination || ''}" data-key="destination" /><button type="button" class="pickMapBtn" data-target="${destId}" data-note="目的地选址">地图选址</button></div>
+          <div class="field"><label>到达时间(HHMM)</label><input value="${trip.arrive_hhmm || ''}" data-key="arrive_hhmm" placeholder="0910" /></div>
+          <div class="field"><label>出行目的</label><select data-key="purpose">${optionHtml(purposeOptions, trip.purpose || '工作')}</select></div>
+          <div class="field"><label>接送人数（接送目的时）</label><input type="number" min="0" max="10" value="${trip.pickup_people || 0}" data-key="pickup_people" /></div>
+          <div class="field"><label>出行花费（元）</label><input type="number" step="0.1" min="0" value="${trip.cost_cny || 0}" data-key="cost_cny" /></div>
+          <div class="field"><label>在目的地逗留时长（分钟）</label><input type="number" min="0" value="${trip.stay_min || 0}" data-key="stay_min" /></div>
+          <div class="field"><label>出发地到目的地距离（km）</label><input type="number" step="0.1" min="0" value="${trip.distance_km || 0}" data-key="distance_km" /></div>
+          <div class="field"><label>主要交通方式</label><select data-key="main_mode">${optionHtml(modeOptions, trip.main_mode || '公交')}</select></div>
+        </div>
+        <div class="trip-row-actions"><button type="button" class="delTripBtn">删除本次出行</button></div>
+      </div>`;
+  }
+
+  function updateTripTitles(cardEl) {
+    const rows = Array.from(cardEl.querySelectorAll('.trip-row'));
+    rows.forEach((row, idx) => {
+      const h = row.querySelector('h4');
+      if (h) h.textContent = `第${idx + 1}次出行`;
+    });
+  }
+
+  function bindTripDeleteButtons(cardEl) {
+    cardEl.querySelectorAll('.delTripBtn').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        const list = cardEl.querySelector('.trip-list');
+        const rows = Array.from(list.querySelectorAll('.trip-row'));
+        if (rows.length <= 1) {
+          alert('至少保留一次出行记录。');
+          return;
+        }
+        const row = btn.closest('.trip-row');
+        if (row) row.remove();
+        updateTripTitles(cardEl);
+        applyHomeRules();
+        saveDraftSilently();
+        hasUnsavedChanges = true;
+      });
+    });
+  }
+
+  function memberCard(i, profileMember = {}, initTrips = [], memberMeta = {}) {
+    const trips = initTrips.length ? initTrips : [{}];
+    const tripsHtml = trips.map((t, j) => tripRow(i, j, t)).join('');
+    const memberId = profileMember.member_id || `P${i + 1}`;
+    const gender = profileMember.gender || '';
+    const ageGroup = profileMember.age_group || '';
+    const occupation = profileMember.occupation || '';
+    const relationship = profileMember.relationship || '';
+    return `
+      <article class="member-card" data-member-index="${i}">
+        <h2>成员 ${i + 1}</h2>
+        <div class="grid">
+          <input type="hidden" data-key="member_id" value="${memberId}" />
+          <input type="hidden" data-key="gender" value="${gender}" />
+          <input type="hidden" data-key="age_group" value="${ageGroup}" />
+          <input type="hidden" data-key="occupation" value="${occupation}" />
+          <input type="hidden" data-key="relationship" value="${relationship}" />
+          <div class="field"><label>成员ID</label><input value="${memberId}" readonly /></div>
+          <div class="field"><label>性别（继承）</label><input value="${gender}" readonly /></div>
+          <div class="field"><label>年龄段（继承）</label><input value="${ageGroup}" readonly /></div>
+          <div class="field"><label>职业（继承）</label><input value="${occupation}" readonly /></div>
+          <div class="field"><label>与受访者关系（继承）</label><input value="${relationship}" readonly /></div>
+        </div>
+        <div class="trip-list">${tripsHtml}</div>
+        <div class="actions"><button type="button" class="addTripBtn">+ 添加一次出行</button></div>
+      </article>`;
+  }
+
+  function buildMembers(n, existing = [], profileMembers = []) {
+    membersContainer.innerHTML = '';
+    const existingById = {};
+    existing.forEach((m) => {
+      if (m.member_id) existingById[m.member_id] = m;
+    });
+    for (let i = 0; i < n; i += 1) {
+      const profileMember = profileMembers[i] || {};
+      const old = existingById[profileMember.member_id] || existing[i] || {};
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = memberCard(i, profileMember, old.trips || [], old);
+      const el = wrapper.firstElementChild;
+      membersContainer.appendChild(el);
+
+      el.querySelector('.addTripBtn').addEventListener('click', () => {
+        const list = el.querySelector('.trip-list');
+        const idx = list.querySelectorAll('.trip-row').length;
+        const rowWrap = document.createElement('div');
+        rowWrap.innerHTML = tripRow(i, idx, {});
+        list.appendChild(rowWrap.firstElementChild);
+        bindTripDeleteButtons(el);
+        bindMapPickerButtons();
+        applyHomeRules();
+        saveDraftSilently();
+        hasUnsavedChanges = true;
+      });
+      el.querySelectorAll('[data-key="origin"], [data-key="destination"]').forEach((input) => {
+        input.addEventListener('change', () => {
+          applyHomeRules(input);
+          saveDraftSilently();
+          hasUnsavedChanges = true;
+        });
+      });
+      bindTripDeleteButtons(el);
+    }
+    bindMapPickerButtons();
+    applyMapPickerResult();
+    applyHomeRules();
+  }
+
+  function applyHomeRules(changedEl = null) {
+    const home = document.getElementById('residence').value || '';
+    document.querySelectorAll('.member-card').forEach((card) => {
+      const trips = Array.from(card.querySelectorAll('.trip-row'));
+      if (!trips.length) return;
+      const changedRow = changedEl ? changedEl.closest('.trip-row') : null;
+      if (changedRow && card.contains(changedRow)) {
+        const changedIdx = trips.indexOf(changedRow);
+        const changedKey = changedEl.dataset ? changedEl.dataset.key : '';
+        if (changedIdx > 0 && changedKey === 'origin') {
+          const prevDest = trips[changedIdx - 1].querySelector('[data-key="destination"]');
+          if (prevDest) prevDest.value = changedEl.value || '';
+        } else if (changedIdx >= 0 && changedIdx < trips.length - 1 && changedKey === 'destination') {
+          const nextOrigin = trips[changedIdx + 1].querySelector('[data-key="origin"]');
+          if (nextOrigin) nextOrigin.value = changedEl.value || '';
+        }
+      }
+
+      const firstOrigin = trips[0].querySelector('[data-key="origin"]');
+      if (firstOrigin) firstOrigin.value = home;
+
+      // Default each destination to home when empty.
+      trips.forEach((tripRowEl) => {
+        const dest = tripRowEl.querySelector('[data-key="destination"]');
+        if (dest && !String(dest.value || '').trim()) dest.value = home;
+      });
+
+      for (let idx = 1; idx < trips.length; idx += 1) {
+        const origin = trips[idx].querySelector('[data-key="origin"]');
+        const prevDest = trips[idx - 1].querySelector('[data-key="destination"]');
+        if (origin && prevDest) origin.value = prevDest.value || home;
+      }
+    });
+  }
+
+  function bindMapPickerButtons() {
+    document.querySelectorAll('.pickMapBtn').forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => {
+        saveDraftSilently();
+        // Map jump is an intentional step after local draft save; skip unsaved-leave prompt.
+        hasUnsavedChanges = false;
+        localStorage.setItem('survey_map_picker_context', JSON.stringify({
+          targetId: btn.dataset.target,
+          returnPage: routes.trip,
+          note: btn.dataset.note || '地图选址',
+        }));
+        location.href = routes.map;
+      });
+    });
+  }
+
+  function applyMapPickerResult() {
+    const raw = localStorage.getItem('survey_map_picker_result');
+    if (!raw) return;
+    const result = JSON.parse(raw);
+    if (!result.targetId) return;
+    const el = document.getElementById(result.targetId);
+    if (el) {
+      el.value = result.label || result.value || '';
+      localStorage.removeItem('survey_map_picker_result');
+      applyHomeRules();
+      saveDraftSilently();
+      hasUnsavedChanges = true;
+      const focusNode = el.closest('.trip-row') || el.closest('.field') || el;
+      setTimeout(() => {
+        focusNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 0);
+    }
+  }
+
+  function saveDraftSilently() {
+    try {
+      applyHomeRules();
+      const data = collectDiary();
+      localStorage.setItem(storageKey, JSON.stringify(data));
+      preview.textContent = JSON.stringify(data, null, 2);
+    } catch (_e) {}
+  }
+
+  function collectDiary() {
+    applyHomeRules();
+    const out = {
+      respondent_id: getOrCreateRespondentId(),
+      survey_date: todayLocalYmd(),
+      residence: document.getElementById('residence').value,
+      household_size: asNonNegativeInt(document.getElementById('householdSize').value, 0),
+      members: [],
+    };
+
+    document.querySelectorAll('.member-card').forEach((card) => {
+      const member = {
+        member_id: card.querySelector('[data-key="member_id"]').value,
+        gender: card.querySelector('[data-key="gender"]').value,
+        age_group: card.querySelector('[data-key="age_group"]').value,
+        occupation: card.querySelector('[data-key="occupation"]').value,
+        relationship: card.querySelector('[data-key="relationship"]').value,
+        trips: [],
+      };
+      card.querySelectorAll('.trip-row').forEach((row) => {
+        const trip = {};
+        row.querySelectorAll('[data-key]').forEach((el) => {
+          const key = el.dataset.key;
+          if (['pickup_people', 'stay_min'].includes(key)) {
+            trip[key] = Number(el.value || 0);
+          } else if (['cost_cny', 'distance_km'].includes(key)) {
+            trip[key] = Number(el.value || 0);
+          } else {
+            trip[key] = el.value;
+          }
+        });
+        if (trip.depart_hhmm || trip.destination || trip.arrive_hhmm || trip.distance_km) {
+          member.trips.push(trip);
+        }
+      });
+      if (member.trips.length > 0) {
+        const homeOrigin = out.residence || '';
+        member.trips[0].origin = homeOrigin;
+        for (let i = 0; i < member.trips.length; i += 1) {
+          if (i > 0) {
+            member.trips[i].origin = member.trips[i - 1].destination || '';
+          }
+        }
+      }
+      out.members.push(member);
+    });
+
+    return out;
+  }
+
+  function validateLastDestinationIsHome(data) {
+    const home = String((data && data.residence) || '').trim();
+    if (!home) return { ok: false, message: '家庭住址为空，请先在Profile页补全家庭住址。' };
+    const bad = [];
+    (data.members || []).forEach((m) => {
+      const trips = Array.isArray(m.trips) ? m.trips : [];
+      if (!trips.length) return;
+      const last = String((trips[trips.length - 1] && trips[trips.length - 1].destination) || '').trim();
+      if (last !== home) bad.push(m.member_id || '未知成员');
+    });
+    if (bad.length) {
+      return { ok: false, message: `以下成员最后一次出行目的地不是家庭住址：${bad.join('、')}。请补全后再保存。` };
+    }
+    return { ok: true, message: '' };
+  }
+
+  document.getElementById('residence').addEventListener('change', () => {
+    applyHomeRules();
+    renderProfileSummary();
+    saveDraftSilently();
+    hasUnsavedChanges = true;
+  });
+
+  document.addEventListener('input', (e) => {
+    if (!e || !e.target) return;
+    if (e.target.closest('#membersContainer') || e.target.id === 'residence') {
+      saveDraftSilently();
+      hasUnsavedChanges = true;
+    }
+  });
+
+  window.addEventListener('beforeunload', (e) => {
+    if (!hasUnsavedChanges) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+
+  document.getElementById('saveDiaryBtn').addEventListener('click', async () => {
+    const data = collectDiary();
+    const check = validateLastDestinationIsHome(data);
+    if (!check.ok) {
+      alert(check.message);
+      return;
+    }
+    localStorage.setItem(storageKey, JSON.stringify(data));
+    preview.textContent = JSON.stringify(data, null, 2);
+    if (isFile) {
+      const action = await showActionDialog(
+        'Trip Diary已保存（本地模式）',
+        '当前为本地打开模式，已保存到浏览器缓存。',
+        [
+          { id: 'go_sp', label: '进入SP调查页面' },
+          { id: 'back', label: '返回' },
+        ],
+      );
+      if (action === 'go_sp') {
+        hasUnsavedChanges = false;
+        location.href = routes.sp;
+      }
+      if (action === 'back') {
+        hasUnsavedChanges = false;
+      }
+      updateTripInheritBanner();
+      return;
+    }
+    try {
+      const res = await fetch('/api/survey/trip-diary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json();
+      if (!res.ok || out.error) {
+        alert(out.error || '保存失败');
+        return;
+      }
+      hasUnsavedChanges = false;
+      preview.textContent = JSON.stringify({ server_saved: true, submission_id: out.submission_id, payload: data }, null, 2);
+      const action = await showActionDialog(
+        'Trip Diary保存成功',
+        `提交ID: ${out.submission_id}`,
+        [
+          { id: 'confirm', label: '确认' },
+          { id: 'back', label: '返回' },
+          { id: 'go_profile', label: '返回Profile页面' },
+          { id: 'go_sp', label: '进入SP调查页面' },
+          { id: 'clear_switch', label: '清空且切换下一位' },
+        ],
+      );
+      if (action === 'go_profile') {
+        location.href = routes.profile;
+      } else if (action === 'go_sp') {
+        location.href = routes.sp;
+      } else if (action === 'clear_switch') {
+        clearRespondentLocalCache();
+        localStorage.setItem(respondentKey, genRespondentId());
+        location.href = routes.profile;
+      }
+      updateTripInheritBanner();
+    } catch (e) {
+      alert('保存到服务器失败，请检查后端是否启动');
+    }
+  });
+  document.getElementById('exportRespondentJsonBtn').addEventListener('click', exportCurrentRespondentJson);
+
+  const old = localStorage.getItem(storageKey);
+  const profileRaw = localStorage.getItem('survey_profile_data');
+  let profileMembers = [];
+  let inheritedHomeLocation = '';
+  if (profileRaw) {
+    const profile = JSON.parse(profileRaw);
+    fillInheritedHouseholdInfo(profile);
+    const allMembers = profile.household_members || [];
+    const familyTotal = asNonNegativeInt(profile.family_total, allMembers.length);
+    const dependentKids = asNonNegativeInt(profile.dependent_children_count, 0);
+    const targetDiaryCount = Math.max(0, familyTotal - dependentKids);
+    inheritedHomeLocation = profile.home_location || '';
+    if (inheritedHomeLocation) {
+      // Always prefer latest home location from profile for defaults.
+      document.getElementById('residence').value = inheritedHomeLocation;
+    }
+
+    // Enforce count rule directly: diary members = family_total - dependent_children_count.
+    // Keep respondent(P1) first, then fill remaining slots from other members in order.
+    const respondent = allMembers.find((m) => m && m.member_id === 'P1') || allMembers[0] || {
+      member_id: 'P1', relationship: '本人',
+    };
+    const others = allMembers.filter((m) => m && m !== respondent);
+    profileMembers = [respondent, ...others].slice(0, targetDiaryCount);
+
+    const inheritedSize = Number(profileMembers.length || 0);
+    document.getElementById('householdSize').value = inheritedSize;
+    document.getElementById('householdSize').readOnly = true;
+  }
+  if (!document.getElementById('residence').value) {
+    const pickerRaw = localStorage.getItem('survey_map_picker_result');
+    if (pickerRaw) {
+      try {
+        const picker = JSON.parse(pickerRaw);
+        if (picker && picker.targetId === 'home_location') {
+          document.getElementById('residence').value = picker.label || picker.value || '';
+        }
+      } catch (_e) {}
+    }
+  }
+  if (old) {
+    const data = JSON.parse(old);
+    if (!document.getElementById('householdSize').readOnly) {
+      document.getElementById('householdSize').value = asNonNegativeInt(data.household_size, 0);
+    }
+    document.getElementById('residence').value = data.residence || inheritedHomeLocation || '';
+    buildMembers(asNonNegativeInt(document.getElementById('householdSize').value, 0), data.members || [], profileMembers);
+    preview.textContent = JSON.stringify(data, null, 2);
+  } else {
+    if (inheritedHomeLocation) {
+      document.getElementById('residence').value = inheritedHomeLocation;
+    }
+    buildMembers(asNonNegativeInt(document.getElementById('householdSize').value, 0), [], profileMembers);
+  }
+  syncRespondentIdDisplay();
+  updateTripInheritBanner();
+  hasUnsavedChanges = false;
+  bindCollapsible('diaryPreviewToggle', 'diaryPreviewWrap', 'Trip Diary JSON');
+})();
+</script>
+</body>
+</html>

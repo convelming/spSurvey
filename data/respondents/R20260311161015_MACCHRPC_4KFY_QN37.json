@@ -1,0 +1,672 @@
+{
+  "respondent_id": "R20260311161015_MACCHRPC_4KFY_QN37",
+  "created_at": "2026-03-11T08:10:34.035441+00:00",
+  "updated_at": "2026-03-11T08:19:50.993552+00:00",
+  "profile": {
+    "respondent_id": "R20260311161015_MACCHRPC_4KFY_QN37",
+    "housing_status": "自有住房，家庭同住",
+    "family_total": 3,
+    "dependent_children_count": 0,
+    "household_vehicle_count": 0,
+    "household_ebike_count": 0,
+    "household_income_annual": "",
+    "home_location": "POINT(23.159303,113.289814)",
+    "household_members": [
+      {
+        "member_id": "P1",
+        "relationship": "本人",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "education": "本科",
+        "income_pre_tax": "",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      },
+      {
+        "member_id": "P2",
+        "relationship": "配偶",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "education": "本科",
+        "income_pre_tax": "",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      },
+      {
+        "member_id": "P3",
+        "relationship": "配偶",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "education": "本科",
+        "income_pre_tax": "",
+        "driver_license": "无驾照",
+        "main_mode": "公交",
+        "car_usage": "无小汽车",
+        "transit_month_pass": "无",
+        "bike_share_month_pass": "无"
+      }
+    ]
+  },
+  "trip_diary": {
+    "respondent_id": "R20260311161015_MACCHRPC_4KFY_QN37",
+    "survey_date": "2026-03-11",
+    "residence": "POINT(23.159303,113.289814)",
+    "household_size": 3,
+    "members": [
+      {
+        "member_id": "P1",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "relationship": "本人",
+        "trips": [
+          {
+            "origin": "POINT(23.159303,113.289814)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.159303,113.289814)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          }
+        ]
+      },
+      {
+        "member_id": "P2",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "relationship": "配偶",
+        "trips": [
+          {
+            "origin": "POINT(23.159303,113.289814)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.159303,113.289814)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          }
+        ]
+      },
+      {
+        "member_id": "P3",
+        "gender": "男",
+        "age_group": "30~45岁",
+        "occupation": "其它",
+        "relationship": "配偶",
+        "trips": [
+          {
+            "origin": "POINT(23.159303,113.289814)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.159303,113.289814)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          }
+        ]
+      }
+    ]
+  },
+  "sp": {
+    "submissions": [
+      {
+        "submission_id": "sp_a18df4470466",
+        "assignment_id": "saved_design_generated",
+        "respondent_id": "R20260311161015_MACCHRPC_4KFY_QN37",
+        "design_save_name": "test0",
+        "choices": {
+          "saved_1773217166860_1": "car",
+          "saved_1773217166860_2": "car",
+          "saved_1773217166860_3": "pt",
+          "saved_1773217166860_4": "car",
+          "saved_1773217166860_5": "car",
+          "saved_1773217166860_6": "pt",
+          "saved_1773217166860_7": "car",
+          "saved_1773217166860_8": "car"
+        },
+        "choice_details": [
+          {
+            "task_id": "saved_1773217166860_1",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 20,
+              "cost": 15
+            },
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_2",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 30,
+              "cost": 60
+            },
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_3",
+            "chosen_alternative": "pt",
+            "chosen_attributes": {
+              "cost": 4,
+              "wait_time": 3
+            },
+            "alternatives": {
+              "car": {
+                "time": 40,
+                "cost": 12
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_4",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 20,
+              "cost": 15
+            },
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_5",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 30,
+              "cost": 60
+            },
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_6",
+            "chosen_alternative": "pt",
+            "chosen_attributes": {
+              "cost": 4,
+              "wait_time": 5
+            },
+            "alternatives": {
+              "car": {
+                "time": 40,
+                "cost": 12
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_7",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 20,
+              "cost": 15
+            },
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "task_id": "saved_1773217166860_8",
+            "chosen_alternative": "car",
+            "chosen_attributes": {
+              "time": 30,
+              "cost": 60
+            },
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          }
+        ],
+        "tasks": [
+          {
+            "id": "saved_1773217166860_1",
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_2",
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_3",
+            "alternatives": {
+              "car": {
+                "time": 40,
+                "cost": 12
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_4",
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_5",
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_6",
+            "alternatives": {
+              "car": {
+                "time": 40,
+                "cost": 12
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_7",
+            "alternatives": {
+              "car": {
+                "time": 20,
+                "cost": 15
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 3
+              }
+            }
+          },
+          {
+            "id": "saved_1773217166860_8",
+            "alternatives": {
+              "car": {
+                "time": 30,
+                "cost": 60
+              },
+              "pt": {
+                "cost": 4,
+                "wait_time": 5
+              }
+            }
+          }
+        ],
+        "submitted_at": "2026-03-11T08:19:50.992513+00:00"
+      }
+    ],
+    "last_response": {
+      "submission_id": "sp_a18df4470466",
+      "assignment_id": "saved_design_generated",
+      "respondent_id": "R20260311161015_MACCHRPC_4KFY_QN37",
+      "design_save_name": "test0",
+      "choices": {
+        "saved_1773217166860_1": "car",
+        "saved_1773217166860_2": "car",
+        "saved_1773217166860_3": "pt",
+        "saved_1773217166860_4": "car",
+        "saved_1773217166860_5": "car",
+        "saved_1773217166860_6": "pt",
+        "saved_1773217166860_7": "car",
+        "saved_1773217166860_8": "car"
+      },
+      "choice_details": [
+        {
+          "task_id": "saved_1773217166860_1",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 20,
+            "cost": 15
+          },
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_2",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 30,
+            "cost": 60
+          },
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_3",
+          "chosen_alternative": "pt",
+          "chosen_attributes": {
+            "cost": 4,
+            "wait_time": 3
+          },
+          "alternatives": {
+            "car": {
+              "time": 40,
+              "cost": 12
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_4",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 20,
+            "cost": 15
+          },
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_5",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 30,
+            "cost": 60
+          },
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_6",
+          "chosen_alternative": "pt",
+          "chosen_attributes": {
+            "cost": 4,
+            "wait_time": 5
+          },
+          "alternatives": {
+            "car": {
+              "time": 40,
+              "cost": 12
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_7",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 20,
+            "cost": 15
+          },
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "task_id": "saved_1773217166860_8",
+          "chosen_alternative": "car",
+          "chosen_attributes": {
+            "time": 30,
+            "cost": 60
+          },
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "saved_1773217166860_1",
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_2",
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_3",
+          "alternatives": {
+            "car": {
+              "time": 40,
+              "cost": 12
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_4",
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_5",
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_6",
+          "alternatives": {
+            "car": {
+              "time": 40,
+              "cost": 12
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_7",
+          "alternatives": {
+            "car": {
+              "time": 20,
+              "cost": 15
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 3
+            }
+          }
+        },
+        {
+          "id": "saved_1773217166860_8",
+          "alternatives": {
+            "car": {
+              "time": 30,
+              "cost": 60
+            },
+            "pt": {
+              "cost": 4,
+              "wait_time": 5
+            }
+          }
+        }
+      ],
+      "submitted_at": "2026-03-11T08:19:50.992513+00:00"
+    }
+  }
+}

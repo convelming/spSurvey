@@ -1,0 +1,169 @@
+{
+  "save_name": "ppo_test_design",
+  "type": "dyppo",
+  "saved_at": "2026-03-24T03:49:07.845259+00:00",
+  "payload": {
+    "beta_bounds": {},
+    "beta_defaults": {
+      "car.asc": 0,
+      "car.cost": -1,
+      "car.time": -1,
+      "pt.asc": 0,
+      "pt.cost": -1,
+      "pt.time": -1
+    },
+    "design_options": {
+      "dyppo": {
+        "batch_size": 8,
+        "explore_epsilon": 0.2,
+        "reward_weight_d_error": 1.0,
+        "tasks_per_round": 3
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "car",
+          "variables": [
+            {
+              "levels": [
+                10,
+                20,
+                30
+              ],
+              "name": "time"
+            },
+            {
+              "levels": [
+                2,
+                3,
+                4
+              ],
+              "name": "cost"
+            }
+          ]
+        },
+        {
+          "name": "pt",
+          "variables": [
+            {
+              "levels": [
+                12,
+                18,
+                28
+              ],
+              "name": "time"
+            },
+            {
+              "levels": [
+                1,
+                2,
+                3
+              ],
+              "name": "cost"
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "car",
+      "conditions": []
+    },
+    "design_type": "dyppo",
+    "n_parameters": 4,
+    "sample_size": 120,
+    "target_block_sample": 100,
+    "tasks_per_person_candidates": [
+      3
+    ]
+  },
+  "recommendation": {
+    "blocks": 1,
+    "rows": 3,
+    "tasks_per_person": 3
+  },
+  "preview_tasks": [
+    {
+      "alternatives": {
+        "car": {
+          "cost": 3,
+          "time": 30
+        },
+        "pt": {
+          "cost": 2,
+          "time": 12
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r1",
+      "row_in_block": 1,
+      "sig": "dc283d4156b523cd"
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": 4,
+          "time": 30
+        },
+        "pt": {
+          "cost": 3,
+          "time": 28
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r2",
+      "row_in_block": 2,
+      "sig": "32142e563c12b107"
+    },
+    {
+      "alternatives": {
+        "car": {
+          "cost": 4,
+          "time": 10
+        },
+        "pt": {
+          "cost": 2,
+          "time": 12
+        }
+      },
+      "block": 1,
+      "id": "preview_b1_r3",
+      "row_in_block": 3,
+      "sig": "44e427ad6a07a20a"
+    }
+  ],
+  "runtime": {
+    "distribution_log": [
+      {
+        "dedupe_key": "api/survey/sp-submit|sp_0c18fa3c56d7|ASSIGN_TEST_PPO2|R_TEST_PPO2",
+        "submission_id": "sp_0c18fa3c56d7",
+        "assignment_id": "ASSIGN_TEST_PPO2",
+        "respondent_id": "R_TEST_PPO2",
+        "source": "api/survey/sp-submit",
+        "issued_to_respondent_id": "R_TEST_PPO2",
+        "submitted_at": "2026-03-24T03:49:07.846765+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3"
+        ],
+        "choices": {
+          "preview_b1_r1": "car",
+          "preview_b1_r2": "car",
+          "preview_b1_r3": "car"
+        }
+      }
+    ],
+    "distribution_count": 1,
+    "task_issue_counts": {
+      "preview_b1_r1": 1,
+      "preview_b1_r2": 1,
+      "preview_b1_r3": 1
+    },
+    "choice_counts": {
+      "preview_b1_r1::car": 1,
+      "preview_b1_r2::car": 1,
+      "preview_b1_r3::car": 1
+    },
+    "last_distributed_at": "2026-03-24T03:49:07.846765+00:00"
+  }
+}

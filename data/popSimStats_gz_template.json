@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "key_format": "gender|age_group|edu",
+  "zone_key": "zone_id",
+  "notes": [
+    "Each zone_id distribution should sum to 1.0",
+    "Edit values based on PopulationSim/ActivitySim statistics",
+    "If a zone is missing, fallback to default_target"
+  ],
+  "age_groups": [
+    "18-30",
+    "31-45",
+    "46-60",
+    "60+"
+  ],
+  "genders": [
+    "male",
+    "female"
+  ],
+  "edu_groups": [
+    "middle_or_below",
+    "high_school",
+    "college_plus"
+  ],
+  "default_target": {
+    "male|18-30|middle_or_below": 0.06,
+    "male|18-30|high_school": 0.07,
+    "male|18-30|college_plus": 0.10,
+    "female|18-30|middle_or_below": 0.05,
+    "female|18-30|high_school": 0.07,
+    "female|18-30|college_plus": 0.11,
+    "male|31-45|middle_or_below": 0.07,
+    "male|31-45|high_school": 0.08,
+    "male|31-45|college_plus": 0.08,
+    "female|31-45|middle_or_below": 0.06,
+    "female|31-45|high_school": 0.07,
+    "female|31-45|college_plus": 0.08,
+    "male|46-60|middle_or_below": 0.04,
+    "male|46-60|high_school": 0.03,
+    "male|46-60|college_plus": 0.02,
+    "female|46-60|middle_or_below": 0.04,
+    "female|46-60|high_school": 0.03,
+    "female|46-60|college_plus": 0.02,
+    "male|60+|middle_or_below": 0.01,
+    "male|60+|high_school": 0.005,
+    "male|60+|college_plus": 0.005,
+    "female|60+|middle_or_below": 0.01,
+    "female|60+|high_school": 0.005,
+    "female|60+|college_plus": 0.005
+  },
+  "zone_targets": {
+    "440103": "__copy_from_default_target__",
+    "440104": "__copy_from_default_target__",
+    "440105": "__copy_from_default_target__",
+    "440106": "__copy_from_default_target__",
+    "440111": "__copy_from_default_target__",
+    "440112": "__copy_from_default_target__",
+    "440113": "__copy_from_default_target__",
+    "440114": "__copy_from_default_target__",
+    "440115": "__copy_from_default_target__",
+    "440117": "__copy_from_default_target__",
+    "440118": "__copy_from_default_target__"
+  }
+}

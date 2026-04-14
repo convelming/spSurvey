@@ -1,0 +1,236 @@
+{
+  "save_name": "test2",
+  "type": "efficient",
+  "saved_at": "2026-03-12T07:54:36.716316+00:00",
+  "payload": {
+    "sample_size": 600,
+    "design_type": "efficient",
+    "design_options": {
+      "efficient": {
+        "tasks_per_person": 8,
+        "row_exchange_iterations": 200
+      }
+    },
+    "n_parameters": 5,
+    "min_block_sample": 80,
+    "target_block_sample": 100,
+    "tasks_per_person_candidates": [
+      8
+    ],
+    "level_count_by_variable": {
+      "car.time": 3,
+      "car.cost": 3,
+      "pt.cost": 1,
+      "pt.wait_time": 2
+    },
+    "beta_defaults": {
+      "car.asc": 0,
+      "car.time": -20,
+      "car.cost": -5,
+      "pt.asc": 0,
+      "pt.cost": -5,
+      "pt.wait_time": -0.2
+    },
+    "beta_bounds": {
+      "car.time": {
+        "min": -10000,
+        "max": 0
+      },
+      "car.cost": {
+        "min": -1000,
+        "max": 0
+      },
+      "pt.cost": {
+        "min": -1000,
+        "max": 0
+      },
+      "pt.wait_time": {
+        "min": -1000,
+        "max": 0
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "car",
+          "variables": [
+            {
+              "name": "time",
+              "description": "t",
+              "beta_default": -20,
+              "beta_min": -10000,
+              "beta_max": 0,
+              "levels": [
+                "20",
+                "30",
+                "40"
+              ]
+            },
+            {
+              "name": "cost",
+              "description": "cost",
+              "beta_default": -5,
+              "beta_min": -1000,
+              "beta_max": 0,
+              "levels": [
+                "12",
+                "15",
+                "60"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "pt",
+          "variables": [
+            {
+              "name": "cost",
+              "description": "cost_pt",
+              "beta_default": -5,
+              "beta_min": -1000,
+              "beta_max": 0,
+              "levels": [
+                "4"
+              ]
+            },
+            {
+              "name": "wait_time",
+              "description": "wait time",
+              "beta_default": -0.2,
+              "beta_min": -1000,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "5"
+              ]
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "car",
+      "sp_intro_text": "test",
+      "conditions": []
+    }
+  },
+  "recommendation": {
+    "tasks_per_person": 8,
+    "blocks": 1,
+    "rows": 8,
+    "row_exchange_iterations": 200,
+    "information_ratio_n_times_t_over_k": 960,
+    "note": "直接按Efficient配置生成题组（不经过planning.py推荐）"
+  },
+  "preview_tasks": [
+    {
+      "id": "preview_task_1",
+      "alternatives": {
+        "car": {
+          "time": 20,
+          "cost": 15
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 3
+        }
+      }
+    },
+    {
+      "id": "preview_task_2",
+      "alternatives": {
+        "car": {
+          "time": 30,
+          "cost": 60
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 5
+        }
+      }
+    },
+    {
+      "id": "preview_task_3",
+      "alternatives": {
+        "car": {
+          "time": 40,
+          "cost": 12
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 3
+        }
+      }
+    },
+    {
+      "id": "preview_task_4",
+      "alternatives": {
+        "car": {
+          "time": 20,
+          "cost": 15
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 5
+        }
+      }
+    },
+    {
+      "id": "preview_task_5",
+      "alternatives": {
+        "car": {
+          "time": 30,
+          "cost": 60
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 3
+        }
+      }
+    },
+    {
+      "id": "preview_task_6",
+      "alternatives": {
+        "car": {
+          "time": 40,
+          "cost": 12
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 5
+        }
+      }
+    },
+    {
+      "id": "preview_task_7",
+      "alternatives": {
+        "car": {
+          "time": 20,
+          "cost": 15
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 3
+        }
+      }
+    },
+    {
+      "id": "preview_task_8",
+      "alternatives": {
+        "car": {
+          "time": 30,
+          "cost": 60
+        },
+        "pt": {
+          "cost": 4,
+          "wait_time": 5
+        }
+      }
+    }
+  ],
+  "runtime": {
+    "distribution_log": [],
+    "distribution_count": 0,
+    "task_issue_counts": {},
+    "choice_counts": {},
+    "last_distributed_at": null
+  }
+}
