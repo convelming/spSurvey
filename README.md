@@ -1,4 +1,4 @@
-# mappoQuestinnaire
+# rp and sp Questinnaires
 
 当前项目是一个基于 Flask 的出行调查系统，包含：
 - RP/Profile 页
