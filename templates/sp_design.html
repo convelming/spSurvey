@@ -58,7 +58,7 @@
   <section class="card">
     <h1>4. SP问卷设计页面</h1>
     <p class="hint">支持灵活配置：先添加选项（Alternative），再给每个选项添加变量（Variable）。</p>
-    <p class="hint">每个变量可填写参数默认值（先验）和 attribute level（用英文逗号分隔）。</p>
+    <p class="hint">每个变量可填写参数默认值（先验）和变量水平值（用英文逗号分隔）。</p>
     <p class="hint">ASC处理规则：每个选项自动内置 ASC；默认第一个选项为基准项（ASC=0，不计入参数）；其余选项 ASC 计入参数。</p>
   </section>
 
@@ -85,7 +85,7 @@
     <div class="field">
       <label>条件约束（参考ngene，按行填写）</label>
       <textarea id="designConditions" rows="3" placeholder="例如：\ncar.time > public_transit.time > 20\npublic_transit.wait_time <= 15"></textarea>
-      <p class="hint">支持 > / >= / < / <= 链式比较。用于过滤不合理或被主导组合。</p>
+      <p class="hint">支持 > / >= / < / <= 链式比较，以及变量与常数的 + / - / * / / 表达式，例如 `car.travel_time &lt;= bus.in_vehicle_time * 1.6`。</p>
     </div>
     <div class="grid">
       <div class="field">
@@ -184,7 +184,7 @@
 
   <section class="card">
     <div class="actions">
-      <button id="recommendBtn" type="button">训练权重</button>
+      <button id="recommendBtn" type="button">计算并生成方案</button>
       <a class="btn-link" data-page="sp" id="viewGeneratedSpBtn" target="_blank" rel="noopener noreferrer">查看生成的SP页面</a>
     </div>
   </section>
@@ -279,18 +279,67 @@
       .filter((x) => x.length > 0);
   }
 
+  const VARIABLE_TYPE_OPTIONS = [
+    { value: 'continuous', label: '连续型' },
+    { value: 'categorical', label: '类别变量' },
+    { value: 'ordinal', label: '有序变量' },
+  ];
+
+  function isNumericLike(value) {
+    const s = String(value == null ? '' : value).trim();
+    if (!s) return false;
+    return Number.isFinite(Number(s));
+  }
+
+  function inferVariableType(varName, levels) {
+    const name = String(varName || '').trim().toLowerCase();
+    const lv = Array.isArray(levels) ? levels.map((x) => String(x).trim()).filter(Boolean) : [];
+    if (!lv.length) return 'continuous';
+
+    const ordinalHints = /(level|rank|grade|quality|safety|stress|comfort|crowding|risk|score|count|次数|程度|等级|质量|安全|压力|舒适|拥挤|风险|评分)/i;
+
+    if (!lv.every(isNumericLike)) return 'categorical';
+
+    const nums = lv.map((x) => Number(x));
+    const uniq = Array.from(new Set(nums));
+    const sorted = uniq.slice().sort((a, b) => a - b);
+    const isBinary = sorted.length === 2 && sorted[0] === 0 && sorted[1] === 1;
+    const isSmallIntegerScale = sorted.length >= 2
+      && sorted.length <= 5
+      && sorted.every((n) => Number.isInteger(n))
+      && sorted.every((n, idx) => idx === 0 || n - sorted[idx - 1] === 1);
+
+    if (ordinalHints.test(name) || isSmallIntegerScale) return 'ordinal';
+    if (isBinary) return 'ordinal';
+    return 'continuous';
+  }
+
+  function normalizeVariableType(rawType, varName, levels) {
+    const t = String(rawType || '').trim().toLowerCase();
+    if (VARIABLE_TYPE_OPTIONS.some((item) => item.value === t)) return t;
+    return inferVariableType(varName, levels);
+  }
+
+  function variableTypeOptionsHtml(currentType, varName, levels) {
+    const current = normalizeVariableType(currentType, varName, levels);
+    return VARIABLE_TYPE_OPTIONS
+      .map((item) => `<option value="${item.value}" ${item.value === current ? 'selected' : ''}>${item.label}</option>`)
+      .join('');
+  }
+
   function isAscVar(varName) {
     const n = String(varName || '').trim().toLowerCase();
     return n === 'asc' || n === 'intercept';
   }
 
   function varRowHtml(v) {
+    const levels = parseLevels(v.levels_csv || '');
     return `
       <div class="trip-row variable-row">
-        <div class="grid">
+        <div class="grid variable-config-grid-top">
           <div class="field">
             <label>变量名</label>
-            <input data-key="name" value="${v.name || ''}" placeholder="如 time / cost / wait_time" />
+            <input type="text" data-key="name" value="${v.name || ''}" placeholder="如 time / cost / wait_time" />
           </div>
           <div class="field">
             <label>参数默认值（先验）</label>
@@ -304,13 +353,21 @@
             <label>参数估计上界（可选）</label>
             <input data-key="beta_max" type="number" step="0.01" value="${v.beta_max ?? ''}" placeholder="如 0.00" />
           </div>
+        </div>
+        <div class="grid variable-config-grid-bottom">
           <div class="field">
-            <label>attribute levels（逗号分隔）</label>
-            <input data-key="levels_csv" value="${v.levels_csv || ''}" placeholder="如 20,30,40" />
+            <label>变量类型</label>
+            <select data-key="variable_type">
+              ${variableTypeOptionsHtml(v.variable_type, v.name, levels)}
+            </select>
+          </div>
+          <div class="field">
+            <label>变量水平值（英文逗号分隔）</label>
+            <input type="text" data-key="levels_csv" value="${v.levels_csv || ''}" placeholder="如 20,30,40" />
           </div>
           <div class="field">
             <label>变量描述（用于SP题面展示）</label>
-            <input data-key="description" value="${v.description || ''}" placeholder="如 出行时间（分钟）" />
+            <input type="text" data-key="description" value="${v.description || ''}" placeholder="如 出行时间（分钟）" />
           </div>
         </div>
         <div class="actions">
@@ -326,7 +383,7 @@
         <div class="grid">
           <div class="field">
             <label>选项名称</label>
-            <input data-key="alt_name" value="${alt.name || ''}" placeholder="如 car / pt / ebike" />
+            <input type="text" data-key="alt_name" value="${alt.name || ''}" placeholder="如 car / pt / ebike" />
           </div>
         </div>
         <div class="actions">
@@ -342,7 +399,7 @@
 
     card.querySelector('.addVarBtn').addEventListener('click', () => {
       const wrap = document.createElement('div');
-      wrap.innerHTML = varRowHtml({name: '', beta_default: 0, levels_csv: '', description: ''});
+      wrap.innerHTML = varRowHtml({name: '', beta_default: 0, variable_type: 'continuous', levels_csv: '', description: ''});
       varsContainer.appendChild(wrap.firstElementChild);
       bindVarEvents(card);
       refreshComputed();
@@ -423,12 +480,15 @@
         const betaDefault = Number(row.querySelector('[data-key="beta_default"]').value || 0);
         const betaMinRaw = String(row.querySelector('[data-key="beta_min"]').value || '').trim();
         const betaMaxRaw = String(row.querySelector('[data-key="beta_max"]').value || '').trim();
+        const variableTypeRaw = String(row.querySelector('[data-key="variable_type"]').value || '').trim();
         const levelsRaw = row.querySelector('[data-key="levels_csv"]').value;
         const description = String(row.querySelector('[data-key="description"]').value || '').trim();
         const levels = parseLevels(levelsRaw);
+        const variableType = normalizeVariableType(variableTypeRaw, name, levels);
         variables.push({
           name,
           description,
+          variable_type: variableType,
           beta_default: betaDefault,
           beta_min: betaMinRaw === '' ? null : Number(betaMinRaw),
           beta_max: betaMaxRaw === '' ? null : Number(betaMaxRaw),
@@ -517,6 +577,7 @@
           beta_default: v.beta_default ?? 0,
           beta_min: v.beta_min ?? '',
           beta_max: v.beta_max ?? '',
+          variable_type: v.variable_type || '',
           levels_csv: Array.isArray(v.levels) ? v.levels.join(',') : '',
           description: v.description || '',
         })) : [];
@@ -834,7 +895,11 @@
         const varName = safeName(v && v.name);
         if (!varName) return `选项 ${altName} 存在未命名变量`;
         const levels = Array.isArray(v && v.levels) ? v.levels : [];
-        if (levels.length < 1) return `选项 ${altName} 变量 ${varName} 至少需要1个attribute level`;
+        const variableType = normalizeVariableType(v && v.variable_type, varName, levels);
+        if (levels.length < 1) return `选项 ${altName} 变量 ${varName} 至少需要1个变量水平值`;
+        if (!VARIABLE_TYPE_OPTIONS.some((item) => item.value === variableType)) {
+          return `选项 ${altName} 变量 ${varName} 的变量类型无效`;
+        }
       }
     }
     if (Number(payload.sample_size || 0) <= 0) return 'sample_size必须大于0';

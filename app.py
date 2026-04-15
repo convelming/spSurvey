@@ -8,6 +8,7 @@ import shutil
 import threading
 import sys
 import uuid
+import ast
 from copy import deepcopy
 from datetime import datetime
 from itertools import product
@@ -40,6 +41,7 @@ INLINE_BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
 SUBSCRIPT_IDENT_RE = re.compile(r"\b([A-Za-z]+)((?:_[A-Za-z0-9]+)+)\b")
 INLINE_MATH_DOLLAR_RE = re.compile(r"(?<!\\)\$(.+?)(?<!\\)\$")
 INLINE_MATH_PAREN_RE = re.compile(r"\\\((.+?)\\\)")
+ALLOWED_VARIABLE_TYPES = ("continuous", "categorical", "ordinal")
 
 
 def _merge_dict(base: dict, patch: dict) -> dict:
@@ -93,6 +95,8 @@ def _render_markdown_inline(text: str, link_map: dict[str, str]) -> str:
         if not raw:
             return False
         if raw.startswith("http://") or raw.startswith("https://"):
+            return False
+        if re.fullmatch(r"[A-Za-z_]\w*(?:\([^`]*\))?", raw):
             return False
         if "/" in raw and "\\" not in raw and "_" not in raw and "^" not in raw:
             return False
@@ -270,6 +274,82 @@ def _render_markdown_table(lines: list[str], start: int, link_map: dict[str, str
     return "".join(table_html), i
 
 
+def _render_markdown_list(lines: list[str], start: int, link_map: dict[str, str]) -> tuple[str, int]:
+    def indent_of(text: str) -> int:
+        return len(text) - len(text.lstrip(" "))
+
+    def parse(idx: int, base_indent: int) -> tuple[str, int]:
+        tag: str | None = None
+        items_html: list[str] = []
+
+        while idx < len(lines):
+            raw = lines[idx]
+            stripped = raw.strip()
+            if not stripped:
+                idx += 1
+                break
+
+            current_indent = indent_of(raw)
+            if current_indent < base_indent:
+                break
+            if current_indent > base_indent:
+                break
+
+            ordered_match = re.match(r"^\d+\.\s+(.*)", stripped)
+            unordered_match = re.match(r"^[-*]\s+(.*)", stripped)
+            if not ordered_match and not unordered_match:
+                break
+
+            current_tag = "ol" if ordered_match else "ul"
+            if tag is None:
+                tag = current_tag
+            if current_tag != tag:
+                break
+
+            item_text = (ordered_match.group(1) if ordered_match else unordered_match.group(1)).strip()
+            idx += 1
+            continuation: list[str] = []
+            nested_blocks: list[str] = []
+
+            while idx < len(lines):
+                nxt_raw = lines[idx]
+                nxt_stripped = nxt_raw.strip()
+                if not nxt_stripped:
+                    idx += 1
+                    break
+
+                nxt_indent = indent_of(nxt_raw)
+                if nxt_indent < base_indent:
+                    break
+
+                nested_ordered = re.match(r"^\d+\.\s+(.*)", nxt_stripped)
+                nested_unordered = re.match(r"^[-*]\s+(.*)", nxt_stripped)
+                if nested_ordered or nested_unordered:
+                    if nxt_indent == base_indent:
+                        break
+                    if nxt_indent > base_indent:
+                        nested_html, idx = parse(idx, nxt_indent)
+                        if nested_html:
+                            nested_blocks.append(nested_html)
+                        continue
+
+                if nxt_indent > base_indent:
+                    continuation.append(nxt_stripped)
+                    idx += 1
+                    continue
+
+                break
+
+            text_html = _render_markdown_inline(" ".join([item_text] + continuation).strip(), link_map)
+            items_html.append(f"<li>{text_html}{''.join(nested_blocks)}</li>")
+
+        if not tag:
+            return "", idx
+        return f"<{tag}>{''.join(items_html)}</{tag}>", idx
+
+    return parse(start, len(lines[start]) - len(lines[start].lstrip(" ")))
+
+
 def _render_markdown(md_text: str, link_map: dict[str, str]) -> str:
     lines = md_text.splitlines()
     blocks: list[str] = []
@@ -318,27 +398,8 @@ def _render_markdown(md_text: str, link_map: dict[str, str]) -> str:
             continue
 
         if re.match(r"^[-*]\s+", stripped) or re.match(r"^\d+\.\s+", stripped):
-            ordered = bool(re.match(r"^\d+\.\s+", stripped))
-            tag = "ol" if ordered else "ul"
-            item_re = re.compile(r"^\d+\.\s+(.*)") if ordered else re.compile(r"^[-*]\s+(.*)")
-            items: list[str] = []
-            while i < len(lines):
-                current = lines[i].strip()
-                if not current:
-                    i += 1
-                    break
-                match = item_re.match(current)
-                if match:
-                    items.append(match.group(1).strip())
-                    i += 1
-                    continue
-                if lines[i].startswith("  ") and items:
-                    items[-1] = f"{items[-1]} {current}"
-                    i += 1
-                    continue
-                break
-            list_html = "".join(f"<li>{_render_markdown_inline(item, link_map)}</li>" for item in items)
-            blocks.append(f"<{tag}>{list_html}</{tag}>")
+            list_html, i = _render_markdown_list(lines, i, link_map)
+            blocks.append(list_html)
             continue
 
         paragraph_lines = [stripped]
@@ -457,6 +518,68 @@ def normalize_design_type(raw: str | None) -> str:
     return t if t in ("efficient", "dyppo", "selfattention") else "efficient"
 
 
+def _is_numeric_like(value: Any) -> bool:
+    try:
+        float(str(value).strip())
+        return True
+    except Exception:
+        return False
+
+
+def _infer_variable_type(var_name: str | None, levels: list[Any] | None) -> str:
+    name = str(var_name or "").strip().lower()
+    lv = [str(x).strip() for x in (levels or []) if str(x).strip()]
+    if not lv:
+        return "continuous"
+    ordinal_hints = re.compile(r"(level|rank|grade|quality|safety|stress|comfort|crowding|risk|score|count|次数|程度|等级|质量|安全|压力|舒适|拥挤|风险|评分)")
+    if not all(_is_numeric_like(x) for x in lv):
+        return "categorical"
+
+    nums = [float(x) for x in lv]
+    uniq_sorted = sorted(set(nums))
+    is_binary = len(uniq_sorted) == 2 and uniq_sorted[0] == 0.0 and uniq_sorted[1] == 1.0
+    is_small_integer_scale = (
+        2 <= len(uniq_sorted) <= 5
+        and all(float(int(n)) == n for n in uniq_sorted)
+        and all((uniq_sorted[i] - uniq_sorted[i - 1]) == 1.0 for i in range(1, len(uniq_sorted)))
+    )
+    if ordinal_hints.search(name) or is_small_integer_scale:
+        return "ordinal"
+    if is_binary:
+        return "ordinal"
+    return "continuous"
+
+
+def normalize_variable_type(raw: str | None, *, var_name: str | None = None, levels: list[Any] | None = None) -> str:
+    vt = str(raw or "").strip().lower()
+    if vt in ALLOWED_VARIABLE_TYPES:
+        return vt
+    return _infer_variable_type(var_name, levels)
+
+
+def normalize_design_spec_variable_types(payload_obj: dict) -> dict:
+    out = deepcopy(payload_obj) if isinstance(payload_obj, dict) else {}
+    spec = out.get("design_spec", {})
+    if not isinstance(spec, dict):
+        return out
+    alternatives = spec.get("alternatives", [])
+    if not isinstance(alternatives, list):
+        return out
+    for alt in alternatives:
+        if not isinstance(alt, dict):
+            continue
+        variables = alt.get("variables", [])
+        if not isinstance(variables, list):
+            continue
+        for var in variables:
+            if not isinstance(var, dict):
+                continue
+            var_name = str(var.get("name", "")).strip()
+            levels = var.get("levels", []) if isinstance(var.get("levels", []), list) else []
+            var["variable_type"] = normalize_variable_type(var.get("variable_type"), var_name=var_name, levels=levels)
+    return out
+
+
 def design_spec_file_path(save_name: str) -> Path:
     safe = sanitize_save_name(save_name)
     return paths()["sp_design_dir"] / f"{safe}.json"
@@ -489,10 +612,13 @@ def _payload_save_name(payload: dict) -> str | None:
 
 def ensure_design_type_field(rec: dict) -> dict:
     out = dict(rec) if isinstance(rec, dict) else {}
+    payload = out.get("payload", {}) if isinstance(out.get("payload", {}), dict) else {}
+    if payload:
+        out["payload"] = normalize_design_spec_variable_types(payload)
+        payload = out["payload"]
     if "type" in out and str(out.get("type", "")).strip().lower() in ("efficient", "dyppo", "selfattention"):
         out["type"] = normalize_design_type(out.get("type"))
         return out
-    payload = out.get("payload", {}) if isinstance(out.get("payload", {}), dict) else {}
     out["type"] = normalize_design_type(payload.get("design_type", out.get("design_type")))
     return out
 
@@ -573,6 +699,7 @@ def record_design_distribution(
 def validate_sp_design_payload(payload_obj: dict) -> tuple[bool, str]:
     if not isinstance(payload_obj, dict):
         return False, "payload must be an object"
+    payload_obj = normalize_design_spec_variable_types(payload_obj)
     design_spec = payload_obj.get("design_spec", {})
     if not isinstance(design_spec, dict):
         return False, "design_spec is required"
@@ -600,9 +727,12 @@ def validate_sp_design_payload(payload_obj: dict) -> tuple[bool, str]:
             var_name = sanitize_save_name(str(var.get("name", "")).strip())
             if not var_name:
                 return False, f"选项{alt_name}变量{v_idx}缺少名称"
+            variable_type = normalize_variable_type(var.get("variable_type"), var_name=var_name, levels=var.get("levels", []))
+            if variable_type not in ALLOWED_VARIABLE_TYPES:
+                return False, f"选项{alt_name}变量{var_name}的变量类型无效"
             levels = var.get("levels", [])
             if not isinstance(levels, list) or len(levels) < 1:
-                return False, f"选项{alt_name}变量{var_name}至少需要1个attribute level"
+                return False, f"选项{alt_name}变量{var_name}至少需要1个变量水平值"
 
     design_type = normalize_design_type(payload_obj.get("design_type"))
     sample_size = int(payload_obj.get("sample_size", 0) or 0)
@@ -780,20 +910,63 @@ def _task_satisfies_conditions(task: dict, conditions: list[str]) -> bool:
     if not conditions:
         return True
 
-    def resolve_token(token: str):
-        t = str(token or "").strip()
-        n = _to_num(t)
-        if n is not None:
-            return True, n
-        if "." not in t:
+    def resolve_expr(expr: str):
+        text = str(expr or "").strip()
+        if not text:
             return False, 0.0
-        a, b = t.split(".", 1)
-        alts = task.get("alternatives", {})
-        attrs = alts.get(a, {})
-        val = _to_num(attrs.get(b))
-        if val is None:
+
+        plain_num = _to_num(text)
+        if plain_num is not None:
+            return True, plain_num
+
+        token_values: dict[str, float] = {}
+
+        def repl(match):
+            raw = match.group(0)
+            a, b = raw.split(".", 1)
+            alts = task.get("alternatives", {})
+            attrs = alts.get(a, {})
+            val = _to_num(attrs.get(b))
+            if val is None:
+                raise ValueError(f"unknown condition token: {raw}")
+            key = f"__cond_{len(token_values)}"
+            token_values[key] = float(val)
+            return key
+
+        try:
+            normalized = re.sub(r"\b[A-Za-z_]\w*\.[A-Za-z_]\w*\b", repl, text)
+            node = ast.parse(normalized, mode="eval")
+        except Exception:
             return False, 0.0
-        return True, val
+
+        def eval_node(n):
+            if isinstance(n, ast.Expression):
+                return eval_node(n.body)
+            if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)):
+                return float(n.value)
+            if isinstance(n, ast.Name) and n.id in token_values:
+                return float(token_values[n.id])
+            if isinstance(n, ast.UnaryOp) and isinstance(n.op, (ast.UAdd, ast.USub)):
+                v = eval_node(n.operand)
+                return v if isinstance(n.op, ast.UAdd) else -v
+            if isinstance(n, ast.BinOp) and isinstance(n.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)):
+                left = eval_node(n.left)
+                right = eval_node(n.right)
+                if isinstance(n.op, ast.Add):
+                    return left + right
+                if isinstance(n.op, ast.Sub):
+                    return left - right
+                if isinstance(n.op, ast.Mult):
+                    return left * right
+                if abs(right) <= 1e-12:
+                    raise ZeroDivisionError("condition expression division by zero")
+                return left / right
+            raise ValueError(f"unsupported condition expression: {ast.dump(n)}")
+
+        try:
+            return True, float(eval_node(node))
+        except Exception:
+            return False, 0.0
 
     def cmp(left, op, right):
         if op == ">":
@@ -812,8 +985,8 @@ def _task_satisfies_conditions(task: dict, conditions: list[str]) -> bool:
             continue
         ok = True
         for i in range(1, len(parts), 2):
-            l_ok, l_val = resolve_token(parts[i - 1])
-            r_ok, r_val = resolve_token(parts[i + 1])
+            l_ok, l_val = resolve_expr(parts[i - 1])
+            r_ok, r_val = resolve_expr(parts[i + 1])
             if not l_ok or not r_ok or not cmp(l_val, parts[i], r_val):
                 ok = False
                 break
@@ -2648,7 +2821,8 @@ def api_design_spec():
         return jsonify({"error": "invalid save_name"}), 400
     source_save_name = sanitize_save_name(str(payload.get("source_save_name", "")).strip())
     inherit_model_weights = bool(payload.get("inherit_model_weights", False))
-    payload_inner = payload.get("payload", payload)
+    payload_inner_raw = payload.get("payload", payload)
+    payload_inner = normalize_design_spec_variable_types(payload_inner_raw if isinstance(payload_inner_raw, dict) else {})
     ok, err = validate_sp_design_payload(payload_inner if isinstance(payload_inner, dict) else {})
     if not ok:
         return jsonify({"error": err}), 400
@@ -2740,5 +2914,11 @@ if __name__ == "__main__":
     debug_raw = str(os.environ.get("SP_SURVEY_DEBUG", "1") or "1").strip().lower()
     debug = debug_raw not in ("0", "false", "no", "off")
     is_pydev_console = any("pydevconsole.py" in str(arg) for arg in sys.argv)
-    use_reloader = bool(debug and not is_pydev_console)
-    app.run(host=host, port=port, debug=debug, use_reloader=use_reloader, threaded=True)
+    is_pycharm_hosted = str(os.environ.get("PYCHARM_HOSTED", "") or "").strip() == "1"
+    is_pycharm_runtime = bool(is_pydev_console or is_pycharm_hosted)
+    if is_pycharm_runtime:
+        # PyCharm 自己已经接管了调试能力；再叠加 Flask debug/reloader 更容易卡在 IDE 运行链路里。
+        debug = False
+    use_reloader = bool(debug and not is_pycharm_runtime)
+    threaded = not is_pycharm_runtime
+    app.run(host=host, port=port, debug=debug, use_reloader=use_reloader, threaded=threaded)

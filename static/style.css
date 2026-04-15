@@ -213,6 +213,7 @@ hr {
 }
 
 select,
+input:not([type]),
 input[type="number"],
 input[type="text"],
 input[type="time"],
@@ -239,6 +240,7 @@ textarea {
 }
 
 select:focus,
+input:not([type]):focus,
 input[type="number"]:focus,
 input[type="text"]:focus,
 input[type="time"]:focus,
@@ -249,6 +251,7 @@ textarea:focus {
 }
 
 input[readonly],
+input:not([type])[readonly],
 textarea[readonly],
 select[disabled],
 input[disabled] {
@@ -397,6 +400,22 @@ code {
 .alt-card,
 .variable-row {
   padding: 16px;
+}
+
+.variable-config-grid-top {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.variable-config-grid-bottom {
+  margin-top: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.variable-config-grid-top .field label,
+.variable-config-grid-bottom .field label {
+  min-height: 42px;
+  display: flex;
+  align-items: flex-end;
 }
 
 .member-card,
@@ -766,6 +785,14 @@ tbody tr:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .variable-config-grid-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .variable-config-grid-bottom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .alt-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -804,6 +831,16 @@ tbody tr:hover {
   .grid,
   .alt-grid {
     grid-template-columns: 1fr;
+  }
+
+  .variable-config-grid-top,
+  .variable-config-grid-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .variable-config-grid-top .field label,
+  .variable-config-grid-bottom .field label {
+    min-height: 0;
   }
 
   .actions,

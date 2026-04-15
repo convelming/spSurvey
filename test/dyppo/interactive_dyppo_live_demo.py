@@ -48,7 +48,7 @@ RUNS_DIR = ALGO_TEST_DIR / "runs"
 RUN_STAMP = datetime.now().strftime("%Y%m%d_%H%M")
 RUN_DIR = RUNS_DIR / RUN_STAMP
 CONFIG_FILE = DATA_DIR / "config.json"
-DEFAULT_DESIGN_SAVE_NAME = "sp_efficient_20260324_175903_SZ5V"
+DEFAULT_DESIGN_SAVE_NAME = "gz_pt_share_variable_universe_v1"
 SESSION_ROWS_JSONL = RUN_DIR / "dyppo_live_session_rows.jsonl"
 
 
@@ -552,7 +552,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 
 
 

@@ -1,0 +1,3128 @@
+{
+  "design_save_name": "中途_xjh_限制1",
+  "candidate_pool_size": 120,
+  "expert_preview_size": 6,
+  "overlap_with_expert": 0,
+  "candidate_pool": [
+    {
+      "idx": 1,
+      "sig": "22298492cbe49bd9",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 2,
+      "sig": "132565c818810227",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 3,
+      "sig": "f62c883679c558eb",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 4,
+      "sig": "c56c35a506e541f0",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 5,
+      "sig": "b1ad28135d5d9ff0",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 6,
+      "sig": "ed7c2067295b3049",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 7,
+      "sig": "35d194ff37e39e94",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 8,
+      "sig": "ae81f23241af8572",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 9,
+      "sig": "6b1243ddca96f906",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 10,
+      "sig": "c3530c0699d86cb1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 11,
+      "sig": "65e125902cb00caf",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 12,
+      "sig": "28b9cec00c7d372b",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 13,
+      "sig": "a917fe7b3c4395ca",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 14,
+      "sig": "79f5f84154e2cc98",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 15,
+      "sig": "576fc0bbbace42dc",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 16,
+      "sig": "70eb307e4d99fcb3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 17,
+      "sig": "322ccb7c12934b2d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 18,
+      "sig": "d04e41e5ed98fba3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 19,
+      "sig": "e333f5e3d32a77d5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 20,
+      "sig": "57b3bc293dc25ee5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 21,
+      "sig": "b412246a1d036a32",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 22,
+      "sig": "e2f229e67272ea1d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 23,
+      "sig": "3bd923c24cf8c783",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 24,
+      "sig": "e4c1f2826986624c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 25,
+      "sig": "0c604703e6e4caaa",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 26,
+      "sig": "a09cbd4733897574",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 27,
+      "sig": "0cca212983373a1f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 28,
+      "sig": "30ea0960e87820da",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 29,
+      "sig": "3d2cf189b7d9b6d3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 30,
+      "sig": "43a3be9b5d1462c6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 31,
+      "sig": "c2a5a9ad121e8286",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 32,
+      "sig": "49ac69922322cf83",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 33,
+      "sig": "3152f64893a0901d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 34,
+      "sig": "9c8ae73025da1d45",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 35,
+      "sig": "e23b49a0bc9eeb2e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 36,
+      "sig": "9bfc6bfa333e221f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 37,
+      "sig": "1a5941a315fa5597",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 38,
+      "sig": "42999dbaca024eba",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 39,
+      "sig": "f952ded59812ebe3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 40,
+      "sig": "dcc84e0a0ac7efb5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 41,
+      "sig": "7640f46c3bbe7f9d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 42,
+      "sig": "eee093ad53a5dfc6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 43,
+      "sig": "92bfb27b98b41d67",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 44,
+      "sig": "5a0ee8dfc3eef415",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 45,
+      "sig": "0b9abee5377f99b8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 46,
+      "sig": "ce47b7039ddcfca9",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 47,
+      "sig": "7af1cb30a9e86279",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 48,
+      "sig": "eafa54f566a3dace",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 49,
+      "sig": "2c02e9fa69d46d25",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 50,
+      "sig": "ae0472edeac20198",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 51,
+      "sig": "04b6ca8a22f41d1e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 52,
+      "sig": "55dda00f15410ee3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 53,
+      "sig": "d2e48d3b8400963d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 54,
+      "sig": "ed80a1e4c45a9f62",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 55,
+      "sig": "a6223380e29f5177",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 56,
+      "sig": "9b4929a2766f1a17",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 57,
+      "sig": "e4a6dfae6e183acf",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 58,
+      "sig": "dd7ef9cf6b42ce5f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 59,
+      "sig": "7eea749b35dbc3c8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 60,
+      "sig": "435ebde83a77e7e6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 61,
+      "sig": "5ed0c544ef2986cc",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 62,
+      "sig": "d162fb70ce55eaa8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 63,
+      "sig": "188bc54911db25c5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 64,
+      "sig": "d801e368f446ba13",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 65,
+      "sig": "c22916e0aabca9bf",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 66,
+      "sig": "061d191ce1a52434",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 67,
+      "sig": "530467eec6bccba1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 68,
+      "sig": "03095f9721f34f03",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 69,
+      "sig": "9308438a095210cd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 70,
+      "sig": "87cda0cd9055f18d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 71,
+      "sig": "bc13794726925532",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 72,
+      "sig": "12129d499a94d2a7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 73,
+      "sig": "ef0a9c48a9a993c6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 74,
+      "sig": "17fe80877665f631",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 75,
+      "sig": "91a5b3858187188a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 76,
+      "sig": "b80b2608396d8139",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 77,
+      "sig": "69314d3f3e38527f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 78,
+      "sig": "c8b28a0b0b16bd75",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 79,
+      "sig": "88390d1fa27b2201",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 80,
+      "sig": "e2971af0e8424beb",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 81,
+      "sig": "473a7e5672711202",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 82,
+      "sig": "796738b714ee2556",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 83,
+      "sig": "707da5ac9c278fef",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 84,
+      "sig": "2b5edb10d12bcba5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 85,
+      "sig": "3eb457614a5d399a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 86,
+      "sig": "e0d90efc651eba4c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 87,
+      "sig": "66f7704a18fe347c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 88,
+      "sig": "f2904801d88d39ac",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 89,
+      "sig": "5197e7559ea01439",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 90,
+      "sig": "01193c97e77fd755",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 91,
+      "sig": "321abb3b65200f13",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 92,
+      "sig": "2c4bdc7fa74dc537",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 93,
+      "sig": "99422af31a36c8d4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 94,
+      "sig": "ea60e5118f11a9e3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 95,
+      "sig": "ad284e3532211507",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 96,
+      "sig": "cde104116f1b2893",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 97,
+      "sig": "617a9f67eed91473",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 98,
+      "sig": "7e70e37b0af0ce74",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 99,
+      "sig": "0347ec97ee05b71a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 100,
+      "sig": "2a071eaba90172ea",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 101,
+      "sig": "3fc0da74a55154f7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 102,
+      "sig": "a7b635ac0d5bc85a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 103,
+      "sig": "d371dcac578aa0c3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "12",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 104,
+      "sig": "d24072b9c14eb058",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 105,
+      "sig": "3282fbc0b7a13918",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "12",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 106,
+      "sig": "cee1fcdab0433e88",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 107,
+      "sig": "bb29d178edce6cc6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "18",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 108,
+      "sig": "5a0de128a16a772b",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 109,
+      "sig": "e8fa9f874e19370d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 110,
+      "sig": "22bfd47e139406d4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 111,
+      "sig": "ef6ebe02f6dcd9d5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "9",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 112,
+      "sig": "d691c38db59d0c01",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 113,
+      "sig": "1bea544d01788b20",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "3",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "4"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 114,
+      "sig": "a604ba158ee9dccc",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "18",
+          "delay": "5",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "17"
+        }
+      }
+    },
+    {
+      "idx": 115,
+      "sig": "173be33dc8d6982d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "10",
+          "wait_time": "5",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "3"
+        },
+        "car": {
+          "travel_time": "17",
+          "delay": "3",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 116,
+      "sig": "065d9bb3591b1701",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "13",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 117,
+      "sig": "984e907b54fd1eaa",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "8",
+          "wait_time": "4",
+          "travel_time": "16",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "14",
+          "park_time": "3"
+        },
+        "taxi": {
+          "wait_time": "2",
+          "travel_time": "13",
+          "delay": "3",
+          "cost": "21"
+        }
+      }
+    },
+    {
+      "idx": 118,
+      "sig": "34d702bb9cee18da",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "7",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "13",
+          "delay": "5",
+          "cost": "13",
+          "park_time": "5"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 119,
+      "sig": "5ed1be75a5298290",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "4",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "2"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "4",
+          "cost": "14",
+          "park_time": "6"
+        },
+        "taxi": {
+          "wait_time": "1",
+          "travel_time": "14",
+          "delay": "5",
+          "cost": "19"
+        }
+      }
+    },
+    {
+      "idx": 120,
+      "sig": "ec8dab27700edd1d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "pt": {
+          "walk_time": "12",
+          "wait_time": "5",
+          "travel_time": "16",
+          "delay": "7",
+          "cost": "1"
+        },
+        "car": {
+          "travel_time": "15",
+          "delay": "3",
+          "cost": "12",
+          "park_time": "7"
+        },
+        "taxi": {
+          "wait_time": "3",
+          "travel_time": "14",
+          "delay": "4",
+          "cost": "19"
+        }
+      }
+    }
+  ]
+}

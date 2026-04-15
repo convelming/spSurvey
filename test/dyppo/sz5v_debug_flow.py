@@ -38,7 +38,7 @@ RUNS_DIR = ALGO_TEST_DIR / 'runs'
 RUN_STAMP = datetime.now().strftime('%Y%m%d_%H%M')
 RUN_DIR = RUNS_DIR / RUN_STAMP
 
-DESIGN_SAVE_NAME = 'sp_efficient_20260324_175903_SZ5V'
+DESIGN_SAVE_NAME = 'gz_pt_share_variable_universe_v1'
 DESIGN_FILE = DATA_DIR / 'sp_design' / f'{DESIGN_SAVE_NAME}.json'
 CONFIG_FILE = DATA_DIR / 'config.json'
 
