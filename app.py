@@ -790,7 +790,13 @@ def api_design_issue():
     respondent_record = load_respondent_record(respondent_id)
     profile_obj = respondent_record.get("profile", {}) if isinstance(respondent_record, dict) else {}
     if not isinstance(profile_obj, dict) or not profile_obj:
-        return jsonify({"error": "请先完成并保存当前受访者的RP/Profile信息，再获取SP题组。"}), 409
+        return jsonify(
+            {
+                "error": "请先完成并保存当前受访者的RP/Profile信息，再获取SP题组。",
+                "requires_profile": True,
+                "preview_available": True,
+            }
+        ), 409
 
     safe_name = sanitize_save_name(design_save_name or "")
     f = design_spec_file_path(safe_name) if safe_name else None
@@ -866,6 +872,110 @@ def api_design_issue():
             "model_state": model_state,
             "d_error": d_error,
             "policy_version": (model_state or {}).get("policy_version") if isinstance(model_state, dict) else None,
+        }
+    )
+
+
+def _tasks_per_questionnaire_from_design(payload_inner: dict, recommendation: dict | None = None, design_type: str | None = None) -> int:
+    """读取单份问卷应展示的 SP 题目数，用于预览时避免把全部 block 都塞进页面。"""
+    rec_tpp = int((recommendation or {}).get("tasks_per_person", 0) or 0) if isinstance(recommendation, dict) else 0
+    if rec_tpp > 0:
+        return rec_tpp
+    payload_obj = payload_inner if isinstance(payload_inner, dict) else {}
+    dtype = normalize_design_type(design_type or payload_obj.get("design_type"))
+    options = payload_obj.get("design_options", {}) if isinstance(payload_obj.get("design_options", {}), dict) else {}
+    if dtype == "efficient":
+        return max(1, int(((options.get("efficient", {}) or {}).get("tasks_per_person", 0) or 0) or 8))
+    if dtype == "selfattention":
+        return max(1, int(((options.get("selfattention", {}) or {}).get("tasks_per_round", 0) or 0) or 6))
+    if dtype == "dyppo":
+        return max(1, int(((options.get("dyppo", {}) or {}).get("tasks_per_round", 0) or 0) or 6))
+    return 6
+
+
+def _preview_tasks_for_saved_design(rec: dict, payload_inner: dict, design_type: str, safe_name: str) -> dict:
+    """只为页面样式预览生成题组，不读取 respondent、不更新权重、不写 distribution_log。"""
+    recommendation = rec.get("recommendation", None) if isinstance(rec, dict) else None
+    tasks = rec.get("preview_tasks", []) if isinstance(rec.get("preview_tasks", []), list) else []
+    model_state: dict[str, Any] = {
+        "preview_only": True,
+        "preview_note": "仅用于设计阶段查看题面样式；不绑定 respondent，不记录分发，不更新策略权重。",
+    }
+    d_error = {"value": None}
+    out: dict[str, Any] = {}
+
+    if not tasks and payload_inner:
+        preview_payload = deepcopy(payload_inner)
+        tpp = _tasks_per_questionnaire_from_design(payload_inner, recommendation, design_type)
+        # dyppo/selfattention 的真实 issue 会依赖 respondent 与历史权重；预览只看题面，
+        # 因此用 efficient 的可行组合生成器作无副作用 fallback。
+        preview_payload["design_type"] = "efficient"
+        preview_payload["design_options"] = {
+            "efficient": {
+                "tasks_per_person": max(1, tpp),
+                "row_exchange_iterations": min(
+                    40,
+                    max(1, int(((payload_inner.get("design_options", {}) or {}).get("efficient", {}) or {}).get("row_exchange_iterations", 20) or 20)),
+                ),
+            }
+        }
+        # 预览只需要一份问卷，但先多生成几倍 rows 再切片，避免条件约束过滤后题数不足。
+        preview_payload["sample_size"] = max(max(1, tpp) * 3, max(1, tpp))
+        preview_payload["target_block_sample"] = max(1, tpp)
+        out = _compute_efficient(preview_payload)
+        tasks = out.get("comb", []) if isinstance(out, dict) else []
+        recommendation = out.get("recommendation", recommendation) if isinstance(out, dict) else recommendation
+        d_error = out.get("d_error", d_error) if isinstance(out, dict) else d_error
+
+    tpp = _tasks_per_questionnaire_from_design(payload_inner, recommendation, design_type)
+    if isinstance(tasks, list) and tpp > 0:
+        tasks = tasks[:tpp]
+    return {
+        "tasks": tasks if isinstance(tasks, list) else [],
+        "recommendation": recommendation,
+        "model_state": model_state,
+        "d_error": d_error,
+        "source_mode": (out.get("mode") if isinstance(out, dict) else None) or "saved_design_preview",
+        "design_type": design_type,
+        "save_name": safe_name,
+    }
+
+
+@app.route("/api/design/preview", methods=["POST"])
+def api_design_preview():
+    payload = request.get_json(silent=True) or {}
+    design_save_name = str(payload.get("design_save_name", "")).strip() or None
+    safe_name = sanitize_save_name(design_save_name or "")
+    f = design_spec_file_path(safe_name) if safe_name else None
+    rec = load_json(f, {}) if f and f.exists() else {}
+    rec = ensure_design_type_field(rec) if isinstance(rec, dict) else {}
+    if not safe_name or not f or not f.exists() or not isinstance(rec, dict) or not rec:
+        return jsonify({"error": "design_save_name not found"}), 404
+
+    payload_inner = rec.get("payload", {}) if isinstance(rec.get("payload", {}), dict) else {}
+    design_type = normalize_design_type(rec.get("type") or payload_inner.get("design_type"))
+    preview = _preview_tasks_for_saved_design(rec, payload_inner, design_type, safe_name)
+    tasks = preview.get("tasks", [])
+    if not tasks:
+        return jsonify({"error": "当前设计未生成可预览题组。", "design_type": design_type}), 409
+
+    previewed_at = utc_now_iso()
+    return jsonify(
+        {
+            "ok": True,
+            "preview_only": True,
+            "respondent_id": "PREVIEW_ONLY",
+            "assignment_id": f"preview_{uuid.uuid4().hex[:12]}",
+            "previewed_at": previewed_at,
+            "issued_at": previewed_at,
+            "design_type": design_type,
+            "save_name": safe_name,
+            "tasks": tasks,
+            "recommendation": preview.get("recommendation"),
+            "model_state": preview.get("model_state"),
+            "d_error": preview.get("d_error"),
+            "source_mode": preview.get("source_mode"),
+            "policy_version": None,
         }
     )
 
@@ -2919,6 +3029,8 @@ def api_save_sp_submit():
         respondent_id = f"R_{uuid.uuid4().hex[:10]}"
 
     assignment_id = str(payload.get("assignment_id", "")).strip() or f"spgen_{uuid.uuid4().hex[:12]}"
+    if bool(payload.get("preview_only")) or assignment_id.startswith("preview_"):
+        return jsonify({"error": "当前是设计预览题组，不能作为真实SP答案保存。"}), 400
     choices = payload.get("choices", {}) or {}
     tasks = payload.get("tasks", []) or []
     design_save_name = str(payload.get("design_save_name", "")).strip() or None

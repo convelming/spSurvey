@@ -407,8 +407,21 @@ function initRespondentInheritance() {
 
 function renderTasks(tasks) {
   const box = document.getElementById("tasksContainer");
+  if (!box) return;
   box.innerHTML = "";
   const filteredTasks = tasks.filter((task) => taskSatisfiesConditions(task));
+
+  if (currentAssignment && currentAssignment.preview_only) {
+    const preview = document.createElement("div");
+    preview.className = "task preview-banner";
+    const h = document.createElement("h3");
+    h.textContent = "设计预览模式";
+    const p = document.createElement("p");
+    p.textContent = "当前题组只用于查看 SP 问卷样式，不绑定 respondent_id，不写入服务器分发记录，也不能提交为真实答案。";
+    preview.appendChild(h);
+    preview.appendChild(p);
+    box.appendChild(preview);
+  }
 
   if (designMeta.sp_intro_text) {
     const intro = document.createElement("div");
@@ -481,6 +494,14 @@ function renderTasks(tasks) {
   });
 }
 
+function setSubmitButtonMode(previewOnly) {
+  const submitBtn = document.getElementById("submitBtn");
+  if (!submitBtn) return;
+  submitBtn.disabled = !!previewOnly;
+  submitBtn.textContent = previewOnly ? "预览模式不提交" : "提交答案";
+  submitBtn.title = previewOnly ? "设计预览不写入服务器；请保存 RP/Profile 后重新获取正式题组再提交。" : "";
+}
+
 function maybeToNumber(v) {
   const n = Number(v);
   return Number.isNaN(n) ? v : n;
@@ -531,10 +552,12 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
   const rid = String(meta.respondent_id || getOrCreateRespondentId());
   const assignmentId = String(meta.assignment_id || `saved_design_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
   const policyVersion = meta.policy_version == null ? "saved_design" : meta.policy_version;
+  const previewOnly = !!meta.preview_only;
   currentAssignment = {
     assignment_id: assignmentId,
     respondent_id: rid,
     policy_version: policyVersion,
+    preview_only: previewOnly,
     tasks: tasks.filter((task) => taskSatisfiesConditions(task)),
   };
   localStorage.setItem(
@@ -543,15 +566,21 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
       saved_at: new Date().toISOString(),
       source,
       respondent_id: rid,
+      preview_only: previewOnly,
       payload: currentAssignment,
     }),
   );
 
-  // Do not count distribution at preview/show time. Counting is recorded on real submit.
+  // Frontend rendering never writes distribution logs. The formal server issue route records
+  // real assignments; the preview endpoint deliberately does not.
 
   renderTasks(tasks);
   const spSection = document.getElementById("spSection");
-  if (spSection) spSection.classList.remove("hidden");
+  if (spSection) {
+    spSection.classList.remove("hidden");
+    spSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  setSubmitButtonMode(previewOnly);
 
   const metrics = document.getElementById("metricsBox");
   if (metrics) {
@@ -562,6 +591,7 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
         save_name: designMeta.save_name || null,
         created_at: createdAt || null,
         assignment_id: assignmentId,
+        preview_only: previewOnly,
         policy_version: policyVersion,
         recommendation: recommendation || null,
         tasks_total: tasks.length,
@@ -687,9 +717,80 @@ async function issueTasksFromServer(designSaveName) {
   });
   const data = await res.json();
   if (!res.ok || data.error) {
-    throw new Error(data.error || "获取SP题组失败");
+    const err = new Error(data.error || "获取SP题组失败");
+    err.status = res.status;
+    err.data = data || {};
+    throw err;
   }
   return data || {};
+}
+
+async function previewDesignFromServer(designSaveName) {
+  const res = await fetch("/api/design/preview", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ design_save_name: designSaveName }),
+  });
+  const data = await res.json();
+  if (!res.ok || data.error) {
+    const err = new Error(data.error || "预览SP题组失败");
+    err.status = res.status;
+    err.data = data || {};
+    throw err;
+  }
+  return data || {};
+}
+
+async function previewDesignOnly(selectedName, specData = null) {
+  resetDesignMeta();
+  if (isFileMode) {
+    const raw = localStorage.getItem("survey_sp_design_payload");
+    if (!raw) {
+      alert("未找到本地保存的SP设计数据，请先到SP设计页计算并保存。");
+      return;
+    }
+    const payload = JSON.parse(raw);
+    designMeta.save_name = selectedName || "local_saved_design";
+    applyDesignPayload(payload);
+    const tasks = buildRealtimeTasksFromSavedSpec(payload, null);
+    setGeneratedAssignment(tasks, null, new Date().toISOString(), "preview_local_saved_design", {
+      assignment_id: `preview_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      respondent_id: "PREVIEW_ONLY",
+      preview_only: true,
+      policy_version: "preview",
+    });
+    return;
+  }
+
+  const data = specData || {};
+  if (data.payload) {
+    designMeta.save_name = String(data.save_name || selectedName);
+    applyDesignPayload(data.payload);
+    try {
+      localStorage.setItem("survey_sp_design_payload", JSON.stringify(data.payload));
+    } catch (_e) {}
+  } else {
+    designMeta.save_name = selectedName;
+  }
+
+  const preview = await previewDesignFromServer(designMeta.save_name || selectedName);
+  const tasks = Array.isArray(preview.tasks) ? preview.tasks : [];
+  const designType = String(preview.design_type || (data.payload && data.payload.design_type) || "efficient");
+  setGeneratedAssignment(
+    tasks,
+    preview.recommendation || data.recommendation || null,
+    preview.previewed_at || preview.issued_at || new Date().toISOString(),
+    designType === "selfattention"
+      ? "preview_server_saved_design_selfattention"
+      : (designType === "dyppo" ? "preview_server_saved_design_dyppo" : "preview_server_saved_design_efficient"),
+    {
+      assignment_id: preview.assignment_id,
+      respondent_id: "PREVIEW_ONLY",
+      preview_only: true,
+      policy_version: "preview",
+    },
+  );
+  updateSpInheritBanner();
 }
 
 async function loadDesign() {
@@ -697,10 +798,6 @@ async function loadDesign() {
   const selectedName = String((select && select.value) || "").trim();
   if (!selectedName) {
     alert("请先选择SP设计版本（save_name）。");
-    return;
-  }
-  if (!hasCurrentProfileData()) {
-    alert("请先完成并保存当前受访者的RP/Profile信息，再获取SP题组。");
     return;
   }
 
@@ -720,6 +817,7 @@ async function loadDesign() {
     return;
   }
 
+  let specData = null;
   try {
     const res = await fetch(`/api/design/spec?save_name=${encodeURIComponent(selectedName)}`);
     const data = await res.json();
@@ -727,6 +825,7 @@ async function loadDesign() {
       alert("读取保存的SP设计失败，请确认保存名是否存在。");
       return;
     }
+    specData = data;
 
     designMeta.save_name = String(data.save_name || selectedName);
     applyDesignPayload(data.payload);
@@ -753,6 +852,30 @@ async function loadDesign() {
     );
     updateSpInheritBanner();
   } catch (_e) {
+    const requiresProfile = _e && _e.status === 409 && _e.data && _e.data.requires_profile;
+    if (requiresProfile) {
+      const action = await showActionDialog(
+        "需要先保存RP/Profile",
+        "正式下发 SP 题组需要绑定当前 respondent_id，并记录到对应受访者 JSON。设计阶段如果只想查看题面样式，可以选择“仅预览问卷样式”。",
+        [
+          { id: "go_profile", label: "去保存RP/Profile" },
+          { id: "preview", label: "仅预览问卷样式" },
+          { id: "cancel", label: "取消" },
+        ],
+      );
+      if (action === "go_profile") {
+        window.location.href = isFileMode ? "profile.html" : "/survey/profile";
+        return;
+      }
+      if (action === "preview") {
+        try {
+          await previewDesignOnly(selectedName, specData);
+        } catch (previewErr) {
+          alert(previewErr && previewErr.message ? previewErr.message : "预览SP题组失败。");
+        }
+      }
+      return;
+    }
     alert(_e && _e.message ? _e.message : "读取保存的SP设计失败，请稍后重试。");
   }
 }
@@ -764,6 +887,10 @@ async function submitResponse() {
   }
   if (!currentAssignment) {
     alert("请先获取题组。");
+    return;
+  }
+  if (currentAssignment.preview_only || String(currentAssignment.assignment_id || "").startsWith("preview_")) {
+    alert("当前是设计预览模式，不会写入服务器。请先保存RP/Profile后重新获取正式SP题组再提交。");
     return;
   }
 
