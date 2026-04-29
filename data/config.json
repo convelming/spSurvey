@@ -8,9 +8,11 @@
   },
   "self_attention": {
     "seed": 42,
-    "window_length": 16,
+    "window_length": 32,
     "hidden_dim": 64,
     "num_heads": 4,
+    "sample_target_dim": 16,
+    "target_sample_size": 200,
     "explore_epsilon": 0.15,
     "clip_eps": 0.2,
     "value_coef": 0.5,
@@ -24,7 +26,13 @@
     "target_kl": 0.03,
     "online_lr": 0.005,
     "online_epochs": 2,
-    "online_batch_size": 128
+    "online_batch_size": 128,
+    "count_loss_weight": 1.0,
+    "slot_select_loss_weight": 0.8,
+    "mask_loss_weight": 0.8,
+    "value_loss_weight": 1.2,
+    "score_loss_weight": 0.4,
+    "sample_target_loss_weight": 0.3
   },
   "data_sources": {
     "popsim_stats_path": "zone2_targets.json",

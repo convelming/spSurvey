@@ -1,0 +1,1940 @@
+{
+  "source_design_save_name": "gz_pt_share_variable_universe_v1",
+  "effective_design_type": "selfattention",
+  "design_file": "/Users/convel/PycharmProjects/spSurvey/data/sp_design/gz_pt_share_variable_universe_v1.json",
+  "rows_jsonl": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260416_1158/xjh_limit1_selfattention_rows.jsonl",
+  "n_rows": 4,
+  "rows_loaded_for_train": 4,
+  "candidate_pool_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260416_1158/xjh_limit1_selfattention_candidate_pool.json",
+  "candidate_pool_size": 0,
+  "candidate_pool_target": 120,
+  "preview_source": "recomputed_efficient_preview",
+  "expert_preview_size": 65,
+  "candidate_expert_overlap": 0,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 4,
+    "n_rows_source": "selfattention.train_respondents"
+  },
+  "payload_used": {
+    "save_name": "gz_pt_share_variable_universe_v1",
+    "sample_size": 2000,
+    "design_type": "selfattention",
+    "design_options": {
+      "selfattention": {
+        "tasks_per_round": 2,
+        "explore_epsilon": 0.15,
+        "window_length": 16,
+        "hidden_dim": 64,
+        "num_heads": 4,
+        "train_respondents": 4,
+        "train_epochs": 1,
+        "train_lr": 0.03,
+        "batch_size": 8,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_eps": 0.2,
+        "value_coef": 0.5,
+        "entropy_coef": 0.01,
+        "target_kl": 0.03,
+        "online_lr": 0.005,
+        "online_epochs": 1,
+        "online_batch_size": 4
+      }
+    },
+    "n_parameters": 93,
+    "min_block_sample": 120,
+    "target_block_sample": 160,
+    "tasks_per_person_candidates": [
+      8
+    ],
+    "level_count_by_variable": {
+      "bus.access_time": 4,
+      "bus.wait_time": 4,
+      "bus.in_vehicle_time": 4,
+      "bus.transfer_count": 4,
+      "bus.transfer_time": 4,
+      "bus.fare": 4,
+      "bus.crowding_level": 4,
+      "bus.reliability_delay": 4,
+      "bus.realtime_info_quality": 4,
+      "bus.station_shelter_quality": 4,
+      "bus.night_safety_level": 4,
+      "bus.integrated_access_private_ebike": 4,
+      "bus.integrated_access_shared_bike": 4,
+      "bus.integrated_egress_private_ebike": 4,
+      "bus.integrated_egress_shared_bike": 4,
+      "metro.access_time": 4,
+      "metro.vertical_time": 4,
+      "metro.wait_time": 4,
+      "metro.in_vehicle_time": 4,
+      "metro.transfer_count": 4,
+      "metro.transfer_time": 4,
+      "metro.fare": 4,
+      "metro.crowding_level": 4,
+      "metro.reliability_delay": 4,
+      "metro.realtime_info_quality": 4,
+      "metro.station_shelter_quality": 4,
+      "metro.night_safety_level": 4,
+      "metro.integrated_access_bus": 4,
+      "metro.integrated_access_private_ebike": 4,
+      "metro.integrated_access_shared_bike": 4,
+      "metro.integrated_egress_bus": 4,
+      "metro.integrated_egress_private_ebike": 4,
+      "metro.integrated_egress_shared_bike": 4,
+      "pt_mixed.access_time": 4,
+      "pt_mixed.wait_time": 4,
+      "pt_mixed.in_vehicle_time": 4,
+      "pt_mixed.transfer_count": 4,
+      "pt_mixed.transfer_time": 4,
+      "pt_mixed.fare": 4,
+      "pt_mixed.crowding_level": 4,
+      "pt_mixed.reliability_delay": 4,
+      "pt_mixed.realtime_info_quality": 4,
+      "pt_mixed.station_shelter_quality": 4,
+      "pt_mixed.night_safety_level": 4,
+      "pt_mixed.includes_bus": 2,
+      "pt_mixed.includes_metro": 2,
+      "pt_mixed.integrated_access_private_ebike": 4,
+      "pt_mixed.integrated_access_shared_bike": 4,
+      "pt_mixed.integrated_egress_private_ebike": 4,
+      "pt_mixed.integrated_egress_shared_bike": 4,
+      "car.travel_time": 4,
+      "car.delay_time": 4,
+      "car.out_of_pocket_cost": 4,
+      "car.parking_fee": 4,
+      "car.parking_search_time": 4,
+      "car.driving_stress_level": 4,
+      "car.comfort_level": 4,
+      "car.destination_parking_availability": 4,
+      "car.ev_charging_convenience": 4,
+      "private_ebike.prep_time": 4,
+      "private_ebike.travel_time": 4,
+      "private_ebike.out_of_pocket_cost": 4,
+      "private_ebike.parking_time": 4,
+      "private_ebike.bike_lane_protection_level": 4,
+      "private_ebike.traffic_safety_level": 4,
+      "private_ebike.weather_exposure_level": 4,
+      "private_ebike.battery_anxiety_level": 4,
+      "private_ebike.carrying_convenience": 4,
+      "private_ebike.destination_parking_availability": 4,
+      "shared_bike.walk_to_bike_time": 4,
+      "shared_bike.unlock_wait_time": 4,
+      "shared_bike.travel_time": 4,
+      "shared_bike.out_of_pocket_cost": 4,
+      "shared_bike.bike_availability_level": 4,
+      "shared_bike.dock_availability_level": 4,
+      "shared_bike.bike_lane_protection_level": 4,
+      "shared_bike.traffic_safety_level": 4,
+      "shared_bike.weather_exposure_level": 4,
+      "shared_bike.carrying_convenience": 4,
+      "ride_hailing_car.wait_time": 4,
+      "ride_hailing_car.travel_time": 4,
+      "ride_hailing_car.delay_time": 4,
+      "ride_hailing_car.fare": 4,
+      "ride_hailing_car.pickup_reliability": 4,
+      "ride_hailing_car.comfort_level": 4,
+      "ride_hailing_car.surge_risk_level": 4,
+      "ride_hailing_car.detour_risk_level": 4
+    },
+    "beta_defaults": {
+      "bus.asc": 0,
+      "bus.access_time": -0.09,
+      "bus.wait_time": -0.12,
+      "bus.in_vehicle_time": -0.07,
+      "bus.transfer_count": -0.28,
+      "bus.transfer_time": -0.1,
+      "bus.fare": -0.18,
+      "bus.crowding_level": -0.16,
+      "bus.reliability_delay": -0.11,
+      "bus.realtime_info_quality": 0.07,
+      "bus.station_shelter_quality": 0.05,
+      "bus.night_safety_level": 0.09,
+      "bus.integrated_access_private_ebike": 0.05,
+      "bus.integrated_access_shared_bike": 0.04,
+      "bus.integrated_egress_private_ebike": 0.05,
+      "bus.integrated_egress_shared_bike": 0.04,
+      "metro.asc": 0,
+      "metro.access_time": -0.1,
+      "metro.vertical_time": -0.06,
+      "metro.wait_time": -0.09,
+      "metro.in_vehicle_time": -0.07,
+      "metro.transfer_count": -0.3,
+      "metro.transfer_time": -0.1,
+      "metro.fare": -0.17,
+      "metro.crowding_level": -0.17,
+      "metro.reliability_delay": -0.11,
+      "metro.realtime_info_quality": 0.08,
+      "metro.station_shelter_quality": 0.05,
+      "metro.night_safety_level": 0.09,
+      "metro.integrated_access_bus": 0.05,
+      "metro.integrated_access_private_ebike": 0.06,
+      "metro.integrated_access_shared_bike": 0.05,
+      "metro.integrated_egress_bus": 0.04,
+      "metro.integrated_egress_private_ebike": 0.05,
+      "metro.integrated_egress_shared_bike": 0.04,
+      "pt_mixed.asc": 0,
+      "pt_mixed.access_time": -0.1,
+      "pt_mixed.wait_time": -0.1,
+      "pt_mixed.in_vehicle_time": -0.07,
+      "pt_mixed.transfer_count": -0.32,
+      "pt_mixed.transfer_time": -0.11,
+      "pt_mixed.fare": -0.18,
+      "pt_mixed.crowding_level": -0.15,
+      "pt_mixed.reliability_delay": -0.12,
+      "pt_mixed.realtime_info_quality": 0.08,
+      "pt_mixed.station_shelter_quality": 0.05,
+      "pt_mixed.night_safety_level": 0.08,
+      "pt_mixed.includes_bus": 0.03,
+      "pt_mixed.includes_metro": 0.03,
+      "pt_mixed.integrated_access_private_ebike": 0.05,
+      "pt_mixed.integrated_access_shared_bike": 0.04,
+      "pt_mixed.integrated_egress_private_ebike": 0.05,
+      "pt_mixed.integrated_egress_shared_bike": 0.04,
+      "car.asc": 0,
+      "car.travel_time": -0.07,
+      "car.delay_time": -0.1,
+      "car.out_of_pocket_cost": -0.16,
+      "car.parking_fee": -0.14,
+      "car.parking_search_time": -0.1,
+      "car.driving_stress_level": -0.08,
+      "car.comfort_level": 0.09,
+      "car.destination_parking_availability": 0.11,
+      "car.ev_charging_convenience": 0.04,
+      "private_ebike.asc": 0,
+      "private_ebike.prep_time": -0.05,
+      "private_ebike.travel_time": -0.08,
+      "private_ebike.out_of_pocket_cost": -0.14,
+      "private_ebike.parking_time": -0.06,
+      "private_ebike.bike_lane_protection_level": 0.1,
+      "private_ebike.traffic_safety_level": 0.12,
+      "private_ebike.weather_exposure_level": -0.1,
+      "private_ebike.battery_anxiety_level": -0.06,
+      "private_ebike.carrying_convenience": 0.05,
+      "private_ebike.destination_parking_availability": 0.1,
+      "shared_bike.asc": 0,
+      "shared_bike.walk_to_bike_time": -0.08,
+      "shared_bike.unlock_wait_time": -0.05,
+      "shared_bike.travel_time": -0.08,
+      "shared_bike.out_of_pocket_cost": -0.15,
+      "shared_bike.bike_availability_level": 0.11,
+      "shared_bike.dock_availability_level": 0.09,
+      "shared_bike.bike_lane_protection_level": 0.09,
+      "shared_bike.traffic_safety_level": 0.11,
+      "shared_bike.weather_exposure_level": -0.1,
+      "shared_bike.carrying_convenience": 0.04,
+      "ride_hailing_car.asc": 0,
+      "ride_hailing_car.wait_time": -0.11,
+      "ride_hailing_car.travel_time": -0.07,
+      "ride_hailing_car.delay_time": -0.09,
+      "ride_hailing_car.fare": -0.18,
+      "ride_hailing_car.pickup_reliability": 0.1,
+      "ride_hailing_car.comfort_level": 0.1,
+      "ride_hailing_car.surge_risk_level": -0.12,
+      "ride_hailing_car.detour_risk_level": -0.08
+    },
+    "beta_bounds": {
+      "bus.access_time": {
+        "min": null,
+        "max": 0
+      },
+      "bus.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "bus.in_vehicle_time": {
+        "min": null,
+        "max": 0
+      },
+      "bus.transfer_count": {
+        "min": null,
+        "max": 0
+      },
+      "bus.transfer_time": {
+        "min": null,
+        "max": 0
+      },
+      "bus.fare": {
+        "min": null,
+        "max": 0
+      },
+      "bus.crowding_level": {
+        "min": null,
+        "max": 0
+      },
+      "bus.reliability_delay": {
+        "min": null,
+        "max": 0
+      },
+      "bus.realtime_info_quality": {
+        "min": 0,
+        "max": null
+      },
+      "bus.station_shelter_quality": {
+        "min": 0,
+        "max": null
+      },
+      "bus.night_safety_level": {
+        "min": 0,
+        "max": null
+      },
+      "bus.integrated_access_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "bus.integrated_access_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "bus.integrated_egress_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "bus.integrated_egress_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "metro.access_time": {
+        "min": null,
+        "max": 0
+      },
+      "metro.vertical_time": {
+        "min": null,
+        "max": 0
+      },
+      "metro.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "metro.in_vehicle_time": {
+        "min": null,
+        "max": 0
+      },
+      "metro.transfer_count": {
+        "min": null,
+        "max": 0
+      },
+      "metro.transfer_time": {
+        "min": null,
+        "max": 0
+      },
+      "metro.fare": {
+        "min": null,
+        "max": 0
+      },
+      "metro.crowding_level": {
+        "min": null,
+        "max": 0
+      },
+      "metro.reliability_delay": {
+        "min": null,
+        "max": 0
+      },
+      "metro.realtime_info_quality": {
+        "min": 0,
+        "max": null
+      },
+      "metro.station_shelter_quality": {
+        "min": 0,
+        "max": null
+      },
+      "metro.night_safety_level": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_access_bus": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_access_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_access_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_egress_bus": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_egress_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "metro.integrated_egress_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.access_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.in_vehicle_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.transfer_count": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.transfer_time": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.fare": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.crowding_level": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.reliability_delay": {
+        "min": null,
+        "max": 0
+      },
+      "pt_mixed.realtime_info_quality": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.station_shelter_quality": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.night_safety_level": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.includes_bus": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.includes_metro": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.integrated_access_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.integrated_access_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.integrated_egress_private_ebike": {
+        "min": 0,
+        "max": null
+      },
+      "pt_mixed.integrated_egress_shared_bike": {
+        "min": 0,
+        "max": null
+      },
+      "car.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "car.delay_time": {
+        "min": null,
+        "max": 0
+      },
+      "car.out_of_pocket_cost": {
+        "min": null,
+        "max": 0
+      },
+      "car.parking_fee": {
+        "min": null,
+        "max": 0
+      },
+      "car.parking_search_time": {
+        "min": null,
+        "max": 0
+      },
+      "car.driving_stress_level": {
+        "min": null,
+        "max": 0
+      },
+      "car.comfort_level": {
+        "min": 0,
+        "max": null
+      },
+      "car.destination_parking_availability": {
+        "min": 0,
+        "max": null
+      },
+      "car.ev_charging_convenience": {
+        "min": 0,
+        "max": null
+      },
+      "private_ebike.prep_time": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.out_of_pocket_cost": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.parking_time": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.bike_lane_protection_level": {
+        "min": 0,
+        "max": null
+      },
+      "private_ebike.traffic_safety_level": {
+        "min": 0,
+        "max": null
+      },
+      "private_ebike.weather_exposure_level": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.battery_anxiety_level": {
+        "min": null,
+        "max": 0
+      },
+      "private_ebike.carrying_convenience": {
+        "min": 0,
+        "max": null
+      },
+      "private_ebike.destination_parking_availability": {
+        "min": 0,
+        "max": null
+      },
+      "shared_bike.walk_to_bike_time": {
+        "min": null,
+        "max": 0
+      },
+      "shared_bike.unlock_wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "shared_bike.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "shared_bike.out_of_pocket_cost": {
+        "min": null,
+        "max": 0
+      },
+      "shared_bike.bike_availability_level": {
+        "min": 0,
+        "max": null
+      },
+      "shared_bike.dock_availability_level": {
+        "min": 0,
+        "max": null
+      },
+      "shared_bike.bike_lane_protection_level": {
+        "min": 0,
+        "max": null
+      },
+      "shared_bike.traffic_safety_level": {
+        "min": 0,
+        "max": null
+      },
+      "shared_bike.weather_exposure_level": {
+        "min": null,
+        "max": 0
+      },
+      "shared_bike.carrying_convenience": {
+        "min": 0,
+        "max": null
+      },
+      "ride_hailing_car.wait_time": {
+        "min": null,
+        "max": 0
+      },
+      "ride_hailing_car.travel_time": {
+        "min": null,
+        "max": 0
+      },
+      "ride_hailing_car.delay_time": {
+        "min": null,
+        "max": 0
+      },
+      "ride_hailing_car.fare": {
+        "min": null,
+        "max": 0
+      },
+      "ride_hailing_car.pickup_reliability": {
+        "min": 0,
+        "max": null
+      },
+      "ride_hailing_car.comfort_level": {
+        "min": 0,
+        "max": null
+      },
+      "ride_hailing_car.surge_risk_level": {
+        "min": null,
+        "max": 0
+      },
+      "ride_hailing_car.detour_risk_level": {
+        "min": null,
+        "max": 0
+      }
+    },
+    "design_spec": {
+      "alternatives": [
+        {
+          "name": "bus",
+          "variables": [
+            {
+              "name": "access_time",
+              "description": "到公交站接驳时间（分钟）",
+              "beta_default": -0.09,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "4",
+                "5",
+                "7",
+                "8"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "wait_time",
+              "description": "候车时间（分钟）",
+              "beta_default": -0.12,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5",
+                "7"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "in_vehicle_time",
+              "description": "车内时间（分钟）",
+              "beta_default": -0.07,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "11",
+                "13",
+                "15",
+                "17"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "transfer_count",
+              "description": "换乘次数（次）",
+              "beta_default": -0.28,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "transfer_time",
+              "description": "换乘时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "fare",
+              "description": "公交费用（元）",
+              "beta_default": -0.18,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "crowding_level",
+              "description": "拥挤程度（1有座-4拥挤）",
+              "beta_default": -0.16,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "reliability_delay",
+              "description": "典型延误时间（分钟）",
+              "beta_default": -0.11,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "realtime_info_quality",
+              "description": "到站信息质量（1低-4高）",
+              "beta_default": 0.07,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "station_shelter_quality",
+              "description": "站点遮阴避雨条件（1差-4好）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "night_safety_level",
+              "description": "夜间安全感（1低-4高）",
+              "beta_default": 0.09,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_private_ebike",
+              "description": "电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_shared_bike",
+              "description": "共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_private_ebike",
+              "description": "到达端电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_shared_bike",
+              "description": "到达端共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "metro",
+          "variables": [
+            {
+              "name": "access_time",
+              "description": "到地铁站接驳时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "4",
+                "6",
+                "7",
+                "9"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "vertical_time",
+              "description": "进出站垂直通行时间（分钟）",
+              "beta_default": -0.06,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "wait_time",
+              "description": "候车时间（分钟）",
+              "beta_default": -0.09,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "in_vehicle_time",
+              "description": "车内时间（分钟）",
+              "beta_default": -0.07,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "9",
+                "10",
+                "12",
+                "13"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "transfer_count",
+              "description": "换乘次数（次）",
+              "beta_default": -0.3,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "transfer_time",
+              "description": "换乘时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "fare",
+              "description": "地铁费用（元）",
+              "beta_default": -0.17,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "5",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "crowding_level",
+              "description": "拥挤程度（1有座-4拥挤）",
+              "beta_default": -0.17,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "reliability_delay",
+              "description": "典型延误时间（分钟）",
+              "beta_default": -0.11,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "1",
+                "3",
+                "5"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "realtime_info_quality",
+              "description": "到站信息质量（1低-4高）",
+              "beta_default": 0.08,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "station_shelter_quality",
+              "description": "站内环境质量（1差-4好）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "night_safety_level",
+              "description": "夜间安全感（1低-4高）",
+              "beta_default": 0.09,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_bus",
+              "description": "公交接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_private_ebike",
+              "description": "电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.06,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_shared_bike",
+              "description": "共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_bus",
+              "description": "到达端公交接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_private_ebike",
+              "description": "到达端电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_shared_bike",
+              "description": "到达端共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "pt_mixed",
+          "variables": [
+            {
+              "name": "access_time",
+              "description": "首端接驳总时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "5",
+                "7",
+                "8",
+                "10"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "wait_time",
+              "description": "候车候乘总时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "3",
+                "4",
+                "6",
+                "7"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "in_vehicle_time",
+              "description": "公共交通链条车内总时间（分钟）",
+              "beta_default": -0.07,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "14",
+                "16",
+                "18",
+                "20"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "transfer_count",
+              "description": "链条换乘次数（次）",
+              "beta_default": -0.32,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "transfer_time",
+              "description": "链条换乘总时间（分钟）",
+              "beta_default": -0.11,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "2",
+                "4",
+                "6",
+                "8"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "fare",
+              "description": "公共交通链条总费用（元）",
+              "beta_default": -0.18,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "4",
+                "5",
+                "6",
+                "7"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "crowding_level",
+              "description": "链条平均拥挤程度（1有座-4拥挤）",
+              "beta_default": -0.15,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "reliability_delay",
+              "description": "链条典型延误时间（分钟）",
+              "beta_default": -0.12,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "3",
+                "5",
+                "7"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "realtime_info_quality",
+              "description": "跨方式信息衔接质量（1低-4高）",
+              "beta_default": 0.08,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "station_shelter_quality",
+              "description": "换乘环境质量（1差-4好）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "night_safety_level",
+              "description": "链条夜间安全感（1低-4高）",
+              "beta_default": 0.08,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "includes_bus",
+              "description": "链条中是否包含公交（0否-1是）",
+              "beta_default": 0.03,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "0",
+                "1"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "includes_metro",
+              "description": "链条中是否包含地铁（0否-1是）",
+              "beta_default": 0.03,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "0",
+                "1"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_private_ebike",
+              "description": "首端电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_access_shared_bike",
+              "description": "首端共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_private_ebike",
+              "description": "末端电动自行车接驳便利程度（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "integrated_egress_shared_bike",
+              "description": "末端共享单车接驳便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "car",
+          "variables": [
+            {
+              "name": "travel_time",
+              "description": "自驾总时间（分钟）",
+              "beta_default": -0.07,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "10",
+                "11",
+                "13",
+                "14"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "delay_time",
+              "description": "拥堵额外时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "out_of_pocket_cost",
+              "description": "油/电/路桥单次成本（元）",
+              "beta_default": -0.16,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "4",
+                "6",
+                "8",
+                "10"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "parking_fee",
+              "description": "停车费用（元）",
+              "beta_default": -0.14,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "4",
+                "6",
+                "8"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "parking_search_time",
+              "description": "找车位时间（分钟）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "driving_stress_level",
+              "description": "驾驶压力（1低-4高）",
+              "beta_default": -0.08,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "comfort_level",
+              "description": "舒适性（1低-4高）",
+              "beta_default": 0.09,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "destination_parking_availability",
+              "description": "目的地停车可得性（1低-4高）",
+              "beta_default": 0.11,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "ev_charging_convenience",
+              "description": "充电便利程度（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "private_ebike",
+          "variables": [
+            {
+              "name": "prep_time",
+              "description": "取车准备时间（分钟）",
+              "beta_default": -0.05,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "travel_time",
+              "description": "骑行时间（分钟）",
+              "beta_default": -0.08,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "12",
+                "14",
+                "16",
+                "18"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "out_of_pocket_cost",
+              "description": "单次使用成本（元）",
+              "beta_default": -0.14,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "parking_time",
+              "description": "停放时间（分钟）",
+              "beta_default": -0.06,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "bike_lane_protection_level",
+              "description": "骑行设施保护程度（1低-4高）",
+              "beta_default": 0.1,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "traffic_safety_level",
+              "description": "交通安全感（1低-4高）",
+              "beta_default": 0.12,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "weather_exposure_level",
+              "description": "受天气影响程度（1低-4高）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "battery_anxiety_level",
+              "description": "续航焦虑程度（1低-4高）",
+              "beta_default": -0.06,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "carrying_convenience",
+              "description": "携物便利性（1低-4高）",
+              "beta_default": 0.05,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "destination_parking_availability",
+              "description": "目的地停放可得性（1低-4高）",
+              "beta_default": 0.1,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "shared_bike",
+          "variables": [
+            {
+              "name": "walk_to_bike_time",
+              "description": "找车步行时间（分钟）",
+              "beta_default": -0.08,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "unlock_wait_time",
+              "description": "扫码解锁等待时间（分钟）",
+              "beta_default": -0.05,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "travel_time",
+              "description": "骑行时间（分钟）",
+              "beta_default": -0.08,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "15",
+                "17",
+                "19",
+                "21"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "out_of_pocket_cost",
+              "description": "使用费用（元）",
+              "beta_default": -0.15,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "bike_availability_level",
+              "description": "车辆可得性（1低-4高）",
+              "beta_default": 0.11,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "dock_availability_level",
+              "description": "还车位可得性（1低-4高）",
+              "beta_default": 0.09,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "bike_lane_protection_level",
+              "description": "骑行设施保护程度（1低-4高）",
+              "beta_default": 0.09,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "traffic_safety_level",
+              "description": "交通安全感（1低-4高）",
+              "beta_default": 0.11,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "weather_exposure_level",
+              "description": "受天气影响程度（1低-4高）",
+              "beta_default": -0.1,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "carrying_convenience",
+              "description": "携物便利性（1低-4高）",
+              "beta_default": 0.04,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        },
+        {
+          "name": "ride_hailing_car",
+          "variables": [
+            {
+              "name": "wait_time",
+              "description": "叫车等待时间（分钟）",
+              "beta_default": -0.11,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "2",
+                "3",
+                "4",
+                "5"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "travel_time",
+              "description": "乘车时间（分钟）",
+              "beta_default": -0.07,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "10",
+                "11",
+                "13",
+                "14"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "delay_time",
+              "description": "拥堵额外时间（分钟）",
+              "beta_default": -0.09,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "0",
+                "2",
+                "4",
+                "6"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "fare",
+              "description": "网约车费用（元）",
+              "beta_default": -0.18,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "12",
+                "15",
+                "18",
+                "22"
+              ],
+              "variable_type": "continuous"
+            },
+            {
+              "name": "pickup_reliability",
+              "description": "接驾可靠性（1低-4高）",
+              "beta_default": 0.1,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "comfort_level",
+              "description": "舒适性（1低-4高）",
+              "beta_default": 0.1,
+              "beta_min": 0,
+              "beta_max": null,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "surge_risk_level",
+              "description": "高峰加价风险（1低-4高）",
+              "beta_default": -0.12,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            },
+            {
+              "name": "detour_risk_level",
+              "description": "拼车绕路风险（1低-4高）",
+              "beta_default": -0.08,
+              "beta_min": null,
+              "beta_max": 0,
+              "levels": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ],
+              "variable_type": "ordinal"
+            }
+          ]
+        }
+      ],
+      "asc_base_alternative": "bus",
+      "sp_intro_text": "本测试用于广州公共交通分担率变化机敏感性分析研究。该配置尽量列全可能相关变量、接驳变量与部分组合变量，后续可由 encoder-decoder 动态 mask、重激活并缩放 level。",
+      "conditions": [
+        "car.travel_time <= bus.in_vehicle_time * 1.6",
+        "car.delay_time <= car.travel_time",
+        "car.parking_search_time <= car.travel_time",
+        "car.out_of_pocket_cost + car.parking_fee >= bus.fare",
+        "car.out_of_pocket_cost + car.parking_fee >= metro.fare",
+        "ride_hailing_car.wait_time <= ride_hailing_car.travel_time",
+        "ride_hailing_car.delay_time <= ride_hailing_car.travel_time",
+        "ride_hailing_car.fare >= car.out_of_pocket_cost",
+        "ride_hailing_car.fare >= bus.fare",
+        "ride_hailing_car.fare >= metro.fare",
+        "bus.transfer_time <= bus.in_vehicle_time",
+        "bus.access_time + bus.wait_time <= bus.in_vehicle_time * 2.2",
+        "metro.transfer_time <= metro.in_vehicle_time",
+        "metro.access_time + metro.vertical_time <= metro.in_vehicle_time * 1.8",
+        "pt_mixed.transfer_count >= 1",
+        "pt_mixed.transfer_time <= pt_mixed.in_vehicle_time",
+        "pt_mixed.includes_bus + pt_mixed.includes_metro >= 1",
+        "shared_bike.walk_to_bike_time + shared_bike.unlock_wait_time <= shared_bike.travel_time",
+        "private_ebike.parking_time <= private_ebike.travel_time"
+      ]
+    }
+  },
+  "train_output": {
+    "comb": [],
+    "d_error": {
+      "value": null
+    },
+    "iteration_log": [
+      {
+        "epoch": 0,
+        "msg": "no feasible candidates"
+      }
+    ],
+    "model_state": {
+      "trained": false
+    },
+    "policy_state": {}
+  },
+  "online_updates": [
+    {
+      "step": 1,
+      "respondent_id": "sim_0001",
+      "n_choices": 65,
+      "update": {
+        "updated": false,
+        "reason": "weights not initialized"
+      }
+    },
+    {
+      "step": 2,
+      "respondent_id": "sim_0002",
+      "n_choices": 65,
+      "update": {
+        "updated": false,
+        "reason": "weights not initialized"
+      }
+    },
+    {
+      "step": 3,
+      "respondent_id": "sim_0003",
+      "n_choices": 65,
+      "update": {
+        "updated": false,
+        "reason": "weights not initialized"
+      }
+    },
+    {
+      "step": 4,
+      "respondent_id": "sim_0004",
+      "n_choices": 65,
+      "update": {
+        "updated": false,
+        "reason": "weights not initialized"
+      }
+    }
+  ],
+  "policy_state_after": {},
+  "timing": {
+    "total_elapsed_seconds": 24.926,
+    "total_elapsed_hms": "00:00:25",
+    "online_updates_elapsed_seconds": 0.0,
+    "online_updates_elapsed_hms": "00:00:00",
+    "timer_interval_seconds": 5.0
+  }
+}

@@ -1,41 +1,32 @@
-"""SelfAttention 题目生成与在线更新模块。
+"""SelfAttention 并行题组生成与在线更新模块。
 
-本文件实现的是“带自注意力骨干的 Actor-Critic + PPO-clip”版本，
-用于在候选题池中为当前 respondent 生成一整份 block，并在 respondent
-提交回答后做一次在线增量更新。
+本文件采用当前项目统一后的实现口径：
 
-整体数据流可以概括为：
-1. 候选题池 `candidate_pool`
-   形如 `list[task]`，其中单个 `task` 一般为：
-   {
-       "id": "preview_b1_r1",
-       "sig": "a1b2c3...",
-       "alternatives": {
-           "car": {"time": 20, "cost": 8},
-           "pt": {"time": 35, "cost": 4}
-       }
-   }
-2. respondent / 状态特征
-   由 `dynamicPPO.py` 中共享的特征构造逻辑生成单步状态向量
-   `state_x ∈ R^[D]`，再堆叠成历史窗口
-   `state_seq ∈ R^[L, D]`。
-3. 自注意力网络
-   输入 `x ∈ R^[B, L, D]`，输出：
-   - `logits ∈ R^[B, N]`，N 为候选动作数（候选题数）
-   - `value ∈ R^[B]`
-4. 训练
-   使用 rollout 字典：
-   {
-       "states": np.ndarray[T, D],
-       "actions": np.ndarray[T],
-       "rewards": np.ndarray[T],
-       "dones": np.ndarray[T],
-       "meta": {...}
-   }
-   其中 `T` 是总 step 数。
-5. 生成
-   对每个题位逐次构造当前状态窗口，调用网络获得对剩余候选题的概率，
-   再结合 expert prior、参数越界惩罚 mask 与 epsilon 探索完成抽题。
+1. 一份 SP 问卷中的题目是一次性并行生成的；
+2. respondent 也是一次性看到并填写整份 block；
+3. decoder 不再使用 shifted-right + 上三角因果遮罩式 attention 的自回归解释；
+4. 取而代之的是：
+   - encoder 读取 `X_rp / X_env / X_hist / X_cand`
+   - encoder 汇总状态同时分出 `respondent_target_head`，给出剩余样本的定向采样建议
+   - 并行 question queries 表示 `T_max` 个待生成题位
+   - question-slot self-attention 建模整份问卷内部题位之间的关系
+   - count_head 决定本次问卷题数
+   - slot_select_head 决定哪些候选题位进入最终 block
+   - mask_head 决定题内哪些变量激活
+   - value_head 在 mask 条件下给激活变量赋值
+   - score_head 评估每题质量
+
+为了保持与 `app.py` 的现有接口兼容，本文件仍然暴露：
+- `train_self_attention_ppo(...)`
+- `online_update_self_attention_ppo(...)`
+
+但这两个函数现在内部不再执行“候选题池级别的 PPO 逐题选题”，
+而是执行“并行 block 生成器”的监督 warmup / 在线微调流程。
+
+对外返回结构保持不变：
+- `comb`: 生成出的题组
+- `model_state`: 调试摘要
+- `policy_state`: 可继续在线更新的权重与元信息
 """
 
 from __future__ import annotations
@@ -49,15 +40,15 @@ import numpy as np
 try:
     import torch
     import torch.nn as nn
+    import torch.nn.functional as F
     import torch.optim as optim
-    from torch.distributions import Categorical
 
     TORCH_AVAILABLE = True
 except Exception:
     torch = None
     nn = None
+    F = None
     optim = None
-    Categorical = None
     TORCH_AVAILABLE = False
 
 try:
@@ -69,15 +60,6 @@ _MISSING_ATTR_TOKEN = "__missing__"
 
 
 def _safe_float(v, default: float = 0.0) -> float:
-    """尽力把任意输入转成浮点数。
-
-    参数:
-        v: 任意待转换对象，常见为 `str / int / float / None`。
-        default: 转换失败时返回的默认值。
-
-    返回:
-        float: 转换后的浮点数；若失败则返回 `default`。
-    """
     try:
         return float(v)
     except Exception:
@@ -85,38 +67,11 @@ def _safe_float(v, default: float = 0.0) -> float:
 
 
 def _progress_print(verbose: bool, prefix: str, message: str) -> None:
-    """按需输出训练/更新进度。
-
-    参数:
-        verbose: 是否开启打印。
-        prefix: 日志前缀，例如 `selfattention/train`。
-        message: 具体日志内容。
-
-    返回:
-        None
-    """
-    if not verbose:
-        return
-    print(f"[{prefix}] {message}", flush=True)
+    if verbose:
+        print(f"[{prefix}] {message}", flush=True)
 
 
 def _task_signature(task: dict) -> str:
-    """为单个 task 生成稳定短签名。
-
-    参数:
-        task: 单个 SP 题目字典，通常至少包含：
-            {
-                "alternatives": {
-                    "<alt_name>": {"<attr_name>": value, ...},
-                    ...
-                }
-            }
-
-    返回:
-        str: 长度约 16 的稳定哈希短签名，用于：
-            - 判断题目是否与 candidate pool 中的动作一致；
-            - 在线更新时把“已出题 task”映射回动作索引。
-    """
     alts = (task or {}).get("alternatives", {}) if isinstance(task, dict) else {}
     norm = {}
     for alt, attrs in alts.items():
@@ -124,154 +79,143 @@ def _task_signature(task: dict) -> str:
     return hashlib.sha1(str(sorted(norm.items())).encode("utf-8")).hexdigest()[:16]
 
 
+def _normalize_heads(hidden_dim: int, num_heads: int) -> int:
+    heads = max(1, min(int(num_heads), int(hidden_dim)))
+    while heads > 1 and hidden_dim % heads != 0:
+        heads -= 1
+    return max(1, heads)
+
+
 if TORCH_AVAILABLE:
-    class SelfAttentionActorCritic(nn.Module):
-        """使用多头自注意力骨干的共享 Actor-Critic 网络。
+    class ParallelQuestionBlockGenerator(nn.Module):
+        """并行 question-block 生成器。
 
-        输入张量默认是 `[B, L, D]`：
-        - `B`: batch size
-        - `L`: 时间窗口长度（同一 respondent / 同一问卷内的历史状态序列）
-        - `D`: 单步状态维度
+        输入:
+            encoder_tokens ∈ R^[B, L_enc, D_ctx]
 
-        若外部只给 `[B, D]`，会自动升成长度为 1 的序列。
+        输出:
+            count_logits ∈ R^[B, K_count]
+            mask_logits  ∈ R^[B, T_max, V]
+            value_raw    ∈ R^[B, T_max, V]
+            slot_select_logits ∈ R^[B, T_max]
+            score_raw          ∈ R^[B, T_max]
+            sample_target_logits ∈ R^[B, C_sample]
 
-        网络内部维度流转如下：
-        1. `x ∈ R^[B,L,D]`
-        2. `embed(x) -> h ∈ R^[B,L,H]`，其中 `H = hidden_dim`
-        3. Multi-head self-attention:
-           - Q/K/V 由 `nn.MultiheadAttention` 内部线性层产生
-           - 注意力输出 `attn_out ∈ R^[B,L,H]`
-        4. 残差 + LayerNorm 后仍为 `R^[B,L,H]`
-        5. 前馈层 FFN 后仍为 `R^[B,L,H]`
-        6. 取最后一个 token：
-           `pooled = h[:, -1, :] ∈ R^[B,H]`
-        7. 两个 head：
-           - `actor_head(pooled) -> logits ∈ R^[B,N]`
-           - `critic_head(pooled) -> value ∈ R^[B]`
+        其中：
+            - `T_max` 是本次问卷允许的最大题数
+            - `V` 是展平后的变量槽位数
+            - `K_count = T_max - T_min + 1`
         """
 
-        def __init__(self, input_dim: int, output_dim: int, hidden_dim: int = 64, num_heads: int = 4):
-            """初始化共享骨干的 SelfAttention Actor-Critic。
-
-            参数:
-                input_dim: 单步状态特征维度 `D`。
-                output_dim: 动作空间维度 `N`，即候选题池中的候选 task 数量。
-                hidden_dim: 自注意力与前馈层内部维度 `H`。
-                num_heads: 多头注意力的 head 数；若不能整除 `hidden_dim`，
-                    会在 `_normalize_heads()` 中自动下调。
-
-            返回:
-                None
-            """
+        def __init__(
+            self,
+            *,
+            context_dim: int,
+            slot_dim: int,
+            hidden_dim: int = 64,
+            num_heads: int = 4,
+            max_questions: int = 8,
+            count_classes: int = 1,
+            sample_target_dim: int = 1,
+        ) -> None:
             super().__init__()
-            self.input_dim = int(input_dim)
-            self.output_dim = int(output_dim)
+            self.context_dim = int(context_dim)
+            self.slot_dim = int(slot_dim)
             self.hidden_dim = max(16, int(hidden_dim))
-            self.num_heads = self._normalize_heads(self.hidden_dim, int(num_heads))
+            self.num_heads = _normalize_heads(self.hidden_dim, int(num_heads))
+            self.max_questions = max(1, int(max_questions))
+            self.count_classes = max(1, int(count_classes))
+            self.sample_target_dim = max(1, int(sample_target_dim))
 
-            self.embed = nn.Linear(self.input_dim, self.hidden_dim)
-            self.attn = nn.MultiheadAttention(self.hidden_dim, self.num_heads, batch_first=True)
-            self.norm1 = nn.LayerNorm(self.hidden_dim)
-            self.ffn = nn.Sequential(
+            self.context_proj = nn.Linear(self.context_dim, self.hidden_dim)
+            self.encoder_attn = nn.MultiheadAttention(self.hidden_dim, self.num_heads, batch_first=True)
+            self.encoder_norm1 = nn.LayerNorm(self.hidden_dim)
+            self.encoder_ffn = nn.Sequential(
                 nn.Linear(self.hidden_dim, self.hidden_dim * 2),
                 nn.ReLU(),
                 nn.Linear(self.hidden_dim * 2, self.hidden_dim),
             )
-            self.norm2 = nn.LayerNorm(self.hidden_dim)
-            self.actor_head = nn.Linear(self.hidden_dim, self.output_dim)
-            self.critic_head = nn.Linear(self.hidden_dim, 1)
+            self.encoder_norm2 = nn.LayerNorm(self.hidden_dim)
 
-        @staticmethod
-        def _normalize_heads(hidden_dim: int, num_heads: int) -> int:
-            """把 head 数调整为 `hidden_dim` 的可整除因子。
+            self.slot_queries = nn.Parameter(torch.randn(self.max_questions, self.hidden_dim) * 0.02)
+            self.slot_attn = nn.MultiheadAttention(self.hidden_dim, self.num_heads, batch_first=True)
+            self.slot_norm1 = nn.LayerNorm(self.hidden_dim)
+            self.cross_attn = nn.MultiheadAttention(self.hidden_dim, self.num_heads, batch_first=True)
+            self.slot_norm2 = nn.LayerNorm(self.hidden_dim)
+            self.slot_ffn = nn.Sequential(
+                nn.Linear(self.hidden_dim, self.hidden_dim * 2),
+                nn.ReLU(),
+                nn.Linear(self.hidden_dim * 2, self.hidden_dim),
+            )
+            self.slot_norm3 = nn.LayerNorm(self.hidden_dim)
 
-            参数:
-                hidden_dim: 注意力内部总通道数 `H`。
-                num_heads: 期望 head 数。
+            self.count_head = nn.Sequential(
+                nn.Linear(self.hidden_dim, self.hidden_dim),
+                nn.Tanh(),
+                nn.Linear(self.hidden_dim, self.count_classes),
+            )
+            self.respondent_target_head = nn.Sequential(
+                nn.Linear(self.hidden_dim, self.hidden_dim),
+                nn.Tanh(),
+                nn.Linear(self.hidden_dim, self.sample_target_dim),
+            )
+            self.slot_select_head = nn.Linear(self.hidden_dim, 1)
+            self.mask_head = nn.Linear(self.hidden_dim, self.slot_dim)
+            self.mask_context = nn.Linear(self.slot_dim, self.hidden_dim)
+            self.value_head = nn.Sequential(
+                nn.Linear(self.hidden_dim, self.hidden_dim),
+                nn.ReLU(),
+                nn.Linear(self.hidden_dim, self.slot_dim),
+            )
+            self.score_head = nn.Linear(self.hidden_dim, 1)
 
-            返回:
-                int: 实际使用的 head 数 `M`，满足：
-                    - `1 <= M <= hidden_dim`
-                    - `hidden_dim % M == 0`
+        def forward(self, encoder_tokens: torch.Tensor) -> dict[str, torch.Tensor]:
+            if encoder_tokens.dim() == 2:
+                encoder_tokens = encoder_tokens.unsqueeze(0)
+            if encoder_tokens.dim() != 3:
+                raise ValueError(f"expected [B,L_enc,D_ctx], got {tuple(encoder_tokens.shape)}")
 
-            说明:
-                多头注意力中每个 head 的通道数为 `d_head = hidden_dim / M`。
-                若 `hidden_dim` 不能被用户给定的 `num_heads` 整除，这里会把
-                `num_heads` 递减到最近的可整除值，避免 `nn.MultiheadAttention`
-                构造时报错。
-            """
-            heads = max(1, min(int(num_heads), int(hidden_dim)))
-            while heads > 1 and hidden_dim % heads != 0:
-                heads -= 1
-            return max(1, heads)
+            enc = self.context_proj(encoder_tokens)
+            enc_attn, _ = self.encoder_attn(enc, enc, enc, need_weights=False)
+            enc = self.encoder_norm1(enc + enc_attn)
+            enc_ffn = self.encoder_ffn(enc)
+            enc = self.encoder_norm2(enc + enc_ffn)
 
-        def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
-            """前向传播。
+            batch = enc.shape[0]
+            slot = self.slot_queries.unsqueeze(0).expand(batch, -1, -1)
+            slot_attn, _ = self.slot_attn(slot, slot, slot, need_weights=False)
+            slot = self.slot_norm1(slot + slot_attn)
+            cross, _ = self.cross_attn(slot, enc, enc, need_weights=False)
+            slot = self.slot_norm2(slot + cross)
+            slot_ffn = self.slot_ffn(slot)
+            slot = self.slot_norm3(slot + slot_ffn)
 
-            参数:
-                x: `[B, L, D]` 或 `[B, D]`。
-
-            返回:
-                tuple[torch.Tensor, torch.Tensor]:
-                    - logits: `[B, output_dim]`
-                    - value: `[B]`
-
-            维度说明:
-                - 输入 `[B, D]` 时，会自动扩展为 `[B, 1, D]`
-                - `key_padding_mask ∈ {0,1}^[B,L]`
-                - `embed(x) -> [B,L,H]`
-                - `attn_out -> [B,L,H]`
-                - `pooled -> [B,H]`
-                - `logits -> [B,N]`
-                - `value -> [B]`
-            """
-            if x.dim() == 2:
-                x = x.unsqueeze(1)
-            if x.dim() != 3:
-                raise ValueError(f"expected [B,L,D] or [B,D], got shape={tuple(x.shape)}")
-
-            # 全零 token 视为左侧 padding，不参与注意力。
-            key_padding_mask = torch.all(torch.abs(x) <= 1e-12, dim=-1)
-            if key_padding_mask.ndim == 2:
-                all_masked = torch.all(key_padding_mask, dim=1)
-                if torch.any(all_masked):
-                    key_padding_mask = key_padding_mask.clone()
-                    key_padding_mask[all_masked, -1] = False
-
-            # 线性嵌入: [B,L,D] -> [B,L,H]
-            h = self.embed(x)
-            # 自注意力输出: [B,L,H]
-            attn_out, _ = self.attn(h, h, h, key_padding_mask=key_padding_mask, need_weights=False)
-            h = self.norm1(h + attn_out)
-            # 前馈层输出: [B,L,H]
-            f = self.ffn(h)
-            h = self.norm2(h + f)
-
-            # 由于序列是右对齐构造的，最后一个 token 对应当前题位状态。
-            pooled = h[:, -1, :]
-            logits = self.actor_head(pooled)
-            value = self.critic_head(pooled).squeeze(-1)
-            return logits, value
+            pooled = slot.mean(dim=1)
+            pooled_enc = enc.mean(dim=1)
+            count_logits = self.count_head(pooled)
+            sample_target_logits = self.respondent_target_head(pooled_enc)
+            slot_select_logits = self.slot_select_head(slot).squeeze(-1)
+            mask_logits = self.mask_head(slot)
+            mask_prob = torch.sigmoid(mask_logits)
+            value_in = slot + self.mask_context(mask_prob)
+            value_raw = self.value_head(value_in)
+            score_raw = self.score_head(slot).squeeze(-1)
+            return {
+                "encoder_hidden": enc,
+                "slot_hidden": slot,
+                "count_logits": count_logits,
+                "sample_target_logits": sample_target_logits,
+                "slot_select_logits": slot_select_logits,
+                "mask_logits": mask_logits,
+                "value_raw": value_raw,
+                "score_raw": score_raw,
+            }
 else:
-    class SelfAttentionActorCritic:
+    class ParallelQuestionBlockGenerator:
         pass
 
 
 def _state_dict_to_json(sd: dict[str, torch.Tensor]) -> dict[str, list]:
-    """把 PyTorch `state_dict` 转成可 JSON 序列化的 list 字典。
-
-    参数:
-        sd: 模型参数字典，通常来自 `model.state_dict()`。
-
-    返回:
-        dict[str, list]:
-            键仍为参数名，值从 `torch.Tensor` 转为嵌套 `list`。
-
-    说明:
-        这里主要用于把权重暂存进 `policy_state`，便于：
-        - 写入 JSON
-        - 后续在线更新重新加载
-    """
     if not TORCH_AVAILABLE:
         return {}
     out = {}
@@ -281,17 +225,6 @@ def _state_dict_to_json(sd: dict[str, torch.Tensor]) -> dict[str, list]:
 
 
 def _load_state_dict_from_json(model: nn.Module, raw: dict | None) -> bool:
-    """在张量形状一致时，从 JSON 字典恢复模型参数。
-
-    参数:
-        model: 目标 PyTorch 模型。
-        raw: JSON 反序列化后的参数字典，通常来自 `_state_dict_to_json()`。
-
-    返回:
-        bool:
-            - `True`: 所有键存在且形状匹配，已成功加载
-            - `False`: 任一键缺失、形状不匹配或加载异常
-    """
     if not TORCH_AVAILABLE:
         return False
     if not isinstance(raw, dict) or not raw:
@@ -313,445 +246,1085 @@ def _load_state_dict_from_json(model: nn.Module, raw: dict | None) -> bool:
 
 
 def _sa_cfg(config: dict | None) -> dict:
-    """读取并标准化 SelfAttention 相关超参数。
-
-    参数:
-        config: 整体配置字典，通常来自 `data/config.json`。
-
-    返回:
-        dict:
-            标准化后的自注意力/PPO 超参数字典，包含：
-            - `seed`
-            - `window_length`
-            - `hidden_dim`
-            - `num_heads`
-            - `explore_epsilon`
-            - `clip_eps`
-            - `value_coef`
-            - `entropy_coef`
-            - `train_respondents`
-            - `train_epochs`
-            - `train_lr`
-            - `online_lr`
-            - `online_epochs`
-            - `batch_size`
-            - `online_batch_size`
-            - `gamma`
-            - `gae_lambda`
-            - `target_kl`
-
-    说明:
-        本函数会优先读取 `config["self_attention"]`，
-        部分字段缺失时回退到 `config["dynamic_ppo"]` 的默认值，
-        这样三种策略的训练参数可以尽量保持口径一致。
-    """
     cfg = (config or {}).get("self_attention", {}) if isinstance((config or {}).get("self_attention", {}), dict) else {}
     dyn = (config or {}).get("dynamic_ppo", {}) if isinstance((config or {}).get("dynamic_ppo", {}), dict) else {}
     return {
-        "seed": int(cfg.get("seed", dyn.get("seed", 42)) or dyn.get("seed", 42) or 42),
-        "window_length": int(cfg.get("window_length", 16) or 16),
+        "seed": int(cfg.get("seed", dyn.get("seed", 42)) or 42),
         "hidden_dim": int(cfg.get("hidden_dim", 64) or 64),
         "num_heads": int(cfg.get("num_heads", 4) or 4),
-        "explore_epsilon": float(cfg.get("explore_epsilon", 0.15) or 0.15),
-        "clip_eps": float(cfg.get("clip_eps", dyn.get("clip_eps", 0.2)) or dyn.get("clip_eps", 0.2) or 0.2),
-        "value_coef": float(cfg.get("value_coef", dyn.get("value_coef", 0.5)) or dyn.get("value_coef", 0.5) or 0.5),
-        "entropy_coef": float(cfg.get("entropy_coef", dyn.get("entropy_coef", 0.01)) or dyn.get("entropy_coef", 0.01) or 0.01),
-        "train_respondents": int(cfg.get("train_respondents", dyn.get("train_respondents", 300)) or dyn.get("train_respondents", 300) or 300),
-        "train_epochs": int(cfg.get("train_epochs", dyn.get("train_epochs", 200)) or dyn.get("train_epochs", 200) or 200),
-        "train_lr": float(cfg.get("train_lr", dyn.get("train_lr", 0.03)) or dyn.get("train_lr", 0.03) or 0.03),
-        "online_lr": float(cfg.get("online_lr", 0.005) or 0.005),
-        "online_epochs": int(cfg.get("online_epochs", 2) or 2),
-        "batch_size": int(cfg.get("batch_size", dyn.get("batch_size", 128)) or dyn.get("batch_size", 128) or 128),
-        "online_batch_size": int(cfg.get("online_batch_size", cfg.get("batch_size", dyn.get("batch_size", 128))) or cfg.get("batch_size", dyn.get("batch_size", 128)) or 128),
-        "gamma": float(cfg.get("gamma", dyn.get("gamma", 0.99)) or dyn.get("gamma", 0.99) or 0.99),
-        "gae_lambda": float(cfg.get("gae_lambda", dyn.get("gae_lambda", 0.95)) or dyn.get("gae_lambda", 0.95) or 0.95),
-        "target_kl": float(cfg.get("target_kl", dyn.get("target_kl", 0.03)) or dyn.get("target_kl", 0.03) or 0.03),
+        "train_respondents": int(cfg.get("train_respondents", 300) or 300),
+        "train_epochs": int(cfg.get("train_epochs", 120) or 120),
+        "train_lr": float(cfg.get("train_lr", 0.01) or 0.01),
+        "online_lr": float(cfg.get("online_lr", 0.002) or 0.002),
+        "online_epochs": int(cfg.get("online_epochs", 8) or 8),
+        "batch_size": int(cfg.get("batch_size", 64) or 64),
+        "sample_target_dim": int(cfg.get("sample_target_dim", 16) or 16),
+        "target_sample_size": int(cfg.get("target_sample_size", 200) or 200),
+        "count_loss_weight": float(cfg.get("count_loss_weight", 1.0) or 1.0),
+        "slot_select_loss_weight": float(cfg.get("slot_select_loss_weight", 0.8) or 0.8),
+        "mask_loss_weight": float(cfg.get("mask_loss_weight", 0.8) or 0.8),
+        "value_loss_weight": float(cfg.get("value_loss_weight", 1.2) or 1.2),
+        "score_loss_weight": float(cfg.get("score_loss_weight", 0.4) or 0.4),
+        "sample_target_loss_weight": float(cfg.get("sample_target_loss_weight", 0.3) or 0.3),
     }
 
 
-def _build_state_sequence_batch(states: np.ndarray, dones: np.ndarray, seq_len: int) -> np.ndarray:
-    """把单步状态 `[T, D]` 重组为窗口序列 `[T, L, D]`。
-
-    规则：
-    - 仅在同一 episode 内回看历史；
-    - 窗口不够长时左侧补 0；
-    - 每个样本的最后一个 token 始终是当前时刻状态。
-
-    参数:
-        states: 单步状态矩阵 `states ∈ R^[T,D]`
-            - `T`: 总 step 数
-            - `D`: 单步状态维度
-        dones: 终止标记向量 `dones ∈ R^[T]`
-            - 当前 step 为 episode 最后一步时，`dones[t] = 1`
-        seq_len: 历史窗口长度 `L`
-
-    返回:
-        np.ndarray:
-            右对齐后的序列张量 `seq ∈ R^[T,L,D]`。
-            对于每个 step `t`，`seq[t]` 都是“到当前 step 为止”的历史窗口。
-    """
-    states_np = np.asarray(states, dtype=np.float32)
-    dones_np = np.asarray(dones, dtype=np.float32)
-    if states_np.ndim != 2 or states_np.shape[0] == 0:
-        return np.zeros((0, max(1, int(seq_len)), states_np.shape[1] if states_np.ndim == 2 else 0), dtype=np.float32)
-    n_steps, input_dim = states_np.shape
-    l = max(1, int(seq_len))
-    out = np.zeros((n_steps, l, input_dim), dtype=np.float32)
-    episode_start = 0
-    for idx in range(n_steps):
-        if idx > 0 and float(dones_np[idx - 1]) >= 0.5:
-            episode_start = idx
-        start = max(episode_start, idx - l + 1)
-        hist = states_np[start:idx + 1]
-        out[idx, -len(hist):, :] = hist
-    return out
+def _infer_variable_type(var_name: str | None, levels: list | None, given: str | None = None) -> str:
+    raw = str(given or "").strip().lower()
+    if raw in {"continuous", "ordinal", "categorical"}:
+        return raw
+    vals = list(levels or [])
+    numeric = []
+    for lv in vals:
+        try:
+            numeric.append(float(lv))
+        except Exception:
+            numeric = []
+            break
+    if numeric:
+        return "continuous" if len(vals) > 4 else "ordinal"
+    return "categorical"
 
 
-def _history_to_sequence(history_states: list[np.ndarray], seq_len: int, input_dim: int) -> np.ndarray:
-    """把当前 respondent 已走过的状态历史转成一个右对齐窗口。
+def _extract_design_slots(spec: dict) -> tuple[list[dict], list[str]]:
+    alternatives = spec.get("alternatives", []) if isinstance(spec, dict) else []
+    slot_specs: list[dict] = []
+    alt_order: list[str] = []
+    for alt_idx, alt in enumerate(alternatives or []):
+        if not isinstance(alt, dict):
+            continue
+        alt_name = str(alt.get("name") or alt.get("label") or f"alt_{alt_idx + 1}")
+        alt_order.append(alt_name)
+        for var_idx, var in enumerate(alt.get("variables", []) or []):
+            if not isinstance(var, dict):
+                continue
+            var_name = str(var.get("name") or f"var_{var_idx + 1}")
+            levels = list(var.get("levels", []) or [])
+            variable_type = _infer_variable_type(var_name, levels, var.get("variable_type"))
+            numeric_levels = []
+            for lv in levels:
+                try:
+                    numeric_levels.append(float(lv))
+                except Exception:
+                    numeric_levels = []
+                    break
+            if numeric_levels:
+                lower = float(min(numeric_levels))
+                upper = float(max(numeric_levels))
+                default = float(np.mean(numeric_levels))
+            else:
+                lower = 0.0
+                upper = float(max(len(levels) - 1, 1))
+                default = 0.0
+            slot_specs.append(
+                {
+                    "index": len(slot_specs),
+                    "alt_name": alt_name,
+                    "alt_index": alt_idx,
+                    "var_name": var_name,
+                    "slot_key": f"{alt_name}.{var_name}",
+                    "levels": levels,
+                    "variable_type": variable_type,
+                    "lower": lower,
+                    "upper": upper,
+                    "default": default,
+                    "description": str(var.get("description") or var_name),
+                }
+            )
+    return slot_specs, alt_order
 
-    参数:
-        history_states: 历史单步状态列表，列表中每个元素形如 `R^[D]`。
-        seq_len: 目标窗口长度 `L`。
-        input_dim: 目标单步状态维度 `D`。
 
-    返回:
-        np.ndarray:
-            `seq ∈ R^[L,D]`。
+def _normalize_slot_value(value, slot: dict) -> float:
+    levels = list(slot.get("levels", []) or [])
+    variable_type = str(slot.get("variable_type") or "continuous")
+    lower = float(slot.get("lower", 0.0) or 0.0)
+    upper = float(slot.get("upper", 1.0) or 1.0)
+    if value is None:
+        return 0.0
+    if variable_type == "categorical":
+        if not levels:
+            return 0.0
+        value_str = str(value)
+        for idx, lv in enumerate(levels):
+            if str(lv) == value_str:
+                return float(idx / max(len(levels) - 1, 1))
+        return 0.0
+    num = _safe_float(value, lower)
+    span = max(upper - lower, 1e-8)
+    return float(np.clip((num - lower) / span, 0.0, 1.0))
 
-    说明:
-        - 历史不足 `L` 时左侧补 0
-        - 历史超过 `L` 时截取最近 `L` 步
-        - 若单步状态长度与 `input_dim` 不一致，会做截断或补 0
-    """
-    l = max(1, int(seq_len))
-    out = np.zeros((l, int(input_dim)), dtype=np.float32)
-    if not history_states:
+
+def _denormalize_slot_value(value_norm: float, slot: dict):
+    p = float(np.clip(value_norm, 0.0, 1.0))
+    levels = list(slot.get("levels", []) or [])
+    variable_type = str(slot.get("variable_type") or "continuous")
+    lower = float(slot.get("lower", 0.0) or 0.0)
+    upper = float(slot.get("upper", 1.0) or 1.0)
+
+    if variable_type == "categorical" and levels:
+        idx = int(round(p * max(len(levels) - 1, 0)))
+        idx = max(0, min(idx, len(levels) - 1))
+        return levels[idx]
+
+    value = lower + p * max(upper - lower, 1e-8)
+    if variable_type == "ordinal" and levels:
+        numeric_levels = []
+        for lv in levels:
+            try:
+                numeric_levels.append(float(lv))
+            except Exception:
+                numeric_levels = []
+                break
+        if numeric_levels:
+            nearest = min(numeric_levels, key=lambda x: abs(x - value))
+            if all(float(lv).is_integer() for lv in numeric_levels):
+                return int(round(nearest))
+            return float(nearest)
+    if levels:
+        numeric_levels = []
+        for lv in levels:
+            try:
+                numeric_levels.append(float(lv))
+            except Exception:
+                numeric_levels = []
+                break
+        if numeric_levels and variable_type != "continuous":
+            nearest = min(numeric_levels, key=lambda x: abs(x - value))
+            return float(nearest)
+    if float(lower).is_integer() and float(upper).is_integer() and abs(value - round(value)) < 1e-6:
+        return int(round(value))
+    return round(float(value), 3)
+
+
+def _task_to_slot_arrays(task: dict, slot_specs: list[dict]) -> tuple[np.ndarray, np.ndarray]:
+    mask = np.zeros((len(slot_specs),), dtype=np.float32)
+    values = np.zeros((len(slot_specs),), dtype=np.float32)
+    alts = (task or {}).get("alternatives", {}) if isinstance(task, dict) else {}
+    for idx, slot in enumerate(slot_specs):
+        attrs = (alts.get(slot["alt_name"], {}) or {}) if isinstance(alts, dict) else {}
+        if slot["var_name"] in attrs:
+            mask[idx] = 1.0
+            values[idx] = _normalize_slot_value(attrs.get(slot["var_name"]), slot)
+    return mask, values
+
+
+def _group_tasks_into_blocks(tasks: list[dict], default_block_size: int) -> list[list[dict]]:
+    blocks: dict[int, list[dict]] = {}
+    for idx, task in enumerate(tasks or []):
+        block_id = int((task or {}).get("block", 1) or 1)
+        blocks.setdefault(block_id, []).append(task)
+    out: list[list[dict]] = []
+    if blocks:
+        for block_id in sorted(blocks.keys()):
+            block_tasks = sorted(blocks[block_id], key=lambda t: int((t or {}).get("row_in_block", 0) or 0))
+            out.append(block_tasks)
         return out
-    arr = np.vstack([np.asarray(x, dtype=np.float32).reshape(1, -1) for x in history_states])
-    if arr.shape[1] < input_dim:
-        pad = np.zeros((arr.shape[0], input_dim - arr.shape[1]), dtype=np.float32)
-        arr = np.concatenate([arr, pad], axis=1)
-    elif arr.shape[1] > input_dim:
-        arr = arr[:, :input_dim]
-    tail = arr[-l:]
-    out[-len(tail):, :] = tail
+    chunk = max(1, int(default_block_size))
+    for start in range(0, len(tasks or []), chunk):
+        out.append(list((tasks or [])[start:start + chunk]))
     return out
 
 
-def _compute_gae(rewards: np.ndarray, values: np.ndarray, dones: np.ndarray, gamma: float, gae_lambda: float) -> tuple[np.ndarray, np.ndarray]:
-    """根据 `reward / value / done` 计算 GAE advantage 与 return。
+def _iter_submission_tasks(rows: list[dict] | None) -> list[list[dict]]:
+    blocks: list[list[dict]] = []
+    for row in rows or []:
+        tasks = row.get("tasks", []) if isinstance(row, dict) else []
+        if isinstance(tasks, list) and tasks:
+            blocks.append([t for t in tasks if isinstance(t, dict)])
+    return blocks
 
-    参数:
-        rewards: 奖励向量 `r ∈ R^[T]`
-        values: 状态价值估计 `V(s_t) ∈ R^[T]`
-        dones: 终止标记 `done ∈ R^[T]`
-        gamma: 折扣因子
-        gae_lambda: GAE 衰减系数
+
+def _chunk_feature_vector(vec: np.ndarray, token_count: int, width: int) -> np.ndarray:
+    token_count = max(1, int(token_count))
+    width = max(4, int(width))
+    arr = np.asarray(vec, dtype=np.float32).reshape(-1)
+    if arr.size == 0:
+        return np.zeros((token_count, width), dtype=np.float32)
+    if arr.size < token_count * width:
+        arr = np.pad(arr, (0, token_count * width - arr.size))
+    else:
+        arr = arr[: token_count * width]
+    return arr.reshape(token_count, width)
+
+
+def _build_cand_tokens(slot_specs: list[dict], *, token_count: int, width: int) -> np.ndarray:
+    if not slot_specs:
+        return np.zeros((token_count, width), dtype=np.float32)
+    meta_rows: list[np.ndarray] = []
+    max_alt = max([int(s.get("alt_index", 0) or 0) for s in slot_specs] + [0]) + 1
+    for slot in slot_specs:
+        levels = list(slot.get("levels", []) or [])
+        vec = np.zeros((width,), dtype=np.float32)
+        vec[0] = float((int(slot.get("alt_index", 0) or 0) + 1) / max(max_alt, 1))
+        vtype = str(slot.get("variable_type") or "continuous")
+        vec[1] = 1.0 if vtype == "continuous" else 0.0
+        vec[2] = 1.0 if vtype == "ordinal" else 0.0
+        vec[3] = 1.0 if vtype == "categorical" else 0.0
+        vec[4] = float(min(len(levels), 12) / 12.0)
+        vec[5] = float(slot.get("lower", 0.0) or 0.0)
+        vec[6] = float(slot.get("upper", 0.0) or 0.0)
+        vec[7] = float((float(slot.get("upper", 0.0) or 0.0) - float(slot.get("lower", 0.0) or 0.0)) / max(abs(float(slot.get("upper", 0.0) or 0.0)), 1.0))
+        meta_rows.append(vec)
+    meta = np.vstack(meta_rows)
+    if meta.shape[0] < token_count:
+        out = np.zeros((token_count, width), dtype=np.float32)
+        out[: meta.shape[0], :] = meta
+        return out
+    chunks = np.array_split(meta, token_count, axis=0)
+    return np.vstack([np.mean(c, axis=0) if len(c) else np.zeros((width,), dtype=np.float32) for c in chunks])
+
+
+def _build_hist_tokens(historical_rows: list[dict] | None, slot_specs: list[dict], *, token_count: int, width: int) -> np.ndarray:
+    task_blocks = _iter_submission_tasks(historical_rows)
+    if not task_blocks:
+        return np.zeros((token_count, width), dtype=np.float32)
+    masks = []
+    values = []
+    counts = []
+    for tasks in task_blocks:
+        for task in tasks:
+            m, v = _task_to_slot_arrays(task, slot_specs)
+            masks.append(m)
+            values.append(v)
+            counts.append(float(np.sum(m)))
+    if not masks:
+        return np.zeros((token_count, width), dtype=np.float32)
+    mask_mean = np.mean(np.vstack(masks), axis=0)
+    value_mean = np.mean(np.vstack(values), axis=0)
+    value_std = np.std(np.vstack(values), axis=0)
+    density = np.array([float(np.mean(counts) / max(len(slot_specs), 1))], dtype=np.float32)
+    joined = np.concatenate([mask_mean, value_mean, value_std, density], axis=0)
+    return _chunk_feature_vector(joined, token_count, width)
+
+
+def _pad_vector(vec: np.ndarray, width: int) -> np.ndarray:
+    arr = np.asarray(vec, dtype=np.float32).reshape(-1)
+    if arr.size < width:
+        arr = np.pad(arr, (0, width - arr.size))
+    else:
+        arr = arr[:width]
+    return arr.astype(np.float32)
+
+
+def _build_env_vector(policy_state: dict, historical_rows: list[dict] | None, width: int) -> np.ndarray:
+    signal = policy_state.get("current_mnl_signal", {}) if isinstance(policy_state.get("current_mnl_signal", {}), dict) else {}
+    bound_violation = signal.get("bound_violation", {}) if isinstance(signal.get("bound_violation", {}), dict) else {}
+    viol_vals = [_safe_float(v, 0.0) for v in bound_violation.values()]
+    vec = np.zeros((width,), dtype=np.float32)
+    vec[0] = float(min(1.0, int(policy_state.get("response_count", 0) or 0) / 200.0))
+    vec[1] = float(np.clip(_safe_float(signal.get("adjusted_pseudo_r2"), 0.0), -1.0, 1.0))
+    vec[2] = float(np.mean(viol_vals)) if viol_vals else 0.0
+    vec[3] = float(min(1.0, len(historical_rows or []) / 200.0))
+    vec[4] = float(min(1.0, int(policy_state.get("online_updates", 0) or 0) / 100.0))
+    return vec
+
+
+def _build_sample_target_cells(feature_spec: dict, max_cells: int) -> list[str]:
+    """构造定向采样建议 head 的离散 cell 列表。
+
+    输入:
+        feature_spec: dynamicPPO 共用的人口编码规格，通常包含
+            `zone_categories`、`attr_dim_names`、`attr_categories`。
+        max_cells: 最多保留多少个采样 cell，避免 head 维度随 PopSim 配置无限膨胀。
 
     返回:
-        tuple[np.ndarray, np.ndarray]:
-            - `advantages ∈ R^[T]`
-            - `returns ∈ R^[T]`
+        list[str]: 稳定排序后的 cell 名称，例如 `zone=天河区`、`gender=female`。
 
     说明:
-        `returns = advantages + values`
-        后续 PPO 中：
-        - `advantages` 用于更新策略 head
-        - `returns` 用于回归 critic / value head
+        这里不做全量笛卡尔积。全量 `zone × gender × age × edu ...` 很容易爆炸，
+        也会使早期样本过稀。因此先使用“边际分布 cell”作为采样建议单元，
+        后续 dashboard 可以再把多个 cell 组合成更细的人工配额建议。
     """
-    n = int(len(rewards))
-    advantages = np.zeros((n,), dtype=float)
-    last_gae = 0.0
-    for t in range(n - 1, -1, -1):
-        next_value = float(values[t + 1]) if t + 1 < n else 0.0
-        nonterminal = 1.0 - float(dones[t])
-        delta = float(rewards[t]) + float(gamma) * next_value * nonterminal - float(values[t])
-        last_gae = delta + float(gamma) * float(gae_lambda) * nonterminal * last_gae
-        advantages[t] = last_gae
-    returns = advantages + values
-    return advantages, returns
+    spec = feature_spec if isinstance(feature_spec, dict) else {}
+    cells: list[str] = []
+    for zone in spec.get("zone_categories", []) if isinstance(spec.get("zone_categories", []), list) else []:
+        z = str(zone)
+        if z and z != _MISSING_ATTR_TOKEN:
+            cells.append(f"zone={z}")
+    names = spec.get("attr_dim_names", []) if isinstance(spec.get("attr_dim_names", []), list) else []
+    cats_by_dim = spec.get("attr_categories", []) if isinstance(spec.get("attr_categories", []), list) else []
+    for idx, cats in enumerate(cats_by_dim):
+        dim_name = str(names[idx]) if idx < len(names) else f"attr_{idx}"
+        for cat in cats if isinstance(cats, list) else []:
+            c = str(cat)
+            if c and c != _MISSING_ATTR_TOKEN:
+                cells.append(f"{dim_name}={c}")
+    deduped = list(dict.fromkeys(cells))
+    return deduped[: max(1, int(max_cells))] or ["all"]
 
 
-def _train_policy(
-    rollouts: dict,
+def _respondent_target_vector(respondent: dict, cells: list[str], feature_spec: dict | None = None) -> np.ndarray:
+    """将单个 respondent 映射为采样 cell 的多标签向量。
+
+    输入:
+        respondent: 当前或合成受访者，至少包含 `zone_id` 和 `attr_segments`。
+        cells: `_build_sample_target_cells` 返回的 cell 列表。
+        feature_spec: 人口编码规格，用于把 `attr_segments` 的列位置映射到列名。
+
+    返回:
+        np.ndarray: 形状为 `[C_sample]` 的 0/1 多标签向量。
+            respondent 可以同时命中 `zone=...`、`gender=...`、`age=...` 等多个 cell。
+    """
+    cells = list(cells or ["all"])
+    vec = np.zeros((len(cells),), dtype=np.float32)
+    if not cells:
+        return vec
+    if cells == ["all"]:
+        vec[0] = 1.0
+        return vec
+
+    spec = feature_spec if isinstance(feature_spec, dict) else {}
+    names = spec.get("attr_dim_names", []) if isinstance(spec.get("attr_dim_names", []), list) else []
+    parts = respondent.get("attr_segments", []) if isinstance(respondent, dict) else []
+    if not isinstance(parts, list):
+        parts = []
+    attr_map = {str(names[idx] if idx < len(names) else f"attr_{idx}"): str(val) for idx, val in enumerate(parts)}
+    zone_id = str((respondent or {}).get("zone_id", "") or _MISSING_ATTR_TOKEN)
+
+    for idx, cell in enumerate(cells):
+        text = str(cell)
+        if text == "all":
+            vec[idx] = 1.0
+        elif text.startswith("zone="):
+            vec[idx] = 1.0 if zone_id == text.split("=", 1)[1] else 0.0
+        elif "=" in text:
+            key, value = text.split("=", 1)
+            vec[idx] = 1.0 if attr_map.get(key) == value else 0.0
+    if float(np.sum(vec)) <= 0:
+        # 兜底：若 respondent 不在当前截断后的 cell 列表里，至少给一个弱监督信号。
+        vec[0] = 1.0
+    return vec
+
+
+def _build_sample_cell_targets(pop_stats: dict | None, cells: list[str], feature_spec: dict | None = None) -> dict[str, float]:
+    """从 PopSim 统计文件中提取采样 cell 的目标边际占比。
+
+    输入:
+        pop_stats: `popSimStats.json` 风格配置。
+        cells: `_build_sample_target_cells` 生成的 cell 名称。
+        feature_spec: 人口编码规格，用于识别属性列名。
+
+    返回:
+        dict[str, float]: cell -> target share。能从 PopSim 推断的使用目标值；
+            推断不了的 zone cell 默认按分区均匀分配，保证采样建议不会全为空。
+    """
+    cells = list(cells or [])
+    if not cells:
+        return {}
+    spec = feature_spec if isinstance(feature_spec, dict) else {}
+    names = spec.get("attr_dim_names", []) if isinstance(spec.get("attr_dim_names", []), list) else []
+    targets = {str(c): 0.0 for c in cells}
+
+    zone_targets = {}
+    default_target = {}
+    expected_len = max(1, len(names))
+    if isinstance(pop_stats, dict):
+        default_target = pop_stats.get("default_target", {}) if isinstance(pop_stats.get("default_target", {}), dict) else {}
+        zone_targets = pop_stats.get("zone_targets", {}) if isinstance(pop_stats.get("zone_targets", {}), dict) else {}
+        if not zone_targets and isinstance(pop_stats.get("zone2_targets", {}), dict):
+            zone_targets = pop_stats.get("zone2_targets", {})
+        key_format = str(pop_stats.get("key_format", "") or "").strip()
+        if key_format:
+            expected_len = max(1, len(key_format.split("|")))
+
+    zone_cells = [c for c in cells if str(c).startswith("zone=")]
+    if zone_cells:
+        zone_share = 1.0 / max(len(zone_cells), 1)
+        for cell in zone_cells:
+            targets[str(cell)] = zone_share
+
+    attr_acc = {str(c): 0.0 for c in cells if "=" in str(c) and not str(c).startswith("zone=")}
+    distributions: list[tuple[dict, float]] = []
+    if isinstance(default_target, dict) and default_target:
+        distributions.append((default_target, 1.0))
+    if isinstance(zone_targets, dict) and zone_targets:
+        z_weight = 1.0 / max(len(zone_targets), 1)
+        for zv in zone_targets.values():
+            if isinstance(zv, dict) and zv:
+                distributions.append((zv, z_weight))
+            elif isinstance(default_target, dict) and default_target:
+                distributions.append((default_target, z_weight))
+
+    for dist, dist_weight in distributions:
+        total = sum(max(0.0, _safe_float(v, 0.0)) for v in (dist or {}).values())
+        if total <= 0:
+            continue
+        for raw_key, raw_val in (dist or {}).items():
+            parts = [str(x).strip() or _MISSING_ATTR_TOKEN for x in str(raw_key or "").split("|")]
+            if len(parts) < expected_len:
+                parts.extend([_MISSING_ATTR_TOKEN] * (expected_len - len(parts)))
+            weight = dist_weight * max(0.0, _safe_float(raw_val, 0.0)) / total
+            for idx, part in enumerate(parts[:expected_len]):
+                dim_name = str(names[idx]) if idx < len(names) else f"attr_{idx}"
+                cell = f"{dim_name}={part}"
+                if cell in attr_acc:
+                    attr_acc[cell] += weight
+
+    attr_sum = sum(attr_acc.values())
+    if attr_sum > 0:
+        for cell, val in attr_acc.items():
+            targets[cell] = float(val / attr_sum)
+    return {k: round(float(v), 8) for k, v in targets.items()}
+
+
+def _sample_target_recommendations(
+    logits: np.ndarray,
+    cells: list[str],
+    policy_state: dict,
     *,
-    input_dim: int,
-    output_dim: int,
-    seq_len: int,
+    target_sample_size: int,
+    top_k: int = 8,
+) -> list[dict]:
+    """把 respondent_target_head 的 logits 转成人可读的定向采样建议。
+
+    输入:
+        logits: 模型输出，形状 `[C_sample]`。
+        cells: cell 名称列表。
+        policy_state: 当前策略状态，读取 `response_count` 估计剩余样本量。
+        target_sample_size: 计划总样本量。
+        top_k: 最多返回多少条建议。
+
+    返回:
+        list[dict]: 每条包含 `cell / priority / needed_n / reason`。
+    """
+    cells = list(cells or ["all"])
+    arr = np.asarray(logits, dtype=np.float32).reshape(-1)
+    if arr.size < len(cells):
+        arr = np.pad(arr, (0, len(cells) - arr.size))
+    arr = arr[: len(cells)]
+    z = arr - float(np.max(arr)) if arr.size else arr
+    prob = np.exp(z)
+    prob = prob / max(float(np.sum(prob)), 1e-8)
+    response_count = int((policy_state or {}).get("response_count", 0) or 0)
+    remaining = max(0, int(target_sample_size) - response_count)
+
+    # 若外部已经把 dashboard 统计出来的 sample_cell_counts / sample_cell_targets
+    # 写入 policy_state，则优先把“缺口比例”融合进优先级；否则只使用模型 logits。
+    counts = (policy_state or {}).get("sample_cell_counts", {})
+    targets = (policy_state or {}).get("sample_cell_targets", {})
+    if isinstance(counts, dict) and isinstance(targets, dict) and targets:
+        gap = np.zeros_like(prob)
+        for i, cell in enumerate(cells):
+            target_share = _safe_float(targets.get(cell), 0.0)
+            observed_share = _safe_float(counts.get(cell), 0.0) / max(response_count, 1)
+            gap[i] = max(0.0, target_share - observed_share)
+        if float(np.sum(gap)) > 0:
+            gap = gap / max(float(np.sum(gap)), 1e-8)
+            prob = 0.45 * prob + 0.55 * gap
+            prob = prob / max(float(np.sum(prob)), 1e-8)
+
+    order = list(np.argsort(-prob))[: max(1, int(top_k))]
+    out = []
+    for idx in order:
+        out.append(
+            {
+                "cell": str(cells[int(idx)]),
+                "priority": round(float(prob[int(idx)]), 6),
+                "needed_n": int(round(float(prob[int(idx)]) * remaining)),
+                "reason": "respondent_target_head_priority",
+            }
+        )
+    return out
+
+
+def _build_encoder_tokens(
+    respondent: dict,
+    *,
+    policy_state: dict,
+    feature_spec: dict,
+    slot_specs: list[dict],
+    historical_rows: list[dict] | None,
+    context_dim: int,
+    hist_token_count: int = 4,
+    cand_token_count: int = 5,
+) -> np.ndarray:
+    rp_feat = dyppo_shared._respondent_feat(respondent, feature_spec=feature_spec)
+    env_feat = _build_env_vector(policy_state, historical_rows, context_dim)
+    rp_token = _pad_vector(rp_feat, context_dim)
+    env_token = _pad_vector(env_feat, context_dim)
+    hist_tokens = _build_hist_tokens(historical_rows, slot_specs, token_count=hist_token_count, width=context_dim)
+    cand_tokens = _build_cand_tokens(slot_specs, token_count=cand_token_count, width=context_dim)
+    return np.vstack([rp_token.reshape(1, -1), env_token.reshape(1, -1), hist_tokens, cand_tokens]).astype(np.float32)
+
+
+def _slot_score_label(task: dict, beta_defaults: dict, respondent: dict) -> float:
+    stats = dyppo_shared._task_choice_stats(task, beta_defaults, respondent, chosen_alt=None)
+    spread = float(stats.get("spread", 0.0) or 0.0)
+    entropy = float(stats.get("entropy_norm", 0.0) or 0.0)
+    score = (spread / (1.0 + spread)) * 0.7 + entropy * 0.3
+    return float(np.clip(score, 0.0, 1.0))
+
+
+def _block_to_labels(
+    tasks: list[dict],
+    *,
+    slot_specs: list[dict],
+    count_min: int,
+    count_max: int,
+    beta_defaults: dict,
+    respondent: dict,
+) -> dict:
+    t_max = max(1, int(count_max))
+    v_dim = len(slot_specs)
+    count = max(int(count_min), min(int(len(tasks)), int(count_max))) if tasks else int(count_min)
+    count_label = int(max(0, min(count - int(count_min), int(count_max) - int(count_min))))
+    slot_mask = np.zeros((t_max,), dtype=np.float32)
+    slot_mask[:count] = 1.0
+    mask_labels = np.zeros((t_max, v_dim), dtype=np.float32)
+    value_labels = np.zeros((t_max, v_dim), dtype=np.float32)
+    score_labels = np.zeros((t_max,), dtype=np.float32)
+    for idx, task in enumerate(tasks[:t_max]):
+        m, v = _task_to_slot_arrays(task, slot_specs)
+        mask_labels[idx] = m
+        value_labels[idx] = v
+        score_labels[idx] = _slot_score_label(task, beta_defaults, respondent)
+    return {
+        "count_label": count_label,
+        "slot_mask": slot_mask,
+        "mask_labels": mask_labels,
+        "value_labels": value_labels,
+        "score_labels": score_labels,
+    }
+
+
+def _sample_teacher_block(
+    *,
+    candidate_pool: list[dict],
+    expert_blocks: list[list[dict]],
+    count: int,
+    rng: np.random.Generator,
+) -> list[dict]:
+    pool = [deepcopy(t) for t in candidate_pool if isinstance(t, dict)]
+    if not pool:
+        return []
+    picked: list[dict] = []
+    used: set[str] = set()
+    base = expert_blocks[int(rng.integers(0, len(expert_blocks)))] if expert_blocks else []
+    for task in list(base)[:count]:
+        sig = str(task.get("sig") or _task_signature(task))
+        if sig in used:
+            continue
+        used.add(sig)
+        picked.append(deepcopy(task))
+    while len(picked) < count and pool:
+        task = deepcopy(pool[int(rng.integers(0, len(pool)))])
+        sig = str(task.get("sig") or _task_signature(task))
+        if sig in used:
+            continue
+        used.add(sig)
+        picked.append(task)
+    return picked[:count]
+
+
+def _build_teacher_samples(
+    *,
+    payload: dict,
+    candidate_pool: list[dict],
+    expert_result: dict | None,
+    rows: list[dict] | None,
+    respondents: list[dict],
+    slot_specs: list[dict],
+    feature_spec: dict,
+    context_dim: int,
+    count_min: int,
+    count_max: int,
+    beta_defaults: dict,
+    seed: int,
+    sample_target_cells: list[str] | None = None,
+) -> dict:
+    row_blocks = _iter_submission_tasks(rows)
+    expert_blocks = _group_tasks_into_blocks((expert_result or {}).get("comb", []) or [], default_block_size=max(1, count_max))
+    rng = np.random.default_rng(seed)
+    samples = []
+
+    if row_blocks:
+        for idx, tasks in enumerate(row_blocks):
+            respondent = respondents[idx % len(respondents)] if respondents else {
+                "respondent_id": f"row_{idx+1:03d}",
+                "zone_id": _MISSING_ATTR_TOKEN,
+                "attr_segments": [_MISSING_ATTR_TOKEN] * max(1, len(feature_spec.get("attr_dim_names", []))),
+            }
+            labels = _block_to_labels(
+                tasks,
+                slot_specs=slot_specs,
+                count_min=count_min,
+                count_max=count_max,
+                beta_defaults=beta_defaults,
+                respondent=respondent,
+            )
+            tokens = _build_encoder_tokens(
+                respondent,
+                policy_state={},
+                feature_spec=feature_spec,
+                slot_specs=slot_specs,
+                historical_rows=rows,
+                context_dim=context_dim,
+            )
+            sample_target_label = _respondent_target_vector(respondent, sample_target_cells or ["all"], feature_spec)
+            samples.append({"tokens": tokens, "sample_target_label": sample_target_label, **labels})
+    else:
+        respondent_list = respondents if respondents else [
+            {
+                "respondent_id": "sim_default",
+                "zone_id": _MISSING_ATTR_TOKEN,
+                "attr_segments": [_MISSING_ATTR_TOKEN] * max(1, len(feature_spec.get("attr_dim_names", []))),
+            }
+        ]
+        for respondent in respondent_list:
+            count = int(rng.integers(count_min, count_max + 1)) if count_max > count_min else int(count_min)
+            tasks = _sample_teacher_block(
+                candidate_pool=candidate_pool,
+                expert_blocks=expert_blocks,
+                count=count,
+                rng=rng,
+            )
+            labels = _block_to_labels(
+                tasks,
+                slot_specs=slot_specs,
+                count_min=count_min,
+                count_max=count_max,
+                beta_defaults=beta_defaults,
+                respondent=respondent,
+            )
+            tokens = _build_encoder_tokens(
+                respondent,
+                policy_state={},
+                feature_spec=feature_spec,
+                slot_specs=slot_specs,
+                historical_rows=None,
+                context_dim=context_dim,
+            )
+            sample_target_label = _respondent_target_vector(respondent, sample_target_cells or ["all"], feature_spec)
+            samples.append({"tokens": tokens, "sample_target_label": sample_target_label, **labels})
+
+    if not samples:
+        return {
+            "encoder_tokens": np.zeros((0, 1, context_dim), dtype=np.float32),
+            "count_labels": np.zeros((0,), dtype=np.int64),
+            "slot_masks": np.zeros((0, count_max), dtype=np.float32),
+            "mask_labels": np.zeros((0, count_max, len(slot_specs)), dtype=np.float32),
+            "value_labels": np.zeros((0, count_max, len(slot_specs)), dtype=np.float32),
+            "score_labels": np.zeros((0, count_max), dtype=np.float32),
+            "sample_target_labels": np.zeros((0, len(sample_target_cells or ["all"])), dtype=np.float32),
+        }
+
+    return {
+        "encoder_tokens": np.stack([s["tokens"] for s in samples]).astype(np.float32),
+        "count_labels": np.array([s["count_label"] for s in samples], dtype=np.int64),
+        "slot_masks": np.stack([s["slot_mask"] for s in samples]).astype(np.float32),
+        "mask_labels": np.stack([s["mask_labels"] for s in samples]).astype(np.float32),
+        "value_labels": np.stack([s["value_labels"] for s in samples]).astype(np.float32),
+        "score_labels": np.stack([s["score_labels"] for s in samples]).astype(np.float32),
+        "sample_target_labels": np.stack([s["sample_target_label"] for s in samples]).astype(np.float32),
+    }
+
+
+def _train_parallel_generator(
+    dataset: dict,
+    *,
+    context_dim: int,
+    slot_dim: int,
     hidden_dim: int,
     num_heads: int,
+    max_questions: int,
+    count_classes: int,
+    sample_target_dim: int,
     seed: int,
     epochs: int,
     lr: float,
-    clip_eps: float,
-    value_coef: float,
-    entropy_coef: float,
-    gamma: float,
-    gae_lambda: float,
     batch_size: int,
-    target_kl: float,
+    count_loss_weight: float,
+    slot_select_loss_weight: float,
+    mask_loss_weight: float,
+    value_loss_weight: float,
+    score_loss_weight: float,
+    sample_target_loss_weight: float,
     init_state: dict | None,
     verbose: bool = False,
     progress_prefix: str = "selfattention/train",
 ) -> tuple[dict, list[dict]]:
-    """基于 rollout + GAE 的 SelfAttention PPO-clip 训练。
-
-    参数:
-        rollouts: 训练样本字典，要求至少包含：
-            - `states ∈ R^[T,D]`
-            - `actions ∈ Z^[T]`
-            - `rewards ∈ R^[T]`
-            - `dones ∈ {0,1}^[T]`
-            - `meta: dict`
-          其中：
-            - `T` 为总 step 数
-            - `D` 为单步状态维度
-        input_dim: 单步状态维度 `D`
-        output_dim: 动作空间维度 `N`
-        seq_len: 历史窗口长度 `L`
-        hidden_dim: 注意力内部通道维度 `H`
-        num_heads: 多头注意力 head 数 `M`
-        seed: 随机种子
-        epochs: 对同一批 rollout 重复优化的轮数
-        lr: Adam 学习率
-        clip_eps: PPO-clip 截断阈值
-        value_coef: 价值损失权重
-        entropy_coef: 熵正则权重
-        gamma: 折扣因子
-        gae_lambda: GAE 衰减系数
-        batch_size: mini-batch 大小
-        target_kl: 提前停止阈值；若平均 KL 超过该值则停止
-        init_state: 初始模型参数；为空时随机初始化
-        verbose: 是否打印训练过程
-        progress_prefix: 日志前缀
-
-    返回:
-        tuple[dict, list[dict]]:
-            - `new_state`: JSON 可序列化的模型参数字典
-            - `logs`: 训练日志列表，每个元素为 epoch 级摘要
-
-    关键张量维度:
-        - `states_np ∈ R^[T,D]`
-        - `seq_np ∈ R^[T,L,D]`
-        - `x_t ∈ R^[T,L,D]`
-        - `a_t ∈ Z^[T]`
-        - `old_logits ∈ R^[T,N]`
-        - `old_values ∈ R^[T]`
-        - `advantages_t ∈ R^[T]`
-        - `returns_t ∈ R^[T]`
-        - mini-batch 内：
-          `b_x ∈ R^[B_m,L,D]`, `b_a ∈ Z^[B_m]`, `logits ∈ R^[B_m,N]`
-    """
     if not TORCH_AVAILABLE:
         return {}, [{"epoch": 0, "msg": "torch not installed"}]
 
     torch.manual_seed(int(seed))
     np.random.seed(int(seed))
-    model = SelfAttentionActorCritic(
-        input_dim=input_dim,
-        output_dim=output_dim,
+    model = ParallelQuestionBlockGenerator(
+        context_dim=context_dim,
+        slot_dim=slot_dim,
         hidden_dim=hidden_dim,
         num_heads=num_heads,
+        max_questions=max_questions,
+        count_classes=count_classes,
+        sample_target_dim=sample_target_dim,
     )
     _load_state_dict_from_json(model, init_state if isinstance(init_state, dict) else None)
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    logs: list[dict] = []
 
-    states_np = np.asarray(rollouts.get("states", np.zeros((0, input_dim))), dtype=np.float32)
-    actions_np = np.asarray(rollouts.get("actions", np.zeros((0,), dtype=int)), dtype=np.int64)
-    rewards_np = np.asarray(rollouts.get("rewards", np.zeros((0,), dtype=float)), dtype=np.float32)
-    dones_np = np.asarray(rollouts.get("dones", np.zeros((0,), dtype=float)), dtype=np.float32)
-    meta = rollouts.get("meta", {}) if isinstance(rollouts.get("meta", {}), dict) else {}
-    if states_np.size == 0 or len(actions_np) == 0:
-        return _state_dict_to_json(model.state_dict()), [{"epoch": 0, "loss": None, "steps": 0, "episodes": 0}]
+    enc_np = np.asarray(dataset.get("encoder_tokens", np.zeros((0, 1, context_dim))), dtype=np.float32)
+    count_np = np.asarray(dataset.get("count_labels", np.zeros((0,), dtype=np.int64)), dtype=np.int64)
+    slot_np = np.asarray(dataset.get("slot_masks", np.zeros((0, max_questions))), dtype=np.float32)
+    mask_np = np.asarray(dataset.get("mask_labels", np.zeros((0, max_questions, slot_dim))), dtype=np.float32)
+    value_np = np.asarray(dataset.get("value_labels", np.zeros((0, max_questions, slot_dim))), dtype=np.float32)
+    score_np = np.asarray(dataset.get("score_labels", np.zeros((0, max_questions))), dtype=np.float32)
+    sample_target_np = np.asarray(
+        dataset.get("sample_target_labels", np.zeros((0, sample_target_dim), dtype=np.float32)),
+        dtype=np.float32,
+    )
+    if sample_target_np.ndim != 2 or sample_target_np.shape[1] != int(sample_target_dim):
+        fixed = np.zeros((enc_np.shape[0], int(sample_target_dim)), dtype=np.float32)
+        rows = min(fixed.shape[0], sample_target_np.shape[0] if sample_target_np.ndim >= 1 else 0)
+        cols = min(fixed.shape[1], sample_target_np.shape[1] if sample_target_np.ndim == 2 else 0)
+        if rows and cols:
+            fixed[:rows, :cols] = sample_target_np[:rows, :cols]
+        sample_target_np = fixed
+
+    if enc_np.size == 0:
+        return _state_dict_to_json(model.state_dict()), [{"epoch": 0, "loss": None, "samples": 0}]
 
     _progress_print(
         verbose,
         progress_prefix,
         (
-            f"start: samples={len(actions_np)} episodes={int(meta.get('episodes', 0) or 0)} "
-            f"seq_len={int(seq_len)} input_dim={int(input_dim)} output_dim={int(output_dim)} "
-            f"hidden_dim={int(hidden_dim)} heads={int(num_heads)} batch_size={int(max(1, min(int(batch_size), len(actions_np))))} "
-            f"epochs={int(max(1, int(epochs)))} lr={float(lr):.6f}"
+            f"start: samples={enc_np.shape[0]} context_dim={context_dim} slot_dim={slot_dim} "
+            f"max_questions={max_questions} count_classes={count_classes} hidden_dim={hidden_dim} heads={num_heads}"
         ),
     )
 
-    # 把平铺状态 `[T,D]` 重构为序列状态 `[T,L,D]`，
-    # 这样每个 step 都能看到其所在 respondent / episode 的历史上下文。
-    seq_np = _build_state_sequence_batch(states_np, dones_np, seq_len)
-    x_t = torch.tensor(seq_np, dtype=torch.float32)
-    a_t = torch.tensor(actions_np, dtype=torch.long)
+    x = torch.tensor(enc_np, dtype=torch.float32)
+    y_count = torch.tensor(count_np, dtype=torch.long)
+    y_slot = torch.tensor(slot_np, dtype=torch.float32)
+    y_mask = torch.tensor(mask_np, dtype=torch.float32)
+    y_value = torch.tensor(value_np, dtype=torch.float32)
+    y_score = torch.tensor(score_np, dtype=torch.float32)
+    y_sample_target = torch.tensor(sample_target_np, dtype=torch.float32)
 
-    with torch.no_grad():
-        # 旧策略（theta_old）固定下来，为 PPO ratio 提供分母。
-        old_logits, old_values_t = model(x_t)
-        old_dist = Categorical(logits=old_logits)
-        old_logp = old_dist.log_prob(a_t)
-        old_values = old_values_t.detach().cpu().numpy()
-    # 基于旧 value 估计计算 advantage / return。
-    adv_np, ret_np = _compute_gae(rewards_np, old_values, dones_np, gamma, gae_lambda)
-    if adv_np.size > 1:
-        adv_np = (adv_np - np.mean(adv_np)) / (np.std(adv_np) + 1e-8)
-    advantages_t = torch.tensor(adv_np, dtype=torch.float32)
-    returns_t = torch.tensor(ret_np, dtype=torch.float32)
-
-    n_steps = int(len(actions_np))
-    batch_size = max(1, min(int(batch_size), n_steps))
-    rng = np.random.default_rng(seed + 17)
+    n = int(enc_np.shape[0])
+    batch_size = max(1, min(int(batch_size), n))
+    rng = np.random.default_rng(seed + 29)
+    logs: list[dict] = []
 
     for ep in range(max(1, int(epochs))):
-        perm = rng.permutation(n_steps)
-        ep_loss = []
-        ep_policy = []
+        perm = rng.permutation(n)
+        ep_total = []
+        ep_count = []
+        ep_mask = []
         ep_value = []
-        ep_entropy = []
-        ep_kl = []
-        ep_clip = []
-        for start in range(0, n_steps, batch_size):
+        ep_score = []
+        ep_slot = []
+        ep_sample = []
+        for start in range(0, n, batch_size):
             idx = perm[start:start + batch_size]
             idx_t = torch.tensor(idx, dtype=torch.long)
-            b_x = x_t[idx_t]
-            b_a = a_t[idx_t]
-            b_old_logp = old_logp[idx_t]
-            b_adv = advantages_t[idx_t]
-            b_ret = returns_t[idx_t]
+            b_x = x[idx_t]
+            b_count = y_count[idx_t]
+            b_slot = y_slot[idx_t]
+            b_mask = y_mask[idx_t]
+            b_value = y_value[idx_t]
+            b_score = y_score[idx_t]
+            b_sample_target = y_sample_target[idx_t]
 
-            logits, values = model(b_x)
-            dist = Categorical(logits=logits)
-            logp = dist.log_prob(b_a)
-            # PPO ratio: r_t(theta) = pi_theta(a|s) / pi_theta_old(a|s)
-            ratio = torch.exp(logp - b_old_logp)
-            surr1 = ratio * b_adv
-            surr2 = torch.clamp(ratio, 1.0 - clip_eps, 1.0 + clip_eps) * b_adv
-            policy_loss = -torch.min(surr1, surr2).mean()
-            # critic 回归目标是 `return_t`
-            value_loss = ((values - b_ret) ** 2).mean()
-            entropy = dist.entropy().mean()
-            # 总损失 = 策略损失 + 价值损失 - 熵正则
-            loss = policy_loss + value_coef * value_loss - entropy_coef * entropy
+            out = model(b_x)
+            count_logits = out["count_logits"]
+            slot_select_logits = out["slot_select_logits"]
+            sample_target_logits = out["sample_target_logits"]
+            mask_logits = out["mask_logits"]
+            value_pred = torch.sigmoid(out["value_raw"])
+            score_pred = torch.sigmoid(out["score_raw"])
+
+            count_loss = F.cross_entropy(count_logits, b_count)
+            slot_select_loss = F.binary_cross_entropy_with_logits(slot_select_logits, b_slot)
+
+            sample_mass = b_sample_target.sum(dim=1, keepdim=True)
+            sample_valid = sample_mass.squeeze(-1) > 0
+            if bool(torch.any(sample_valid)):
+                sample_dist = b_sample_target / torch.clamp(sample_mass, min=1.0)
+                sample_target_loss_vec = -(
+                    sample_dist * F.log_softmax(sample_target_logits, dim=-1)
+                ).sum(dim=-1)
+                sample_target_loss = sample_target_loss_vec[sample_valid].mean()
+            else:
+                sample_target_loss = sample_target_logits.sum() * 0.0
+
+            slot_w = b_slot.unsqueeze(-1)
+            mask_loss_raw = F.binary_cross_entropy_with_logits(mask_logits, b_mask, reduction="none")
+            mask_denom = torch.clamp(slot_w.sum() * b_mask.shape[-1], min=1.0)
+            mask_loss = (mask_loss_raw * slot_w).sum() / mask_denom
+
+            value_w = slot_w * b_mask
+            value_denom = torch.clamp(value_w.sum(), min=1.0)
+            value_loss = (((value_pred - b_value) ** 2) * value_w).sum() / value_denom
+
+            score_denom = torch.clamp(b_slot.sum(), min=1.0)
+            score_loss = (((score_pred - b_score) ** 2) * b_slot).sum() / score_denom
+
+            loss = (
+                float(count_loss_weight) * count_loss
+                + float(slot_select_loss_weight) * slot_select_loss
+                + float(mask_loss_weight) * mask_loss
+                + float(value_loss_weight) * value_loss
+                + float(score_loss_weight) * score_loss
+                + float(sample_target_loss_weight) * sample_target_loss
+            )
 
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
 
-            approx_kl = float((b_old_logp - logp).mean().detach().cpu().item())
-            clip_frac = float((torch.abs(ratio - 1.0) > clip_eps).float().mean().detach().cpu().item())
-            ep_loss.append(float(loss.detach().cpu().item()))
-            ep_policy.append(float(policy_loss.detach().cpu().item()))
+            ep_total.append(float(loss.detach().cpu().item()))
+            ep_count.append(float(count_loss.detach().cpu().item()))
+            ep_mask.append(float(mask_loss.detach().cpu().item()))
             ep_value.append(float(value_loss.detach().cpu().item()))
-            ep_entropy.append(float(entropy.detach().cpu().item()))
-            ep_kl.append(approx_kl)
-            ep_clip.append(clip_frac)
+            ep_score.append(float(score_loss.detach().cpu().item()))
+            ep_slot.append(float(slot_select_loss.detach().cpu().item()))
+            ep_sample.append(float(sample_target_loss.detach().cpu().item()))
 
-        mean_loss = float(np.mean(ep_loss)) if ep_loss else 0.0
-        mean_policy = float(np.mean(ep_policy)) if ep_policy else 0.0
+        mean_total = float(np.mean(ep_total)) if ep_total else 0.0
+        mean_count = float(np.mean(ep_count)) if ep_count else 0.0
+        mean_mask = float(np.mean(ep_mask)) if ep_mask else 0.0
         mean_value = float(np.mean(ep_value)) if ep_value else 0.0
-        mean_entropy = float(np.mean(ep_entropy)) if ep_entropy else 0.0
-        mean_kl = float(np.mean(ep_kl)) if ep_kl else 0.0
-        mean_clip = float(np.mean(ep_clip)) if ep_clip else 0.0
-
-        _progress_print(
-            verbose,
-            progress_prefix,
-            (
-                f"epoch {ep + 1}/{max(1, int(epochs))}: "
-                f"loss={mean_loss:.6f} policy={mean_policy:.6f} value={mean_value:.6f} "
-                f"entropy={mean_entropy:.6f} kl={mean_kl:.6f} clip_frac={mean_clip:.6f} "
-                f"mean_reward={float(np.mean(rewards_np)) if rewards_np.size else 0.0:.6f}"
-            ),
-        )
-
+        mean_score = float(np.mean(ep_score)) if ep_score else 0.0
+        mean_slot = float(np.mean(ep_slot)) if ep_slot else 0.0
+        mean_sample = float(np.mean(ep_sample)) if ep_sample else 0.0
         if ep == 0 or ep == epochs - 1 or ep % max(1, epochs // 5) == 0:
             logs.append(
                 {
                     "epoch": int(ep + 1),
-                    "loss": round(mean_loss, 6),
-                    "policy_loss": round(mean_policy, 6),
+                    "loss": round(mean_total, 6),
+                    "count_loss": round(mean_count, 6),
+                    "slot_select_loss": round(mean_slot, 6),
+                    "mask_loss": round(mean_mask, 6),
                     "value_loss": round(mean_value, 6),
-                    "entropy": round(mean_entropy, 6),
-                    "approx_kl": round(mean_kl, 6),
-                    "clip_frac": round(mean_clip, 6),
-                    "mean_reward": round(float(np.mean(rewards_np)) if rewards_np.size else 0.0, 6),
-                    "episodes": int(meta.get("episodes", 0) or 0),
-                    "steps": int(meta.get("steps", n_steps) or n_steps),
+                    "score_loss": round(mean_score, 6),
+                    "sample_target_loss": round(mean_sample, 6),
+                    "samples": n,
                 }
             )
-        if target_kl > 0 and mean_kl > target_kl:
-            _progress_print(
-                verbose,
-                progress_prefix,
-                f"early stop at epoch {ep + 1}: approx_kl={mean_kl:.6f} > target_kl={float(target_kl):.6f}",
-            )
-            logs.append(
-                {
-                    "epoch": int(ep + 1),
-                    "event": "early_stop_target_kl",
-                    "target_kl": float(target_kl),
-                    "approx_kl": round(mean_kl, 6),
-                }
-            )
-            break
+        _progress_print(
+            verbose,
+            progress_prefix,
+            (
+                f"epoch {ep + 1}/{max(1, int(epochs))}: loss={mean_total:.6f} "
+                f"count={mean_count:.6f} slot={mean_slot:.6f} mask={mean_mask:.6f} "
+                f"value={mean_value:.6f} score={mean_score:.6f} sample={mean_sample:.6f}"
+            ),
+        )
 
     return _state_dict_to_json(model.state_dict()), logs
 
 
-def _score_candidates(
-    candidates: list[dict],
+def _prepare_candidate_library(candidate_pool: list[dict], slot_specs: list[dict]) -> list[dict]:
+    library = []
+    for task in candidate_pool or []:
+        if not isinstance(task, dict):
+            continue
+        mask, value = _task_to_slot_arrays(task, slot_specs)
+        library.append(
+            {
+                "task": deepcopy(task),
+                "sig": str(task.get("sig") or _task_signature(task)),
+                "mask": mask,
+                "value": value,
+            }
+        )
+    return library
+
+
+def _pick_prototype(
+    target_mask: np.ndarray,
+    target_value: np.ndarray,
+    library: list[dict],
+    used: set[str],
+) -> dict | None:
+    best = None
+    best_score = None
+    for item in library:
+        sig = str(item.get("sig") or "")
+        if sig in used:
+            continue
+        cand_mask = np.asarray(item.get("mask"), dtype=np.float32)
+        cand_value = np.asarray(item.get("value"), dtype=np.float32)
+        mask_gap = float(np.mean(np.abs(target_mask - cand_mask)))
+        active = np.maximum(target_mask, cand_mask)
+        value_gap = float(np.sum(np.abs(target_value - cand_value) * active) / max(np.sum(active), 1.0))
+        score = mask_gap + 0.6 * value_gap
+        if best is None or score < float(best_score):
+            best = item
+            best_score = score
+    return best
+
+
+def _slot_arrays_to_task(
+    mask_vec: np.ndarray,
+    value_vec: np.ndarray,
     *,
-    state_seq: np.ndarray,
-    model_state: dict,
-    input_dim: int,
-    output_dim: int,
+    slot_specs: list[dict],
+    alt_order: list[str],
+    prototype: dict | None,
+    row_in_block: int,
+    block_id: int,
+    slot_score: float,
+) -> dict:
+    alts = {str(alt): {} for alt in alt_order}
+    proto_alts = ((prototype or {}).get("alternatives", {}) if isinstance(prototype, dict) else {}) or {}
+    for idx, slot in enumerate(slot_specs):
+        alt_name = str(slot["alt_name"])
+        var_name = str(slot["var_name"])
+        if float(mask_vec[idx]) >= 0.5:
+            alts[alt_name][var_name] = _denormalize_slot_value(float(value_vec[idx]), slot)
+    # 若某个备选项被全部 mask 掉，则退回 prototype 中对应的属性；若还没有，则至少填一个变量。
+    for alt_name in alt_order:
+        alt_name = str(alt_name)
+        if alts[alt_name]:
+            continue
+        if alt_name in proto_alts and isinstance(proto_alts.get(alt_name), dict) and proto_alts.get(alt_name):
+            alts[alt_name] = deepcopy(proto_alts.get(alt_name))
+            continue
+        for idx, slot in enumerate(slot_specs):
+            if str(slot["alt_name"]) == alt_name:
+                alts[alt_name][str(slot["var_name"])] = _denormalize_slot_value(float(value_vec[idx]), slot)
+                break
+    task = {
+        "block": int(block_id),
+        "row_in_block": int(row_in_block),
+        "alternatives": alts,
+        "slot_score": round(float(slot_score), 6),
+    }
+    task["sig"] = _task_signature(task)
+    task["id"] = f"preview_b{int(block_id)}_r{int(row_in_block)}"
+    return task
+
+
+def _predict_count_range(count_logits: np.ndarray, count_min: int) -> tuple[int, np.ndarray]:
+    shifted = np.exp(count_logits - np.max(count_logits))
+    probs = shifted / max(np.sum(shifted), 1e-8)
+    count_idx = int(np.argmax(probs))
+    return int(count_min + count_idx), probs
+
+
+def _generate_parallel_block(
+    *,
+    payload: dict,
+    policy_state: dict,
+    current_respondent: dict,
+    candidate_pool: list[dict],
+    expert_result: dict | None,
+    slot_specs: list[dict],
+    alt_order: list[str],
+    feature_spec: dict,
+    context_dim: int,
     hidden_dim: int,
     num_heads: int,
-) -> np.ndarray:
-    """对当前 respondent 的状态序列做一次前向，得到候选题概率。
-
-    参数:
-        candidates: 候选题列表，长度记为 `N`。
-        state_seq: 当前 respondent 的历史状态窗口，
-            形状通常为 `R^[L,D]`。
-        model_state: 已训练好的模型参数字典。
-        input_dim: 单步状态维度 `D`。
-        output_dim: 动作空间维度 `N`。
-        hidden_dim: 注意力内部通道维度 `H`。
-        num_heads: 多头数 `M`。
-
-    返回:
-        np.ndarray:
-            候选题概率向量 `probs ∈ R^[N]`。
-
-    说明:
-        这是“当前状态 -> 候选题打分”的核心推理函数。
-        它不直接输出题目内容，而是输出每个 candidate 的概率，
-        后续再结合：
-        - expert prior
-        - 参数越界 mask
-        - epsilon 探索
-        来完成最终抽题。
-    """
+    sample_target_dim: int,
+    sample_target_cells: list[str],
+    target_sample_size: int,
+    count_min: int,
+    count_max: int,
+    historical_rows: list[dict] | None,
+    verbose: bool = False,
+) -> tuple[list[dict], dict]:
     if not TORCH_AVAILABLE:
-        return np.ones((len(candidates),), dtype=float) / max(1, len(candidates))
-    model = SelfAttentionActorCritic(
-        input_dim=input_dim,
-        output_dim=output_dim,
+        return [], {}
+    count_classes = max(1, int(count_max - count_min + 1))
+    model = ParallelQuestionBlockGenerator(
+        context_dim=context_dim,
+        slot_dim=len(slot_specs),
         hidden_dim=hidden_dim,
         num_heads=num_heads,
+        max_questions=count_max,
+        count_classes=count_classes,
+        sample_target_dim=sample_target_dim,
     )
-    _load_state_dict_from_json(model, model_state)
+    _load_state_dict_from_json(model, policy_state.get("selfattention_state", {}))
     model.eval()
-    seq_arr = np.asarray(state_seq, dtype=np.float32)
-    if seq_arr.ndim == 1:
-        seq_arr = seq_arr.reshape(1, -1)
+
+    tokens = _build_encoder_tokens(
+        current_respondent,
+        policy_state=policy_state,
+        feature_spec=feature_spec,
+        slot_specs=slot_specs,
+        historical_rows=historical_rows,
+        context_dim=context_dim,
+    )
+    x = torch.tensor(tokens, dtype=torch.float32).unsqueeze(0)
     with torch.no_grad():
-        x_t = torch.tensor(seq_arr, dtype=torch.float32).reshape(1, seq_arr.shape[0], seq_arr.shape[1])
-        logits, _value = model(x_t)
-        probs = torch.softmax(logits.squeeze(0), dim=0).cpu().numpy()
-    if len(probs) < len(candidates):
-        probs = np.concatenate([probs, np.zeros((len(candidates) - len(probs),), dtype=float)])
-    return probs[: len(candidates)]
+        out = model(x)
+        count_logits = out["count_logits"].squeeze(0).cpu().numpy()
+        slot_select_prob = torch.sigmoid(out["slot_select_logits"]).squeeze(0).cpu().numpy()
+        sample_target_logits = out["sample_target_logits"].squeeze(0).cpu().numpy()
+        mask_prob = torch.sigmoid(out["mask_logits"]).squeeze(0).cpu().numpy()
+        value_prob = torch.sigmoid(out["value_raw"]).squeeze(0).cpu().numpy()
+        score_prob = torch.sigmoid(out["score_raw"]).squeeze(0).cpu().numpy()
+
+    question_count, count_probs = _predict_count_range(count_logits, count_min)
+    question_count = max(count_min, min(count_max, question_count))
+    slot_quality = 0.65 * slot_select_prob + 0.35 * score_prob
+    slot_indices = list(np.argsort(-slot_quality)[:question_count])
+    slot_indices.sort(key=lambda idx: (-float(slot_quality[idx]), idx))
+
+    expert_blocks = _group_tasks_into_blocks((expert_result or {}).get("comb", []) or [], default_block_size=question_count)
+    expert_proto = expert_blocks[0] if expert_blocks else []
+    library = _prepare_candidate_library(candidate_pool, slot_specs)
+    used_sigs: set[str] = set()
+    tasks: list[dict] = []
+
+    signal = policy_state.get("current_mnl_signal", {}) if isinstance(policy_state.get("current_mnl_signal", {}), dict) else {}
+    bound_violation = signal.get("bound_violation", {}) if isinstance(signal.get("bound_violation", {}), dict) else {}
+
+    for out_idx, slot_idx in enumerate(slot_indices, start=1):
+        target_mask = (mask_prob[slot_idx] >= 0.5).astype(np.float32)
+        # 若某些变量当前估计出现越界，则降低激活概率；这里只做轻量惩罚，不直接清零。
+        for dim, slot in enumerate(slot_specs):
+            penalty = _safe_float(bound_violation.get(str(slot.get("slot_key")), 0.0), 0.0)
+            if penalty > 0:
+                target_mask[dim] = 1.0 if (float(mask_prob[slot_idx, dim]) * max(0.2, 1.0 - penalty)) >= 0.5 else 0.0
+        target_value = np.clip(value_prob[slot_idx], 0.0, 1.0)
+        proto = expert_proto[(out_idx - 1) % len(expert_proto)] if expert_proto else None
+        picked_proto = _pick_prototype(target_mask, target_value, library, used_sigs)
+        if picked_proto is not None:
+            proto = deepcopy(picked_proto.get("task"))
+            used_sigs.add(str(picked_proto.get("sig") or ""))
+        proto_mask, proto_value = _task_to_slot_arrays(proto, slot_specs) if isinstance(proto, dict) else (
+            np.zeros((len(slot_specs),), dtype=np.float32),
+            np.zeros((len(slot_specs),), dtype=np.float32),
+        )
+        if float(np.sum(target_mask)) <= 0:
+            target_mask = proto_mask.copy() if float(np.sum(proto_mask)) > 0 else np.ones_like(target_mask)
+        blended_value = 0.7 * target_value + 0.3 * proto_value
+        task = _slot_arrays_to_task(
+            target_mask,
+            blended_value,
+            slot_specs=slot_specs,
+            alt_order=alt_order,
+            prototype=proto,
+            row_in_block=out_idx,
+            block_id=1,
+            slot_score=float(slot_quality[slot_idx]),
+        )
+        tasks.append(task)
+
+    sampling_recommendation = _sample_target_recommendations(
+        sample_target_logits,
+        sample_target_cells,
+        policy_state,
+        target_sample_size=target_sample_size,
+        top_k=min(8, len(sample_target_cells or [])),
+    )
+    model_summary = {
+        "count_probs": [round(float(x), 6) for x in count_probs.tolist()],
+        "predicted_question_count": int(question_count),
+        "slot_scores": [round(float(slot_quality[idx]), 6) for idx in slot_indices],
+        "slot_select_scores": [round(float(slot_select_prob[idx]), 6) for idx in slot_indices],
+        "quality_scores": [round(float(score_prob[idx]), 6) for idx in slot_indices],
+        "slot_indices": [int(idx) for idx in slot_indices],
+        "sampling_recommendation": sampling_recommendation,
+    }
+    _progress_print(
+        verbose,
+        "selfattention/generate",
+        f"generated block: question_count={question_count} slot_indices={slot_indices}",
+    )
+    return tasks, model_summary
 
 
 def train_self_attention_ppo(
@@ -766,55 +1339,6 @@ def train_self_attention_ppo(
     config: dict,
     verbose: bool = False,
 ) -> dict:
-    """SelfAttention 设计生成主入口。
-
-    整体逻辑与 dynamicPPO 保持一致：
-    1) 动作空间来自统一 feasible combo pool；
-    2) efficient 结果只作为专家先验；
-    3) 训练时优先使用真实 rows，没有时退回到合成 respondent rollout；
-    4) 生成阶段根据当前 respondent 的状态序列逐题打分并抽取。
-
-    参数:
-        payload: 当前 design 的标准化配置字典，通常包含：
-            - `design_options["selfattention"]`
-            - `beta_defaults`
-            - `beta_bounds`
-            - `design_spec`
-        policy_state: 策略缓存字典；会被原地补充/更新，常见字段有：
-            - `selfattention_state`
-            - `candidate_signatures`
-            - `input_dim / output_dim / seq_len`
-            - `attr_dim_names / attr_categories / zone_categories`
-        candidate_pool: 可行动作池，长度为 `N`；
-            单个元素是一个候选题 `task`
-        expert_result: efficient design 给出的专家经验结果，主要用于：
-            - expert prior 融合
-            - 初期保底抽题
-        rows: 真实或合成的 respondent 作答记录列表。若可成功映射到
-            candidate pool，则优先用作训练 rollout。
-        current_respondent: 当前用于生成预览 block 的 respondent 字典
-        data_dir: 数据目录，用于读取 pop stats / design 相关文件
-        config: 全局配置字典
-        verbose: 是否打印训练与生成过程日志
-
-    返回:
-        dict:
-            {
-                "comb": list[task],               # 生成出的预览 block
-                "d_error": {"value": ...},
-                "iteration_log": list[dict],      # epoch 训练日志
-                "model_state": dict,              # 训练摘要
-                "policy_state": dict              # 可继续在线更新的策略状态
-            }
-
-    重要维度:
-        - `N = len(candidate_pool)`：动作空间维度
-        - `D = input_dim`：单步状态维度
-        - `L = seq_len`：历史窗口长度
-        - 训练时：`states ∈ R^[T,D]`
-        - 生成时：`state_seq ∈ R^[L,D]`
-        - 网络输出：`logits ∈ R^[1,N]`，经 softmax 后得 `probs ∈ R^[N]`
-    """
     if not TORCH_AVAILABLE:
         return {
             "comb": [],
@@ -829,309 +1353,176 @@ def train_self_attention_ppo(
             "policy_state": policy_state,
         }
 
-    design_options = payload.get("design_options", {}) or {}
-    if not isinstance(design_options, dict):
-        design_options = {}
-    sopt = design_options.get("selfattention", {}) or {}
-    if not isinstance(sopt, dict):
-        sopt = {}
+    sopt = ((payload.get("design_options", {}) or {}).get("selfattention", {}) or {}) if isinstance(payload, dict) else {}
     scfg = _sa_cfg(config)
-    dyn_cfg = config.get("dynamic_ppo", {}) if isinstance(config.get("dynamic_ppo", {}), dict) else {}
-
-    tpr = int(sopt.get("tasks_per_round", 6) or 6)
-    eps = float(sopt.get("explore_epsilon", scfg.get("explore_epsilon", 0.15)) or scfg.get("explore_epsilon", 0.15))
-    seq_len = max(2, min(int(sopt.get("window_length", scfg.get("window_length", 16)) or scfg.get("window_length", 16)), 128))
-    hidden_dim = max(16, int(sopt.get("hidden_dim", scfg.get("hidden_dim", 64)) or scfg.get("hidden_dim", 64)))
-    num_heads = SelfAttentionActorCritic._normalize_heads(hidden_dim, int(sopt.get("num_heads", scfg.get("num_heads", 4)) or scfg.get("num_heads", 4)))
-    train_n = int(sopt.get("train_respondents", scfg.get("train_respondents", 300)) or scfg.get("train_respondents", 300))
-    epochs = int(sopt.get("train_epochs", scfg.get("train_epochs", 200)) or scfg.get("train_epochs", 200))
-    lr = float(sopt.get("train_lr", scfg.get("train_lr", 0.03)) or scfg.get("train_lr", 0.03))
     seed = int(scfg.get("seed", 42))
-    gamma = float(sopt.get("gamma", scfg.get("gamma", 0.99)) or scfg.get("gamma", 0.99))
-    gae_lambda = float(sopt.get("gae_lambda", scfg.get("gae_lambda", 0.95)) or scfg.get("gae_lambda", 0.95))
-    clip_eps = float(sopt.get("clip_eps", scfg.get("clip_eps", 0.2)) or scfg.get("clip_eps", 0.2))
-    value_coef = float(sopt.get("value_coef", scfg.get("value_coef", 0.5)) or scfg.get("value_coef", 0.5))
-    entropy_coef = float(sopt.get("entropy_coef", scfg.get("entropy_coef", 0.01)) or scfg.get("entropy_coef", 0.01))
-    batch_size = int(sopt.get("batch_size", scfg.get("batch_size", 128)) or scfg.get("batch_size", 128))
-    target_kl = float(sopt.get("target_kl", scfg.get("target_kl", 0.03)) or scfg.get("target_kl", 0.03))
+    tpr = int(sopt.get("tasks_per_round", 6) or 6)
+    count_min = int(sopt.get("count_min", tpr) or tpr)
+    count_max = int(sopt.get("count_max", count_min) or count_min)
+    if count_max < count_min:
+        count_max = count_min
+    count_max = max(1, min(count_max, max(len(candidate_pool or []), count_max)))
+    context_dim = max(24, int(sopt.get("context_dim", 48) or 48))
+    hidden_dim = max(16, int(sopt.get("hidden_dim", scfg.get("hidden_dim", 64)) or scfg.get("hidden_dim", 64)))
+    num_heads = _normalize_heads(hidden_dim, int(sopt.get("num_heads", scfg.get("num_heads", 4)) or scfg.get("num_heads", 4)))
+    train_n = int(sopt.get("train_respondents", scfg.get("train_respondents", 300)) or scfg.get("train_respondents", 300))
+    epochs = int(sopt.get("train_epochs", scfg.get("train_epochs", 120)) or scfg.get("train_epochs", 120))
+    lr = float(sopt.get("train_lr", scfg.get("train_lr", 0.01)) or scfg.get("train_lr", 0.01))
+    batch_size = int(sopt.get("batch_size", scfg.get("batch_size", 64)) or scfg.get("batch_size", 64))
+    sample_target_dim_cfg = int(sopt.get("sample_target_dim", scfg.get("sample_target_dim", 16)) or scfg.get("sample_target_dim", 16))
+    target_sample_size = int(sopt.get("target_sample_size", scfg.get("target_sample_size", payload.get("sample_size", 200))) or scfg.get("target_sample_size", 200))
+    count_loss_weight = float(sopt.get("count_loss_weight", scfg.get("count_loss_weight", 1.0)) or scfg.get("count_loss_weight", 1.0))
+    slot_select_loss_weight = float(sopt.get("slot_select_loss_weight", scfg.get("slot_select_loss_weight", 0.8)) or scfg.get("slot_select_loss_weight", 0.8))
+    mask_loss_weight = float(sopt.get("mask_loss_weight", scfg.get("mask_loss_weight", 0.8)) or scfg.get("mask_loss_weight", 0.8))
+    value_loss_weight = float(sopt.get("value_loss_weight", scfg.get("value_loss_weight", 1.2)) or scfg.get("value_loss_weight", 1.2))
+    score_loss_weight = float(sopt.get("score_loss_weight", scfg.get("score_loss_weight", 0.4)) or scfg.get("score_loss_weight", 0.4))
+    sample_target_loss_weight = float(sopt.get("sample_target_loss_weight", scfg.get("sample_target_loss_weight", 0.3)) or scfg.get("sample_target_loss_weight", 0.3))
 
-    candidates = list(candidate_pool or [])
-    if not candidates:
+    spec = payload.get("design_spec", {}) if isinstance(payload.get("design_spec", {}), dict) else {}
+    beta_defaults = payload.get("beta_defaults", {}) if isinstance(payload.get("beta_defaults", {}), dict) else {}
+    slot_specs, alt_order = _extract_design_slots(spec)
+    if not slot_specs:
         return {
             "comb": [],
             "d_error": {"value": None},
-            "iteration_log": [{"epoch": 0, "msg": "no feasible candidates"}],
-            "model_state": {"trained": False},
+            "iteration_log": [{"epoch": 0, "msg": "design_spec 中没有可用变量槽位。"}],
+            "model_state": {"trained": False, "backend": "invalid_design_spec"},
             "policy_state": policy_state,
         }
-    for cand in candidates:
-        cand["sig"] = str(cand.get("sig") or _task_signature(cand))
 
-    _progress_print(
-        verbose,
-        "selfattention",
-        f"candidate_pool ready: size={len(candidates)} tasks_per_round={int(tpr)} epsilon={float(eps):.4f}",
-    )
-
-    # respondent 统计配置 -> 特征规范，用于后续统一构造状态向量维度。
     pop_stats = dyppo_shared._load_pop_stats(payload, data_dir=data_dir, config=config)
     feature_spec = dyppo_shared._build_feature_spec(pop_stats)
-    input_dim = max(
-        int(dyn_cfg.get("input_dim", feature_spec.get("feature_dim", 6)) or feature_spec.get("feature_dim", 6)),
-        int(feature_spec.get("feature_dim", 6) or 6),
+    sample_target_cells = _build_sample_target_cells(feature_spec, sample_target_dim_cfg)
+    sample_cell_targets = _build_sample_cell_targets(pop_stats, sample_target_cells, feature_spec)
+    sample_target_dim = len(sample_target_cells)
+    respondents = dyppo_shared._sample_respondents(pop_stats, train_n, seed + int(policy_state.get("response_count", 0)))
+    dataset = _build_teacher_samples(
+        payload=payload,
+        candidate_pool=list(candidate_pool or []),
+        expert_result=expert_result,
+        rows=rows,
+        respondents=respondents,
+        slot_specs=slot_specs,
+        feature_spec=feature_spec,
+        context_dim=context_dim,
+        count_min=count_min,
+        count_max=count_max,
+        beta_defaults=beta_defaults,
+        seed=seed + 7,
+        sample_target_cells=sample_target_cells,
     )
-    output_dim = max(1, len(candidates))
-    beta_defaults = payload.get("beta_defaults", {}) if isinstance(payload.get("beta_defaults", {}), dict) else {}
-    beta_bounds = payload.get("beta_bounds", {}) if isinstance(payload.get("beta_bounds", {}), dict) else {}
-    spec = payload.get("design_spec", {}) if isinstance(payload.get("design_spec", {}), dict) else {}
-
-    rollout_meta = {"episodes": 0, "steps": 0, "rows_used": 0, "mean_episode_reward": 0.0}
-    synthetic_respondents: list[dict] = []
-    if rows:
-        _progress_print(
-            verbose,
-            "selfattention",
-            f"building rollout from rows_jsonl: rows={len(rows)}",
-        )
-        rollouts = dyppo_shared._build_rollouts_from_rows(
-            rows,
-            candidates,
-            beta_defaults,
-            spec=spec,
-            beta_bounds=beta_bounds,
-            input_dim=input_dim,
-            feature_spec=feature_spec,
-            config=config,
-        )
-        rollout_meta = rollouts.get("meta", rollout_meta) if isinstance(rollouts.get("meta", {}), dict) else rollout_meta
-    else:
-        rollouts = dyppo_shared._empty_rollouts(input_dim)
-    data_source = "rows_jsonl_rollout" if int(rollout_meta.get("steps", 0) or 0) > 0 else "synthetic_popsim_rollout"
-
-    if int(rollout_meta.get("steps", 0) or 0) <= 0:
-        _progress_print(
-            verbose,
-            "selfattention",
-            f"rows rollout unavailable, fallback to synthetic respondents: n={int(train_n)}",
-        )
-        synthetic_respondents = dyppo_shared._sample_respondents(pop_stats, train_n, seed + int(policy_state.get("response_count", 0)))
-        rollouts = dyppo_shared._build_synthetic_rollouts(
-            candidates,
-            synthetic_respondents,
-            beta_defaults,
-            spec=spec,
-            beta_bounds=beta_bounds,
-            expert_result=expert_result,
-            tasks_per_round=tpr,
-            input_dim=input_dim,
-            feature_spec=feature_spec,
-            seed=seed + int(policy_state.get("response_count", 0)),
-            config=config,
-        )
-        rollout_meta = rollouts.get("meta", rollout_meta) if isinstance(rollouts.get("meta", {}), dict) else rollout_meta
-
-    _progress_print(
-        verbose,
-        "selfattention",
-        (
-            f"rollout prepared: source={data_source} steps={int(rollout_meta.get('steps', 0) or 0)} "
-            f"episodes={int(rollout_meta.get('episodes', 0) or 0)} rows_used={int(rollout_meta.get('rows_used', 0) or 0)} "
-            f"mean_episode_reward={float(rollout_meta.get('mean_episode_reward', 0.0) or 0.0):.6f}"
-        ),
-    )
-
-    active_bound_mask = policy_state.get("candidate_bound_mask", {}) if isinstance(policy_state.get("candidate_bound_mask", {}), dict) else {}
-    current_mnl_signal = policy_state.get("current_mnl_signal", {}) if isinstance(policy_state.get("current_mnl_signal", {}), dict) else {}
-    observed_rows = list(rows or [])
-    if observed_rows:
-        # 对已观察到的 rows 做一次简化的参数重估，
-        # 其结果不会直接替代神经网络，但会作为：
-        # 1) 当前设计质量信号
-        # 2) 参数越界惩罚 mask
-        # 3) dashboard/调试输出
-        obs_rows = dyppo_shared._collect_obs_rows_from_submission_rows(observed_rows, spec)
-        signal = dyppo_shared._mnl_signal_from_obs_rows(
-            obs_rows,
-            spec=spec,
-            beta_defaults=beta_defaults,
-            beta_bounds=beta_bounds,
-            config=config,
-        )
-        current_mnl_signal = {
-            "n_observations": int(signal.get("n_observations", 0) or 0),
-            "adjusted_pseudo_r2": signal.get("adjusted_pseudo_r2"),
-            "estimated_beta_raw": deepcopy(signal.get("estimated_beta_raw", {})),
-            "estimated_beta": deepcopy(signal.get("estimated_beta", {})),
-            "bound_violation": deepcopy(signal.get("bound_violation", {})),
-        }
-        active_bound_mask = deepcopy(signal.get("bound_violation", {}))
 
     init_state = policy_state.get("selfattention_state", {}) if isinstance(policy_state.get("selfattention_state", {}), dict) else None
-    new_state, logs = _train_policy(
-        rollouts,
-        input_dim=input_dim,
-        output_dim=output_dim,
-        seq_len=seq_len,
+    new_state, logs = _train_parallel_generator(
+        dataset,
+        context_dim=context_dim,
+        slot_dim=len(slot_specs),
         hidden_dim=hidden_dim,
         num_heads=num_heads,
+        max_questions=count_max,
+        count_classes=max(1, count_max - count_min + 1),
+        sample_target_dim=sample_target_dim,
         seed=seed,
         epochs=epochs,
         lr=lr,
-        clip_eps=clip_eps,
-        value_coef=value_coef,
-        entropy_coef=entropy_coef,
-        gamma=gamma,
-        gae_lambda=gae_lambda,
         batch_size=batch_size,
-        target_kl=target_kl,
+        count_loss_weight=count_loss_weight,
+        slot_select_loss_weight=slot_select_loss_weight,
+        mask_loss_weight=mask_loss_weight,
+        value_loss_weight=value_loss_weight,
+        score_loss_weight=score_loss_weight,
+        sample_target_loss_weight=sample_target_loss_weight,
         init_state=init_state,
         verbose=verbose,
         progress_prefix="selfattention/train",
     )
 
     score_respondent = current_respondent if isinstance(current_respondent, dict) and current_respondent else None
-    scoring_state_source = "current_respondent"
-    if not score_respondent and rows:
-        score_respondent = dyppo_shared._row_respondent(rows[0]) if rows else None
-        scoring_state_source = "first_training_row"
-    if not score_respondent and synthetic_respondents:
-        score_respondent = synthetic_respondents[0]
-        scoring_state_source = "synthetic_respondent"
+    if not score_respondent and respondents:
+        score_respondent = respondents[0]
     if not score_respondent:
         score_respondent = {
             "respondent_id": "default",
             "zone_id": _MISSING_ATTR_TOKEN,
             "attr_segments": [_MISSING_ATTR_TOKEN] * max(1, len(feature_spec.get("attr_dim_names", []))),
         }
-        scoring_state_source = "missing_default"
-
-    _progress_print(
-        verbose,
-        "selfattention",
-        f"start scoring preview block: scoring_state_source={scoring_state_source}",
-    )
-
-    rng = np.random.default_rng(seed + 99 + int(policy_state.get("response_count", 0)))
-    picked: list[dict] = []
-    remain_idx = list(range(len(candidates)))
-    history_states: list[np.ndarray] = []
-    expert_stats = {"expert_overlap": 0, "expert_prior_weight": 0.0}
-    bound_mask_stats = {"active_bound_mask_params": 0, "bound_masked_candidates": 0, "bound_mask_min_factor": 1.0}
-    # 逐题位生成 block。每次循环只决定一个题位放哪道题。
-    for _ in range(min(max(1, tpr), len(remain_idx))):
-        state_x = dyppo_shared._task_state_vector(
-            score_respondent,
-            picked,
-            beta_defaults=beta_defaults,
-            feature_spec=feature_spec,
-            step_index=len(picked),
-            episode_len=tpr,
-            input_dim=input_dim,
-        )
-        history_states.append(state_x)
-        # 把当前 respondent 的历史状态堆成 `[L,D]` 序列。
-        state_seq = _history_to_sequence(history_states, seq_len, input_dim)
-        probs = _score_candidates(
-            candidates,
-            state_seq=state_seq,
-            model_state=new_state,
-            input_dim=input_dim,
-            output_dim=output_dim,
-            hidden_dim=hidden_dim,
-            num_heads=num_heads,
-        )
-        # 先融合 efficient 经验，再应用参数越界惩罚 mask。
-        probs, expert_stats = dyppo_shared._blend_with_expert_prior(probs, candidates, expert_result)
-        probs, bound_mask_stats = dyppo_shared._apply_candidate_bound_mask(probs, candidates, active_bound_mask)
-        sub_probs = np.array([probs[i] for i in remain_idx], dtype=float)
-        if np.sum(sub_probs) <= 0:
-            sub_probs = np.ones_like(sub_probs) / len(sub_probs)
-        else:
-            sub_probs = sub_probs / np.sum(sub_probs)
-        # epsilon-greedy:
-        # - 以 epsilon 概率随机探索
-        # - 否则按当前策略分布抽样
-        if rng.random() < max(0.0, min(1.0, eps)):
-            k = int(rng.integers(0, len(remain_idx)))
-        else:
-            k = int(rng.choice(len(remain_idx), p=sub_probs))
-        idx = remain_idx.pop(k)
-        picked.append(candidates[idx])
-
-    final_tasks = []
-    for i, task in enumerate(picked):
-        final_tasks.append({**task, "block": 1, "row_in_block": i + 1, "id": f"preview_b1_r{i+1}"})
-
-    _progress_print(
-        verbose,
-        "selfattention",
-        f"preview block generated: rows={len(final_tasks)} expert_overlap={int(expert_stats.get('expert_overlap', 0) or 0)}",
-    )
 
     policy_state["selfattention_state"] = new_state
-    policy_state["input_dim"] = input_dim
-    policy_state["output_dim"] = output_dim
+    policy_state["trained"] = True
+    policy_state["context_dim"] = int(context_dim)
+    policy_state["slot_dim"] = int(len(slot_specs))
+    policy_state["hidden_dim"] = int(hidden_dim)
+    policy_state["num_heads"] = int(num_heads)
+    policy_state["count_min"] = int(count_min)
+    policy_state["count_max"] = int(count_max)
+    policy_state["sample_target_dim"] = int(sample_target_dim)
+    policy_state["sample_target_cells"] = deepcopy(sample_target_cells)
+    policy_state["sample_cell_targets"] = deepcopy(sample_cell_targets)
+    policy_state["target_sample_size"] = int(target_sample_size)
+    policy_state["architecture_mode"] = "parallel_question_block_generator"
+    policy_state["response_count"] = int(policy_state.get("response_count", 0) or 0)
+    policy_state["candidate_signatures"] = [str((c or {}).get("sig") or _task_signature(c)) for c in (candidate_pool or [])]
     policy_state["attr_dim_names"] = deepcopy(feature_spec.get("attr_dim_names", []))
     policy_state["attr_categories"] = deepcopy(feature_spec.get("attr_categories", []))
     policy_state["zone_categories"] = deepcopy(feature_spec.get("zone_categories", []))
-    policy_state["candidate_signatures"] = [str((c or {}).get("sig") or _task_signature(c)) for c in candidates]
-    policy_state["seq_len"] = int(seq_len)
-    policy_state["hidden_dim"] = int(hidden_dim)
-    policy_state["num_heads"] = int(num_heads)
-    policy_state["trained"] = True
-    policy_state["train_epochs"] = int(epochs)
-    policy_state["gamma"] = float(gamma)
-    policy_state["gae_lambda"] = float(gae_lambda)
-    policy_state["clip_eps"] = float(clip_eps)
-    policy_state["value_coef"] = float(value_coef)
-    policy_state["entropy_coef"] = float(entropy_coef)
-    policy_state["target_kl"] = float(target_kl)
-    policy_state["batch_size"] = int(batch_size)
-    policy_state["response_count"] = int(policy_state.get("response_count", 0))
-    policy_state["candidate_bound_mask"] = deepcopy(active_bound_mask) if isinstance(active_bound_mask, dict) else {}
-    policy_state["current_mnl_signal"] = deepcopy(current_mnl_signal) if isinstance(current_mnl_signal, dict) else {}
+
+    current_mnl_signal = policy_state.get("current_mnl_signal", {}) if isinstance(policy_state.get("current_mnl_signal", {}), dict) else {}
+    generated_tasks, gen_summary = _generate_parallel_block(
+        payload=payload,
+        policy_state=policy_state,
+        current_respondent=score_respondent,
+        candidate_pool=list(candidate_pool or []),
+        expert_result=expert_result,
+        slot_specs=slot_specs,
+        alt_order=alt_order,
+        feature_spec=feature_spec,
+        context_dim=context_dim,
+        hidden_dim=hidden_dim,
+        num_heads=num_heads,
+        sample_target_dim=sample_target_dim,
+        sample_target_cells=sample_target_cells,
+        target_sample_size=target_sample_size,
+        count_min=count_min,
+        count_max=count_max,
+        historical_rows=rows,
+        verbose=verbose,
+    )
+
+    model_state = {
+        "trained": True,
+        "backend": "pytorch_parallel_selfattention",
+        "architecture_mode": "parallel_question_block_generator",
+        "question_generation_mode": "parallel_queries",
+        "context_dim": int(context_dim),
+        "slot_dim": int(len(slot_specs)),
+        "max_questions": int(count_max),
+        "count_range": [int(count_min), int(count_max)],
+        "count_head_classes": int(max(1, count_max - count_min + 1)),
+        "variable_semantics": "count -> slot_select -> variable_mask -> value",
+        "sampling_semantics": "respondent_target_head -> recommended RP cells for remaining sample collection",
+        "sample_target_dim": int(sample_target_dim),
+        "sample_target_cells": deepcopy(sample_target_cells),
+        "sample_cell_targets": deepcopy(sample_cell_targets),
+        "train_samples": int(dataset.get("encoder_tokens", np.zeros((0, 1, context_dim))).shape[0]),
+        "train_epochs": int(epochs),
+        "hidden_dim": int(hidden_dim),
+        "num_heads": int(num_heads),
+        "prototype_pool_size": int(len(candidate_pool or [])),
+        "expert_demo_size": int(len((expert_result or {}).get("comb", []) or [])),
+        "current_mnl_signal": deepcopy(current_mnl_signal),
+        "generated_summary": gen_summary,
+    }
+    sampling_recommendation = gen_summary.get("sampling_recommendation", []) if isinstance(gen_summary, dict) else []
+    policy_state["last_sampling_recommendation"] = deepcopy(sampling_recommendation)
+    model_state["sampling_recommendation"] = deepcopy(sampling_recommendation)
 
     return {
-        "comb": final_tasks,
+        "comb": generated_tasks,
         "d_error": {"value": None},
         "iteration_log": logs,
-        "model_state": {
-            "trained": True,
-            "backend": "pytorch_selfattention",
-            "input_dim": input_dim,
-            "output_dim": output_dim,
-            "candidate_pool_size": len(candidates),
-            "training_data_source": data_source,
-            "rows_used": int(rollout_meta.get("rows_used", 0) or 0),
-            "rollout_episodes": int(rollout_meta.get("episodes", 0) or 0),
-            "rollout_steps": int(rollout_meta.get("steps", 0) or 0),
-            "mean_episode_reward": float(rollout_meta.get("mean_episode_reward", 0.0) or 0.0),
-            "train_samples": int(rollouts.get("states", np.zeros((0, input_dim))).shape[0]) if isinstance(rollouts, dict) else 0,
-            "train_epochs": int(epochs),
-            "gamma": float(gamma),
-            "gae_lambda": float(gae_lambda),
-            "clip_eps": float(clip_eps),
-            "value_coef": float(value_coef),
-            "entropy_coef": float(entropy_coef),
-            "batch_size": int(batch_size),
-            "target_kl": float(target_kl),
-            "epsilon": float(eps),
-            "seq_len": int(seq_len),
-            "hidden_dim": int(hidden_dim),
-            "num_heads": int(num_heads),
-            "expert_overlap": int(expert_stats.get("expert_overlap", 0) or 0),
-            "expert_prior_weight": float(expert_stats.get("expert_prior_weight", 0.0) or 0.0),
-            "active_bound_mask_params": int(bound_mask_stats.get("active_bound_mask_params", 0) or 0),
-            "bound_masked_candidates": int(bound_mask_stats.get("bound_masked_candidates", 0) or 0),
-            "bound_mask_min_factor": float(bound_mask_stats.get("bound_mask_min_factor", 1.0) or 1.0),
-            "scoring_state_source": scoring_state_source,
-            "attr_dim_names": deepcopy(feature_spec.get("attr_dim_names", [])),
-            "attr_categories": deepcopy(feature_spec.get("attr_categories", [])),
-            "zone_categories": deepcopy(feature_spec.get("zone_categories", [])),
-            "policy_version": int(policy_state.get("response_count", 0)) + 1,
-            "current_mnl_signal": deepcopy(current_mnl_signal),
-        },
+        "model_state": model_state,
         "policy_state": policy_state,
+        "sampling_recommendation": sampling_recommendation,
     }
 
 
@@ -1146,212 +1537,124 @@ def online_update_self_attention_ppo(
     historical_rows: list[dict] | None = None,
     verbose: bool = False,
 ) -> dict:
-    """在 respondent 提交完一整份 block 后做一次在线 PPO 更新。
-
-    参数:
-        payload: 当前 design 配置字典
-        policy_state: 已训练好的策略状态，必须至少包含：
-            - `selfattention_state`
-            - `candidate_signatures`
-            - `input_dim / output_dim / seq_len`
-        tasks: 本次 respondent 实际看到的题目列表 `list[task]`
-        choices: respondent 的答案字典，通常形如：
-            `{task_id: chosen_alt_name, ...}`
-        respondent: respondent 特征字典
-        config: 全局配置字典
-        historical_rows: 当前 respondent 提交前，系统里已有的历史 rows，
-            用于计算“加上本次回答前后”的 MNL 信号变化
-        verbose: 是否打印在线更新日志
-
-    返回:
-        dict:
-            {
-                "updated": bool,
-                "policy_version": int,
-                "mean_episode_reward": float,
-                "steps": int,
-                "online_epochs": int,
-                "loss": float | None,
-                "approx_kl": float | None,
-                "reward_metrics": {...}
-            }
-
-    关键维度:
-        - `len(tasks) = K`：本次 respondent 的 block 题数
-        - 构造出的在线 rollout：
-          - `states ∈ R^[K,D]`
-          - `actions ∈ Z^[K]`
-          - `rewards ∈ R^[K]`
-          - `dones ∈ {0,1}^[K]`
-
-    说明:
-        这里的在线更新不是重新从零训练，而是：
-        1. 把本次 block 回答映射成一个 episode rollout
-        2. 以当前 `selfattention_state` 为初始权重
-        3. 用较小学习率和较少 epoch 做一次增量 PPO 更新
-    """
     if not TORCH_AVAILABLE:
         return {"updated": False, "reason": "torch not installed"}
     if not tasks:
-        return {"updated": False}
-
-    input_dim = int(policy_state.get("input_dim", 6) or 6)
-    output_dim = int(policy_state.get("output_dim", max(1, len(tasks))) or max(1, len(tasks)))
-    seq_len = int(policy_state.get("seq_len", 16) or 16)
-    hidden_dim = int(policy_state.get("hidden_dim", 64) or 64)
-    num_heads = int(policy_state.get("num_heads", 4) or 4)
-    scfg = _sa_cfg(config)
-    sopt = ((payload.get("design_options", {}) or {}).get("selfattention", {}) or {}) if isinstance(payload, dict) else {}
-    gamma = float(policy_state.get("gamma", sopt.get("gamma", scfg.get("gamma", 0.99))) or scfg.get("gamma", 0.99))
-    gae_lambda = float(policy_state.get("gae_lambda", sopt.get("gae_lambda", scfg.get("gae_lambda", 0.95))) or scfg.get("gae_lambda", 0.95))
-    clip_eps = float(policy_state.get("clip_eps", sopt.get("clip_eps", scfg.get("clip_eps", 0.2))) or scfg.get("clip_eps", 0.2))
-    value_coef = float(policy_state.get("value_coef", sopt.get("value_coef", scfg.get("value_coef", 0.5))) or scfg.get("value_coef", 0.5))
-    entropy_coef = float(policy_state.get("entropy_coef", sopt.get("entropy_coef", scfg.get("entropy_coef", 0.01))) or scfg.get("entropy_coef", 0.01))
-    target_kl = float(policy_state.get("target_kl", sopt.get("target_kl", scfg.get("target_kl", 0.03))) or scfg.get("target_kl", 0.03))
-    batch_size = int(
-        sopt.get("online_batch_size", policy_state.get("online_batch_size", scfg.get("online_batch_size", scfg.get("batch_size", 128))))
-        or policy_state.get("online_batch_size", scfg.get("online_batch_size", scfg.get("batch_size", 128)))
-    )
-    online_lr = float(sopt.get("online_lr", scfg.get("online_lr", 0.005)) or scfg.get("online_lr", 0.005))
-    online_epochs = int(sopt.get("online_epochs", scfg.get("online_epochs", 2)) or scfg.get("online_epochs", 2))
-    sa_state = policy_state.get("selfattention_state", {}) if isinstance(policy_state.get("selfattention_state", {}), dict) else {}
-    if not sa_state:
+        return {"updated": False, "reason": "empty tasks"}
+    if not policy_state.get("selfattention_state"):
         return {"updated": False, "reason": "weights not initialized"}
 
-    feature_spec = {
-        "attr_dim_names": deepcopy(policy_state.get("attr_dim_names", [])),
-        "attr_categories": deepcopy(policy_state.get("attr_categories", [])),
-        "zone_categories": deepcopy(policy_state.get("zone_categories", [])),
-    }
-    candidate_sigs = [str(x) for x in (policy_state.get("candidate_signatures", []) or [])]
-    sig_to_idx = {sig: idx for idx, sig in enumerate(candidate_sigs)}
-    if not sig_to_idx:
-        return {"updated": False, "reason": "candidate signatures missing"}
+    sopt = ((payload.get("design_options", {}) or {}).get("selfattention", {}) or {}) if isinstance(payload, dict) else {}
+    scfg = _sa_cfg(config)
+    context_dim = int(policy_state.get("context_dim", sopt.get("context_dim", 48)) or 48)
+    hidden_dim = int(policy_state.get("hidden_dim", scfg.get("hidden_dim", 64)) or scfg.get("hidden_dim", 64))
+    num_heads = int(policy_state.get("num_heads", scfg.get("num_heads", 4)) or scfg.get("num_heads", 4))
+    count_min = int(policy_state.get("count_min", sopt.get("count_min", len(tasks))) or len(tasks))
+    count_max = int(policy_state.get("count_max", sopt.get("count_max", max(len(tasks), count_min))) or max(len(tasks), count_min))
+    online_lr = float(sopt.get("online_lr", scfg.get("online_lr", 0.002)) or scfg.get("online_lr", 0.002))
+    online_epochs = int(sopt.get("online_epochs", scfg.get("online_epochs", 8)) or scfg.get("online_epochs", 8))
+    batch_size = int(sopt.get("online_batch_size", scfg.get("batch_size", 64)) or scfg.get("batch_size", 64))
+    sample_target_dim_cfg = int(policy_state.get("sample_target_dim", sopt.get("sample_target_dim", scfg.get("sample_target_dim", 16))) or 16)
+    count_loss_weight = float(sopt.get("count_loss_weight", scfg.get("count_loss_weight", 1.0)) or scfg.get("count_loss_weight", 1.0))
+    slot_select_loss_weight = float(sopt.get("slot_select_loss_weight", scfg.get("slot_select_loss_weight", 0.8)) or scfg.get("slot_select_loss_weight", 0.8))
+    mask_loss_weight = float(sopt.get("mask_loss_weight", scfg.get("mask_loss_weight", 0.8)) or scfg.get("mask_loss_weight", 0.8))
+    value_loss_weight = float(sopt.get("value_loss_weight", scfg.get("value_loss_weight", 1.2)) or scfg.get("value_loss_weight", 1.2))
+    score_loss_weight = float(sopt.get("score_loss_weight", scfg.get("score_loss_weight", 0.4)) or scfg.get("score_loss_weight", 0.4))
+    sample_target_loss_weight = float(sopt.get("sample_target_loss_weight", scfg.get("sample_target_loss_weight", 0.3)) or scfg.get("sample_target_loss_weight", 0.3))
 
+    spec = payload.get("design_spec", {}) if isinstance(payload.get("design_spec", {}), dict) else {}
+    beta_defaults = payload.get("beta_defaults", {}) if isinstance(payload.get("beta_defaults", {}), dict) else {}
+    beta_bounds = payload.get("beta_bounds", {}) if isinstance(payload.get("beta_bounds", {}), dict) else {}
+    slot_specs, _alt_order = _extract_design_slots(spec)
+    if not slot_specs:
+        return {"updated": False, "reason": "no slot specs"}
+
+    pop_stats = dyppo_shared._load_pop_stats(payload, data_dir=Path("."), config=config or {})
+    feature_spec = dyppo_shared._build_feature_spec(pop_stats)
+    sample_target_cells = policy_state.get("sample_target_cells", [])
+    if not isinstance(sample_target_cells, list) or not sample_target_cells:
+        sample_target_cells = _build_sample_target_cells(feature_spec, sample_target_dim_cfg)
+    sample_cell_targets = policy_state.get("sample_cell_targets", {})
+    if not isinstance(sample_cell_targets, dict) or not sample_cell_targets:
+        sample_cell_targets = _build_sample_cell_targets(pop_stats, sample_target_cells, feature_spec)
+    sample_target_dim = len(sample_target_cells)
     current_respondent = respondent if isinstance(respondent, dict) and respondent else {
         "respondent_id": "online_missing",
         "zone_id": _MISSING_ATTR_TOKEN,
         "attr_segments": [_MISSING_ATTR_TOKEN] * max(1, len(feature_spec.get("attr_dim_names", []))),
     }
-    beta_defaults = payload.get("beta_defaults", {}) if isinstance(payload.get("beta_defaults", {}), dict) else {}
-    beta_bounds = payload.get("beta_bounds", {}) if isinstance(payload.get("beta_bounds", {}), dict) else {}
-    spec = payload.get("design_spec", {}) if isinstance(payload.get("design_spec", {}), dict) else {}
 
-    # 先把“实际发出的 task”映射回 candidate pool 中的动作索引。
-    valid_steps: list[tuple[dict, int, str]] = []
-    for task in tasks:
-        if not isinstance(task, dict):
-            continue
-        sig = str(task.get("sig") or _task_signature(task))
-        action_idx = sig_to_idx.get(sig)
-        if action_idx is None:
-            continue
-        task_id = str(task.get("id", "")).strip()
-        chosen_alt = str((choices or {}).get(task_id, "") or "")
-        valid_steps.append((task, int(action_idx), chosen_alt))
-    if not valid_steps:
-        return {"updated": False, "reason": "no matched task actions"}
-
-    _progress_print(
-        verbose,
-        "selfattention/online",
-        f"start: respondent_id={str((current_respondent or {}).get('respondent_id', ''))} steps={len(valid_steps)} online_epochs={int(online_epochs)} lr={float(online_lr):.6f}",
-    )
-
-    episode_tasks = [task for task, _action_idx, _chosen_alt in valid_steps]
-    episode_choices = {
-        str((task or {}).get("id", "")).strip(): chosen_alt
-        for task, _action_idx, chosen_alt in valid_steps
-        if str((task or {}).get("id", "")).strip()
-    }
-    # 对整份 block 计算全局奖励：
-    # 既包含单题的选择信息，也包含 block 级别的 d-error / 熵 / pseudo R^2 / 参数越界等。
     reward_metrics = dyppo_shared._questionnaire_reward_metrics(
-        episode_tasks,
+        tasks,
         current_respondent,
-        episode_choices,
+        choices or {},
         spec=spec,
         beta_defaults=beta_defaults,
         beta_bounds=beta_bounds,
         prior_obs_rows=dyppo_shared._collect_obs_rows_from_submission_rows(list(historical_rows or []), spec),
         config=config,
     )
-    episode_bonus = float(reward_metrics.get("reward", 0.0) or 0.0)
 
-    # 把整份 block 回答重新编码成在线 rollout。
-    states: list[np.ndarray] = []
-    actions: list[int] = []
-    rewards: list[float] = []
-    dones: list[float] = []
-    prior_tasks: list[dict] = []
-    for step_idx, (task, action_idx, chosen_alt) in enumerate(valid_steps):
-        state = dyppo_shared._task_state_vector(
-            current_respondent,
-            prior_tasks,
-            beta_defaults=beta_defaults,
-            feature_spec=feature_spec,
-            step_index=step_idx,
-            episode_len=len(valid_steps),
-            input_dim=input_dim,
-        )
-        # block 级奖励只在最后一步注入，前面步骤只保留单题级 reward。
-        terminal_bonus = float(episode_bonus) if step_idx == len(valid_steps) - 1 else 0.0
-        reward = dyppo_shared._task_step_reward(
-            task,
-            current_respondent,
-            chosen_alt,
-            beta_defaults=beta_defaults,
-            terminal_bonus=terminal_bonus,
-        )
-        states.append(state)
-        actions.append(int(action_idx))
-        rewards.append(float(reward))
-        dones.append(1.0 if step_idx == len(valid_steps) - 1 else 0.0)
-        prior_tasks.append(task)
-
-    # 单个 respondent 的 block -> 一个 episode
-    rollouts = {
-        "states": np.vstack(states),
-        "actions": np.array(actions, dtype=int),
-        "rewards": np.array(rewards, dtype=float),
-        "dones": np.array(dones, dtype=float),
-        "meta": {
-            "episodes": 1,
-            "steps": len(actions),
-            "rows_used": 1,
-            "mean_episode_reward": float(episode_bonus),
-        },
+    labels = _block_to_labels(
+        tasks,
+        slot_specs=slot_specs,
+        count_min=count_min,
+        count_max=count_max,
+        beta_defaults=beta_defaults,
+        respondent=current_respondent,
+    )
+    tokens = _build_encoder_tokens(
+        current_respondent,
+        policy_state=policy_state,
+        feature_spec=feature_spec,
+        slot_specs=slot_specs,
+        historical_rows=historical_rows,
+        context_dim=context_dim,
+    )
+    dataset = {
+        "encoder_tokens": np.expand_dims(tokens, axis=0),
+        "count_labels": np.array([labels["count_label"]], dtype=np.int64),
+        "slot_masks": np.expand_dims(labels["slot_mask"], axis=0),
+        "mask_labels": np.expand_dims(labels["mask_labels"], axis=0),
+        "value_labels": np.expand_dims(labels["value_labels"], axis=0),
+        "score_labels": np.expand_dims(labels["score_labels"], axis=0),
+        "sample_target_labels": np.expand_dims(
+            _respondent_target_vector(current_respondent, sample_target_cells, feature_spec),
+            axis=0,
+        ),
     }
+
     seed = int(policy_state.get("response_count", 0) or 0) + 1707
-    new_state, logs = _train_policy(
-        rollouts,
-        input_dim=input_dim,
-        output_dim=output_dim,
-        seq_len=seq_len,
+    new_state, logs = _train_parallel_generator(
+        dataset,
+        context_dim=context_dim,
+        slot_dim=len(slot_specs),
         hidden_dim=hidden_dim,
         num_heads=num_heads,
+        max_questions=count_max,
+        count_classes=max(1, count_max - count_min + 1),
+        sample_target_dim=sample_target_dim,
         seed=seed,
         epochs=online_epochs,
         lr=online_lr,
-        clip_eps=clip_eps,
-        value_coef=value_coef,
-        entropy_coef=entropy_coef,
-        gamma=gamma,
-        gae_lambda=gae_lambda,
-        batch_size=max(1, min(batch_size, len(actions))),
-        target_kl=target_kl,
-        init_state=sa_state,
+        batch_size=max(1, min(batch_size, 1)),
+        count_loss_weight=count_loss_weight,
+        slot_select_loss_weight=slot_select_loss_weight,
+        mask_loss_weight=mask_loss_weight,
+        value_loss_weight=value_loss_weight,
+        score_loss_weight=score_loss_weight,
+        sample_target_loss_weight=sample_target_loss_weight,
+        init_state=policy_state.get("selfattention_state", {}),
         verbose=verbose,
         progress_prefix="selfattention/online",
     )
 
     policy_state["selfattention_state"] = new_state
-    policy_state["hidden_dim"] = int(hidden_dim)
-    policy_state["num_heads"] = int(num_heads)
-    policy_state["seq_len"] = int(seq_len)
-    policy_state["online_updates"] = int(policy_state.get("online_updates", 0)) + 1
-    policy_state["response_count"] = int(policy_state.get("response_count", 0)) + 1
-    policy_state["candidate_bound_mask"] = deepcopy(reward_metrics.get("bound_violation", {}))
+    policy_state["online_updates"] = int(policy_state.get("online_updates", 0) or 0) + 1
+    policy_state["response_count"] = int(policy_state.get("response_count", 0) or 0) + 1
+    policy_state["sample_target_dim"] = int(sample_target_dim)
+    policy_state["sample_target_cells"] = deepcopy(sample_target_cells)
+    policy_state["sample_cell_targets"] = deepcopy(sample_cell_targets)
     policy_state["current_mnl_signal"] = {
         "n_observations_before": int(reward_metrics.get("n_observations_before", 0) or 0),
         "n_observations_after": int(reward_metrics.get("n_observations_after", 0) or 0),
@@ -1364,23 +1667,14 @@ def online_update_self_attention_ppo(
     }
 
     last_log = logs[-1] if logs else {}
-    _progress_print(
-        verbose,
-        "selfattention/online",
-        (
-            f"done: policy_version={int(policy_state.get('response_count', 0))} "
-            f"loss={last_log.get('loss')} approx_kl={last_log.get('approx_kl')} "
-            f"mean_episode_reward={float(episode_bonus):.6f}"
-        ),
-    )
     return {
         "updated": True,
-        "policy_version": int(policy_state.get("response_count", 0)),
-        "mean_episode_reward": round(float(episode_bonus), 6),
-        "steps": len(actions),
+        "policy_version": int(policy_state.get("response_count", 0) or 0),
+        "mean_episode_reward": round(float(reward_metrics.get("reward", 0.0) or 0.0), 6),
+        "steps": len(tasks),
         "online_epochs": int(online_epochs),
         "loss": last_log.get("loss"),
-        "approx_kl": last_log.get("approx_kl"),
+        "approx_kl": None,
         "reward_metrics": {
             "components": deepcopy(reward_metrics.get("components", {})),
             "d_error": reward_metrics.get("d_error"),

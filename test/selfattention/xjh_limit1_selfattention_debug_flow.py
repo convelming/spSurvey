@@ -16,7 +16,7 @@ PROJECT_DIR = Path(__file__).resolve().parents[2]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from app import _build_candidate_pool_for_ppo
+from app import _build_candidate_pool_for_ppo, _compute_efficient
 from engine.dynamicPPO import (
     TORCH_AVAILABLE,
     _collect_attr_categories,
@@ -207,6 +207,35 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
             f.write(json.dumps(r, ensure_ascii=False) + '\n')
 
 
+def _resolve_expert_preview(
+    design_rec: dict,
+    raw_payload: dict,
+) -> tuple[list[dict], dict, str]:
+    """获取 selfattention warmup 所需的 expert preview。
+
+    优先使用设计文件里已经保存的 `preview_tasks`。
+    如果该字段为空，则说明当前保存的是“只有配置、尚未附带预览题组”的设计文件，
+    此时回退为：基于 design spec 立即跑一遍 efficient，生成可用于测试的 teacher preview。
+    """
+
+    preview_tasks = (design_rec or {}).get('preview_tasks', []) if isinstance((design_rec or {}).get('preview_tasks', []), list) else []
+    saved_d_error = deepcopy((design_rec or {}).get('d_error', {'value': None})) if isinstance((design_rec or {}).get('d_error', {}), dict) else {'value': None}
+    if preview_tasks:
+        return deepcopy(preview_tasks), {'comb': deepcopy(preview_tasks), 'd_error': saved_d_error}, 'saved_preview_tasks'
+
+    payload_eff = deepcopy(raw_payload if isinstance(raw_payload, dict) else {})
+    payload_eff['design_type'] = 'efficient'
+    eff_result = _compute_efficient(payload_eff)
+    generated_preview = deepcopy((eff_result or {}).get('comb', []) if isinstance((eff_result or {}).get('comb', []), list) else [])
+    if not generated_preview:
+        raise RuntimeError('design preview_tasks为空，且无法根据当前配置重新生成 efficient preview tasks')
+    expert_result = {
+        'comb': deepcopy(generated_preview),
+        'd_error': deepcopy((eff_result or {}).get('d_error', {'value': None})) if isinstance((eff_result or {}).get('d_error', {}), dict) else {'value': None},
+    }
+    return generated_preview, expert_result, 'recomputed_efficient_preview'
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Debug flow for selfattention using gz_pt_share_variable_universe_v1 config.')
     parser.add_argument('--design-save-name', default=DEFAULT_DESIGN_SAVE_NAME)
@@ -267,12 +296,15 @@ def run(args: argparse.Namespace) -> None:
         design_rec = load_json(design_file, {})
         config = load_json(CONFIG_FILE, {})
         raw_payload = (design_rec or {}).get('payload', {}) if isinstance((design_rec or {}).get('payload', {}), dict) else {}
-        preview_tasks = (design_rec or {}).get('preview_tasks', []) if isinstance((design_rec or {}).get('preview_tasks', []), list) else []
-        if not preview_tasks:
-            raise RuntimeError('design preview_tasks is empty, cannot build selfattention test rows')
+        raw_preview_tasks = (design_rec or {}).get('preview_tasks', []) if isinstance((design_rec or {}).get('preview_tasks', []), list) else []
+        if not raw_preview_tasks:
+            ticker.set_stage('recomputing efficient preview')
+        preview_tasks, expert_result, preview_source = _resolve_expert_preview(design_rec, raw_payload)
         if verbose:
             print(
-                f"[selfattention/debug] loaded design: save_name={design_save_name} preview_tasks={len(preview_tasks)} elapsed={_format_elapsed(ticker.elapsed_seconds())}",
+                f"[selfattention/debug] loaded design: save_name={design_save_name} "
+                f"preview_tasks={len(preview_tasks)} source={preview_source} "
+                f"elapsed={_format_elapsed(ticker.elapsed_seconds())}",
                 flush=True,
             )
 
@@ -313,11 +345,27 @@ def run(args: argparse.Namespace) -> None:
         if verbose:
             print(f"[selfattention/debug] building candidate pool: target={candidate_pool_target}", flush=True)
         candidate_pool = _build_candidate_pool_for_ppo(payload, pool_size=candidate_pool_target)
+        candidate_pool_source = 'feasible_combo_pool'
+        if not candidate_pool:
+            seen_sigs: set[str] = set()
+            fallback_pool: list[dict] = []
+            for task in preview_tasks:
+                if not isinstance(task, dict):
+                    continue
+                sig = str((task or {}).get('sig') or _task_sig(task))
+                if sig in seen_sigs:
+                    continue
+                seen_sigs.add(sig)
+                fallback_pool.append({**deepcopy(task), 'sig': sig})
+            candidate_pool = fallback_pool
+            candidate_pool_source = 'expert_preview_fallback'
+            if verbose:
+                print(
+                    "[selfattention/debug] feasible candidate pool is empty after constraints/dominance filtering; "
+                    f"fallback to expert preview pool size={len(candidate_pool)}",
+                    flush=True,
+                )
 
-        expert_result = {
-            'comb': deepcopy(preview_tasks),
-            'd_error': deepcopy((design_rec or {}).get('d_error', {'value': None})) if isinstance((design_rec or {}).get('d_error', {}), dict) else {'value': None},
-        }
         expert_sigs = {_task_sig(t) for t in preview_tasks if isinstance(t, dict)}
         candidate_records = []
         overlap_count = 0
@@ -338,6 +386,8 @@ def run(args: argparse.Namespace) -> None:
             json.dumps(
                 {
                     'design_save_name': design_save_name,
+                    'preview_source': preview_source,
+                    'candidate_pool_source': candidate_pool_source,
                     'candidate_pool_size': len(candidate_pool),
                     'expert_preview_size': len(preview_tasks),
                     'overlap_with_expert': overlap_count,
@@ -440,6 +490,8 @@ def run(args: argparse.Namespace) -> None:
             'candidate_pool_json': str(candidate_pool_json),
             'candidate_pool_size': len(candidate_pool),
             'candidate_pool_target': candidate_pool_target,
+            'candidate_pool_source': candidate_pool_source,
+            'preview_source': preview_source,
             'expert_preview_size': len(preview_tasks),
             'candidate_expert_overlap': overlap_count,
             'row_meta': row_meta,
@@ -465,6 +517,8 @@ def run(args: argparse.Namespace) -> None:
                     'rows_loaded_for_train': len(rows_for_train),
                     'candidate_pool_size': len(candidate_pool),
                     'candidate_pool_target': candidate_pool_target,
+                    'candidate_pool_source': candidate_pool_source,
+                    'preview_source': preview_source,
                     'expert_preview_size': len(preview_tasks),
                     'candidate_expert_overlap': overlap_count,
                     'train_model_state': trained.get('model_state', {}) if isinstance(trained, dict) else {},

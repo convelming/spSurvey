@@ -46,11 +46,19 @@
       <h2>文档目录</h2>
       <p class="hint">本页会在刷新时直接读取 `docs` 目录下的 Markdown 内容，并支持 LaTeX 公式渲染。</p>
       <div class="hint" style="margin-top:12px;">
-        已补充本项目里 encoder-decoder + PPO 的训练闭环说明：
-        `state / action / reward / rollout / GAE / PPO-clip`。
+        已补充当前 selfattention 路线的统一口径：`set/block generation + count head + slot select + mask/value 顺序结构`。
       </div>
       <div class="hint" style="margin-top:8px;">
-        当前文档也同步补充了：`adjusted pseudo R^2` 的 block 级奖励接入方式，以及参数估计越界后的惩罚与候选题降权逻辑。
+        当前文档也同步补充了：`count_head` 决定题数、`slot_select_head` 选择候选题集合、`mask_head` 决定题内结构、`value_head` 为激活变量赋值。
+      </div>
+      <div class="hint" style="margin-top:8px;">
+        新增采样控制分支：`respondent_target_head` 根据总体目标分布、当前样本覆盖和模型状态，输出下一阶段建议补充的 RP cell。
+      </div>
+      <div class="hint" style="margin-top:8px;">
+        统一口径：对 respondent 而言，SP 问卷始终是整份 block 一次性生成、一次性发放、一次性填写；问卷内题目按集合处理，不按时序序列处理。
+      </div>
+      <div class="hint" style="margin-top:8px;">
+        Decoder attention 已统一为 `Question-Set Self-Attention`：不再使用 causal masked attention；`mask_head` 只表示题内变量是否激活。
       </div>
       <div class="docs-toc">
         {% for doc in docs %}

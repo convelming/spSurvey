@@ -130,7 +130,7 @@ s_t = [ respondent_one_hot , spread_hint , mean_entropy , progress , selected_ra
 即：
 - respondent 的 RP / zone 离散编码
 - 历史已选题的统计摘要
-- 当前题位进度
+- 当前 block / rollout 进度
 
 ### 6.1 respondent_one_hot
 

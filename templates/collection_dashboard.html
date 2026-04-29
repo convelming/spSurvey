@@ -25,6 +25,9 @@
     .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
     .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .source-pill { display:inline-block; padding:2px 7px; border-radius:999px; background:#e8f1ff; color:#1d4ed8; font-size:12px; font-weight:700; }
+    .source-pill.selfattention { background:#ecfdf5; color:#047857; }
+    .num-strong { font-weight:800; color:#0f172a; }
     @media (max-width: 980px) { .dash-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -76,6 +79,29 @@
       <h3 style="margin-top:0;">WebGIS点位（家/出行目的）</h3>
       <div class="map-wrap"><div id="dashMap"></div></div>
       <div class="legend" id="purposeLegend"></div>
+    </section>
+
+    <section class="card">
+      <h3 style="margin-top:0;">剩余样本与定向收集建议</h3>
+      <p class="mini" id="samplePlanLine">等待刷新...</p>
+      <div class="scroll-box">
+        <table>
+          <thead>
+            <tr>
+              <th>来源</th>
+              <th>层级</th>
+              <th>区域</th>
+              <th>RP cell</th>
+              <th>目标份数</th>
+              <th>当前份数</th>
+              <th>剩余建议</th>
+              <th>优先级</th>
+            </tr>
+          </thead>
+          <tbody id="samplePlanBody"></tbody>
+        </table>
+      </div>
+      <p class="mini">efficient / dynamicPPO 使用 ActivitySim/PopulationSim 目标分布与当前 SP 完成样本做统计缺口；SelfAttention 优先使用 respondent_target_head 输出，并保留统计缺口作为参照。</p>
     </section>
 
     <section class="dash-grid">
@@ -143,6 +169,8 @@
       const batchTbody = document.getElementById('batchTableBody');
       const choiceBox = document.getElementById('choiceBox');
       const spMetaLine = document.getElementById('spMetaLine');
+      const samplePlanLine = document.getElementById('samplePlanLine');
+      const samplePlanBody = document.getElementById('samplePlanBody');
       const legend = document.getElementById('purposeLegend');
 
       const map = L.map('dashMap').setView([23.14, 113.27], 11);
@@ -296,6 +324,43 @@
         spMetaLine.textContent = `设计：${est.selected_save_name || '(未选择)'} | 类型：${est.selected_type || '-'} | submissions=${est.n_submissions || 0} | observations=${est.n_observations || 0}`;
       }
 
+      function sourceLabel(source) {
+        const s = String(source || '');
+        if (s === 'selfattention_head') return 'SelfAttention输出';
+        if (s === 'selfattention_head_plus_statistical_gap') return 'SelfAttention+统计';
+        return '统计缺口';
+      }
+
+      function renderSamplePlan(plan) {
+        const p = plan || {};
+        const rows = Array.isArray(p.top_recommendations) ? p.top_recommendations : [];
+        samplePlanLine.textContent = `策略：${p.strategy || '-'}；设计：${p.design_save_name || '-'}；目标样本=${p.target_sample_size || 0}；已完成SP=${p.completed_sp_submissions || 0}；剩余=${p.remaining_total || 0}；来源=${sourceLabel(p.source)}`;
+        samplePlanBody.innerHTML = '';
+        if (!rows.length) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="8">暂无建议。请先选择设计并收集至少一份SP问卷。</td>';
+          samplePlanBody.appendChild(tr);
+          return;
+        }
+        rows.forEach((r) => {
+          const src = String(r.source || p.source || 'statistical_gap');
+          const tr = document.createElement('tr');
+          const pillClass = src === 'selfattention_head' ? 'source-pill selfattention' : 'source-pill';
+          const zoneText = r.zone_name_cn || r.zone_id || (String(r.cell || '').startsWith('zone=') ? String(r.cell).replace('zone=', '') : '-');
+          const rpText = r.rp_cell || (!String(r.cell || '').startsWith('zone=') ? r.cell : '-');
+          tr.innerHTML = `
+            <td><span class="${pillClass}">${sourceLabel(src)}</span></td>
+            <td>${r.level || '-'}</td>
+            <td>${zoneText || '-'}</td>
+            <td>${rpText || '-'}</td>
+            <td>${r.target_n ?? '-'}</td>
+            <td>${r.observed_n ?? '-'}</td>
+            <td class="num-strong">${r.remaining_n ?? 0}</td>
+            <td>${r.priority ?? '-'}</td>`;
+          samplePlanBody.appendChild(tr);
+        });
+      }
+
       async function refresh() {
         const q = new URLSearchParams();
         if (typeSel.value) q.set('design_type', typeSel.value);
@@ -316,6 +381,7 @@
           try { map.fitBounds(zoneLayer.getBounds(), { padding: [20, 20] }); } catch (_e) {}
         }
         renderSp(data.sp_estimation || {});
+        renderSamplePlan(data.sample_collection_plan || {});
       }
 
       document.getElementById('refreshBtn').addEventListener('click', () => {

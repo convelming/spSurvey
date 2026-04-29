@@ -1,7 +1,7 @@
 {
   "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
   "created_at": "2026-04-14T07:55:46.742568+00:00",
-  "updated_at": "2026-04-14T07:56:47.201417+00:00",
+  "updated_at": "2026-04-20T07:51:27.482352+00:00",
   "profile": {
     "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
     "housing_status": "自有住房，家庭同住",
@@ -10,7 +10,7 @@
     "household_vehicle_count": 0,
     "household_ebike_count": 0,
     "household_income_annual": "72万及以上",
-    "home_location": "POINT(23.119759,113.314533)",
+    "home_location": "POINT(23.128047,113.316765)",
     "household_members": [
       {
         "member_id": "P1",
@@ -58,7 +58,7 @@
   },
   "trip_diary": {
     "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
-    "survey_date": "2026-04-14",
+    "survey_date": "2026-04-20",
     "residence": "POINT(23.119759,113.314533)",
     "household_size": 2,
     "members": [
@@ -71,6 +71,18 @@
         "trips": [
           {
             "origin": "POINT(23.119759,113.314533)",
+            "depart_hhmm": "",
+            "destination": "POINT(23.124258,113.318825)",
+            "arrive_hhmm": "",
+            "purpose": "工作",
+            "pickup_people": 0,
+            "cost_cny": 0,
+            "stay_min": 0,
+            "distance_km": 0,
+            "main_mode": "公交"
+          },
+          {
+            "origin": "POINT(23.124258,113.318825)",
             "depart_hhmm": "",
             "destination": "POINT(23.119759,113.314533)",
             "arrive_hhmm": "",

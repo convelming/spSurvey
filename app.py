@@ -769,7 +769,10 @@ def validate_sp_design_payload(payload_obj: dict) -> tuple[bool, str]:
             return False, "selfattention.explore_epsilon必须在[0,1]"
         win_l = int(so.get("window_length", 0) or 0)
         if win_l < 1:
-            return False, "selfattention.window_length必须>=1"
+            return False, "selfattention.window_length/L_hist必须>=1"
+        sample_target_dim = int(so.get("sample_target_dim", 0) or 0)
+        if sample_target_dim < 1:
+            return False, "selfattention.sample_target_dim必须>=1"
     return True, ""
 
 
@@ -1706,8 +1709,8 @@ def _compute_dyppo(payload: dict, current_respondent: dict | None = None) -> dic
 
 
 def _compute_selfattention(payload: dict, current_respondent: dict | None = None) -> dict:
-    # SelfAttention 与 dynamicPPO 共用统一的 feasible combo pool。
-    # efficient design 在此仅作为 warmup / teacher prior，而非动作空间本身。
+    # SelfAttention 仍可复用 feasible combo pool 作为 warmup / prototype prior，
+    # 但最终生成逻辑已经切到并行 question-block generator，而不是直接把 combo pool 当动作空间。
     sopt = ((payload.get("design_options", {}) or {}).get("selfattention", {}) or {})
     tpr = int(sopt.get("tasks_per_round", 6) or 6)
     candidate_pool_target = max(120, tpr * 20)
@@ -1728,11 +1731,13 @@ def _compute_selfattention(payload: dict, current_respondent: dict | None = None
     item = _ensure_spec_policy(item, spec_id)
     cfg = _load_runtime_config()
 
+    history_rows = _load_design_history_rows(save_name)
     trained = train_self_attention_ppo(
         payload=payload,
         policy_state=item,
         candidate_pool=candidate_pool,
         expert_result=efficient_result,
+        rows=history_rows,
         current_respondent=current_respondent,
         data_dir=DATA_DIR,
         config=cfg if isinstance(cfg, dict) else {},
@@ -1761,23 +1766,32 @@ def _compute_selfattention(payload: dict, current_respondent: dict | None = None
     }
     iter_log = trained.get("iteration_log", []) if isinstance(trained, dict) else []
     model_state = trained.get("model_state", {}) if isinstance(trained, dict) else {}
+    sampling_recommendation = trained.get("sampling_recommendation", []) if isinstance(trained, dict) else []
     if isinstance(model_state, dict):
-        model_state["action_space_type"] = "feasible_combo_pool"
-        model_state["candidate_pool_size"] = len(candidate_pool)
-        model_state["candidate_pool_target"] = int(candidate_pool_target)
+        model_state["action_space_type"] = "parallel_question_block"
+        model_state["prototype_pool_size"] = len(candidate_pool)
+        model_state["prototype_pool_target"] = int(candidate_pool_target)
         model_state["full_combo_count"] = int(_full_combo_count(spec))
         model_state["expert_demo_size"] = len((efficient_result or {}).get("comb", []) or [])
         model_state["expert_role"] = "prior_only"
+        model_state["prototype_role"] = "warmup_reference_only"
         model_state["final_d_error"] = d_err.get("value")
         model_state["expert_reference_d_error"] = d_err.get("expert_reference_value")
+        model_state["sampling_recommendation"] = sampling_recommendation
 
     return {
         "mode": "selfattention_compute",
-        "recommendation": {"tasks_per_person": len(tasks), "blocks": 1, "rows": len(tasks)},
+        "recommendation": {
+            "tasks_per_person": len(tasks),
+            "blocks": 1,
+            "rows": len(tasks),
+            "sampling_recommendation": sampling_recommendation,
+        },
         "comb": tasks,
         "d_error": d_err,
         "iteration_log": iter_log,
         "model_state": model_state,
+        "sampling_recommendation": sampling_recommendation,
     }
 
 
@@ -1921,6 +1935,8 @@ def _load_design_history_rows(design_save_name: str | None, *, exclude_submissio
             {
                 "submission_id": row.get("submission_id"),
                 "design_save_name": row.get("design_save_name"),
+                "respondent_id": row.get("respondent_id"),
+                "respondent": _respondent_context_for_policy(load_respondent_record(str(row.get("respondent_id", "") or ""))),
                 "tasks": row.get("tasks", []),
                 "choices": row.get("choices", {}),
             }
@@ -2040,6 +2056,8 @@ def _load_popsim_obj() -> dict:
 def _extract_rp_target_from_popsim(pop_obj: dict, rp_schema: dict) -> tuple[dict, dict, list[str]]:
     default_target = pop_obj.get("default_target", {}) if isinstance(pop_obj.get("default_target", {}), dict) else {}
     zone_targets = pop_obj.get("zone_targets", {}) if isinstance(pop_obj.get("zone_targets", {}), dict) else {}
+    if not zone_targets and isinstance(pop_obj.get("zone2_targets", {}), dict):
+        zone_targets = pop_obj.get("zone2_targets", {})
     dims = [_canonical_dim_name(x) for x in str(pop_obj.get("key_format", "gender|age_group|edu")).split("|")]
 
     retained_dims = []
@@ -2164,6 +2182,246 @@ def _zone_bias(obs_counts: dict, target_dist: dict) -> dict:
         max_abs = max(max_abs, ad)
         by_key[k] = {"observed": round(obs, 4), "target": round(tar, 4), "diff": round(d, 4)}
     return {"l1": round(l1, 4), "tv": round(0.5 * l1, 4), "max_abs_diff": round(max_abs, 4), "by_key": by_key}
+
+
+def _zone_target_shares(pop_obj: dict, zone_ids: list[str]) -> dict[str, float]:
+    """读取或推断 zone 目标占比。
+
+    若 ActivitySim/PopulationSim 配置里没有单独给出 zone 权重，则对所有 zone
+    做均匀分配。`zone_targets/zone2_targets` 本身通常是区内条件分布，
+    不能直接当作区际人口规模使用。
+    """
+    ids = [str(z) for z in zone_ids if str(z)]
+    if not ids:
+        return {}
+    for key in ("zone_shares", "zone_share", "zone_target_shares", "zone2_shares", "zone_weights"):
+        raw = pop_obj.get(key, {}) if isinstance(pop_obj, dict) else {}
+        if isinstance(raw, dict) and raw:
+            vals = {z: max(0.0, float(_safe_float(raw.get(z)) or 0.0)) for z in ids}
+            total = sum(vals.values())
+            if total > 0:
+                return {z: vals[z] / total for z in ids}
+    share = 1.0 / max(len(ids), 1)
+    return {z: share for z in ids}
+
+
+def _primary_profile_member(profile: dict) -> dict:
+    members = profile.get("household_members", []) if isinstance(profile.get("household_members", []), list) else []
+    for item in members:
+        if isinstance(item, dict) and str(item.get("member_id", "")) == "P1":
+            return item
+    if members and isinstance(members[0], dict):
+        return members[0]
+    return {}
+
+
+def _profile_zone_id(profile: dict) -> str:
+    return str(
+        profile.get("zone_id")
+        or profile.get("home_zone_id")
+        or profile.get("residence_zone_id")
+        or "UNKNOWN"
+    ).strip() or "UNKNOWN"
+
+
+def _iter_sp_submission_records(recs: list[dict], save_name: str | None) -> list[dict]:
+    """列出某个 design 下已经完成 SP 的 respondent 记录。"""
+    safe = sanitize_save_name(save_name or "")
+    out = []
+    for rec in recs:
+        if not isinstance(rec, dict):
+            continue
+        sp = rec.get("sp", {}) if isinstance(rec.get("sp", {}), dict) else {}
+        submissions = sp.get("submissions", []) if isinstance(sp.get("submissions", []), list) else []
+        for sub in submissions:
+            if not isinstance(sub, dict):
+                continue
+            if safe and sanitize_save_name(str(sub.get("design_save_name", ""))) != safe:
+                continue
+            out.append({"record": rec, "submission": sub})
+    return out
+
+
+def _build_statistical_sample_plan(
+    *,
+    recs: list[dict],
+    selected: dict | None,
+    pop_obj: dict,
+    default_target: dict,
+    zone_targets: dict,
+    retained_dims: list[str],
+    rp_schema: dict,
+    zone_meta: dict,
+) -> dict:
+    """基于总体目标分布和当前已完成 SP 样本计算剩余样本建议。
+
+    efficient/dyppo 没有专门的采样 head，所以使用此统计缺口法；
+    selfattention 也会保留该统计表，并额外叠加模型输出。
+    """
+    payload = selected.get("payload", {}) if isinstance(selected, dict) and isinstance(selected.get("payload", {}), dict) else {}
+    save_name = str(selected.get("save_name", "")) if isinstance(selected, dict) else ""
+    design_type = normalize_design_type(selected.get("type")) if isinstance(selected, dict) else None
+    target_sample_size = int(payload.get("sample_size", 0) or 0) if isinstance(payload, dict) else 0
+    if target_sample_size <= 0:
+        target_sample_size = int(((payload.get("design_options", {}) or {}).get("selfattention", {}) or {}).get("target_sample_size", 200) or 200) if isinstance(payload, dict) else 200
+
+    all_zone_ids = sorted(set(zone_meta.keys()) | set(zone_targets.keys()))
+    if not all_zone_ids:
+        all_zone_ids = ["UNKNOWN"]
+    zone_shares = _zone_target_shares(pop_obj, all_zone_ids)
+    submissions = _iter_sp_submission_records(recs, save_name)
+
+    joint_obs: dict[str, float] = {}
+    zone_obs: dict[str, float] = {}
+    attr_obs: dict[str, float] = {}
+    completed = 0
+    seen_submission_ids: set[str] = set()
+    for item in submissions:
+        sub = item.get("submission", {})
+        sid = str(sub.get("submission_id") or id(sub))
+        # 避免同一个 submission 在 respondent 主文件里被重复写入时重复计数。
+        if sid in seen_submission_ids:
+            continue
+        seen_submission_ids.add(sid)
+        rec = item.get("record", {})
+        profile = rec.get("profile", {}) if isinstance(rec.get("profile", {}), dict) else {}
+        zone_id = _profile_zone_id(profile)
+        member = _primary_profile_member(profile)
+        key_weights = _member_to_rp_key_weights(member, retained_dims, rp_schema)
+        completed += 1
+        zone_obs[zone_id] = zone_obs.get(zone_id, 0.0) + 1.0
+        for key, wt in key_weights.items():
+            attr_obs[key] = attr_obs.get(key, 0.0) + float(wt)
+            joint_key = f"{zone_id}|{key}"
+            joint_obs[joint_key] = joint_obs.get(joint_key, 0.0) + float(wt)
+
+    # 目标 joint cell：zone_share * 区内 RP 条件分布。
+    joint_target: dict[str, float] = {}
+    zone_target_n: dict[str, float] = {}
+    attr_target: dict[str, float] = {}
+    for zid in all_zone_ids:
+        zshare = float(zone_shares.get(zid, 0.0))
+        zone_target_n[zid] = zshare * target_sample_size
+        dist = zone_targets.get(zid, default_target)
+        if not isinstance(dist, dict) or not dist:
+            dist = default_target
+        total = sum(max(0.0, float(v)) for v in dist.values())
+        if total <= 0:
+            continue
+        for key, val in dist.items():
+            share = zshare * max(0.0, float(val)) / total
+            joint_target[f"{zid}|{key}"] = share
+            attr_target[key] = attr_target.get(key, 0.0) + share
+
+    def make_remaining_rows(target_map: dict[str, float], obs_map: dict[str, float], *, level: str, limit: int | None = None) -> list[dict]:
+        rows = []
+        total_obs = max(1.0, float(completed))
+        for cell, target_share in target_map.items():
+            target_n = float(target_share) * target_sample_size
+            observed_n = float(obs_map.get(cell, 0.0))
+            remaining_n = max(0.0, target_n - observed_n)
+            gap_share = max(0.0, float(target_share) - observed_n / total_obs)
+            zone_id = ""
+            rp_cell = str(cell)
+            zone_name = ""
+            if level == "joint" and "|" in str(cell):
+                zone_id, rp_cell = str(cell).split("|", 1)
+                zone_name = (zone_meta.get(zone_id, {}) or {}).get("zone_name_cn", zone_id)
+            elif level == "zone":
+                zone_id = str(cell)
+                zone_name = (zone_meta.get(zone_id, {}) or {}).get("zone_name_cn", zone_id)
+            rows.append(
+                {
+                    "level": level,
+                    "cell": str(cell),
+                    "zone_id": zone_id,
+                    "zone_name_cn": zone_name,
+                    "rp_cell": rp_cell,
+                    "target_share": round(float(target_share), 6),
+                    "target_n": round(target_n, 2),
+                    "observed_n": round(observed_n, 2),
+                    "observed_share": round(observed_n / total_obs, 6),
+                    "remaining_n": int(np.ceil(remaining_n)) if remaining_n > 0 else 0,
+                    "gap_share": round(gap_share, 6),
+                    "priority": round(remaining_n / max(target_sample_size, 1), 6),
+                    "source": "statistical_gap",
+                }
+            )
+        rows.sort(key=lambda r: (r["remaining_n"], r["gap_share"]), reverse=True)
+        return rows[:limit] if limit else rows
+
+    zone_target_share = {z: float(zone_shares.get(z, 0.0)) for z in all_zone_ids}
+    zone_rows = make_remaining_rows(zone_target_share, zone_obs, level="zone")
+    attr_rows = make_remaining_rows(attr_target, attr_obs, level="attr")
+    joint_rows = make_remaining_rows(joint_target, joint_obs, level="joint", limit=50)
+
+    remaining_total = max(0, int(target_sample_size) - int(completed))
+    return {
+        "strategy": design_type,
+        "design_save_name": save_name,
+        "source": "statistical_gap",
+        "target_sample_size": int(target_sample_size),
+        "completed_sp_submissions": int(completed),
+        "remaining_total": int(remaining_total),
+        "retained_dims": retained_dims,
+        "zone_rows": zone_rows,
+        "attr_rows": attr_rows,
+        "joint_rows": joint_rows,
+        "top_recommendations": joint_rows[:12] if joint_rows else (zone_rows[:12] + attr_rows[:12])[:12],
+    }
+
+
+def _merge_selfattention_sampling_output(plan: dict, selected: dict | None) -> dict:
+    """把 selfattention policy_state 中的采样 head 输出叠加到统计计划上。"""
+    if not isinstance(selected, dict) or normalize_design_type(selected.get("type")) != "selfattention":
+        return plan
+    save_name = str(selected.get("save_name", ""))
+    policy_state, _rec = _load_design_policy_state(save_name)
+    recs = []
+    if isinstance(policy_state, dict):
+        recs = policy_state.get("last_sampling_recommendation", []) or []
+    if not isinstance(recs, list):
+        recs = []
+
+    stat_lookup = {}
+    for row in (plan.get("zone_rows", []) or []) + (plan.get("attr_rows", []) or []) + (plan.get("joint_rows", []) or []):
+        stat_lookup[str(row.get("cell", ""))] = row
+        if row.get("zone_id"):
+            stat_lookup[f"zone={row.get('zone_id')}"] = row
+        if row.get("rp_cell"):
+            # respondent_target_head 使用 `gender=female` 这类边际 cell。
+            parts = str(row.get("rp_cell", "")).split("|")
+            dims = plan.get("retained_dims", []) or []
+            for idx, val in enumerate(parts):
+                dim = str(dims[idx]) if idx < len(dims) else f"attr_{idx}"
+                stat_lookup[f"{dim}={val}"] = row
+
+    model_rows = []
+    for item in recs:
+        if not isinstance(item, dict):
+            continue
+        cell = str(item.get("cell", ""))
+        base = dict(stat_lookup.get(cell, {}))
+        model_rows.append(
+            {
+                **base,
+                "level": base.get("level", "model_cell"),
+                "cell": cell,
+                "target_share": base.get("target_share"),
+                "target_n": base.get("target_n"),
+                "observed_n": base.get("observed_n"),
+                "remaining_n": int(item.get("needed_n", base.get("remaining_n", 0)) or 0),
+                "priority": float(item.get("priority", base.get("priority", 0.0)) or 0.0),
+                "source": "selfattention_head",
+                "reason": item.get("reason", "respondent_target_head_priority"),
+            }
+        )
+    model_rows.sort(key=lambda r: (float(r.get("priority", 0.0)), int(r.get("remaining_n", 0))), reverse=True)
+    plan["selfattention_recommendations"] = model_rows
+    if model_rows:
+        plan["source"] = "selfattention_head_plus_statistical_gap"
+        plan["top_recommendations"] = model_rows[:12]
+    return plan
 
 
 def _choose_design_file(design_type: str | None, design_save_name: str | None) -> dict:
@@ -2359,6 +2617,17 @@ def _collect_dashboard_summary(design_type: str | None, design_save_name: str | 
     # SP design and re-estimation.
     design_select = _choose_design_file(design_type, design_save_name)
     selected = design_select.get("selected") if isinstance(design_select, dict) else None
+    sample_collection_plan = _build_statistical_sample_plan(
+        recs=recs,
+        selected=selected if isinstance(selected, dict) else None,
+        pop_obj=pop_obj,
+        default_target=default_target if isinstance(default_target, dict) else {},
+        zone_targets=zone_targets if isinstance(zone_targets, dict) else {},
+        retained_dims=retained_dims,
+        rp_schema=rp_schema,
+        zone_meta=zone_meta,
+    )
+    sample_collection_plan = _merge_selfattention_sampling_output(sample_collection_plan, selected if isinstance(selected, dict) else None)
     sp_est = {
         "selected_save_name": None,
         "selected_type": design_type,
@@ -2461,6 +2730,7 @@ def _collect_dashboard_summary(design_type: str | None, design_save_name: str | 
         "map_points": map_points,
         "sp_designs": design_select.get("available", []),
         "sp_estimation": sp_est,
+        "sample_collection_plan": sample_collection_plan,
     }
 
 
