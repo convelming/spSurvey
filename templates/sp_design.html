@@ -1042,6 +1042,37 @@
     document.body.appendChild(mask);
   }
 
+  function selectTasksForPreview(tasks, recommendation, payload) {
+    const taskList = Array.isArray(tasks) ? tasks : [];
+    const tpp = Number(
+      (recommendation && recommendation.tasks_per_person) ||
+      (payload && payload.tasks_per_person_candidates && payload.tasks_per_person_candidates[0]) ||
+      1,
+    );
+    if (!taskList.length || taskList.length <= tpp) {
+      return taskList.slice(0, Math.max(1, tpp));
+    }
+
+    const blockMap = new Map();
+    for (const task of taskList) {
+      const blockKey = String((task && task.block) || '__default__');
+      if (!blockMap.has(blockKey)) blockMap.set(blockKey, []);
+      blockMap.get(blockKey).push(task);
+    }
+    if (blockMap.size <= 1) {
+      return taskList.slice(0, Math.max(1, tpp));
+    }
+
+    const blockKeys = Array.from(blockMap.keys()).sort((a, b) => {
+      const na = Number(a);
+      const nb = Number(b);
+      if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+      return String(a).localeCompare(String(b));
+    });
+    const firstBlockTasks = blockMap.get(blockKeys[0]) || [];
+    return firstBlockTasks.slice(0, Math.max(1, tpp));
+  }
+
   function persistPreviewBundle(payload, recommendation, computedTasks = null) {
     const tasksPerPerson = Number(
       (recommendation && recommendation.tasks_per_person) ||
@@ -1049,14 +1080,16 @@
       1,
     );
     const blocks = Number((recommendation && recommendation.blocks) || 1);
-    const tasks = Array.isArray(computedTasks) && computedTasks.length
+    const allTasks = Array.isArray(computedTasks) && computedTasks.length
       ? computedTasks
       : buildPreviewTasks(payload, tasksPerPerson, blocks);
+    const tasks = selectTasksForPreview(allTasks, recommendation, payload);
     const bundle = {
       created_at: new Date().toISOString(),
       recommendation,
       payload,
       tasks,
+      all_tasks: allTasks,
     };
     localStorage.setItem('survey_sp_design_payload', JSON.stringify(payload));
     localStorage.setItem('survey_sp_preview_bundle', JSON.stringify(bundle));
@@ -1084,7 +1117,7 @@
         inherit_model_weights: Boolean(isCopyFromHistory && payloadForSave && (payloadForSave.design_type === 'dyppo' || payloadForSave.design_type === 'selfattention')),
         payload: payloadForSave,
         recommendation: bundle.recommendation,
-        preview_tasks: bundle.tasks,
+        preview_tasks: Array.isArray(bundle.all_tasks) && bundle.all_tasks.length ? bundle.all_tasks : bundle.tasks,
       }),
     });
     const data = await res.json();

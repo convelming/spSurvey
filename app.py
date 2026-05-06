@@ -850,6 +850,14 @@ def api_design_issue():
         msg = install_hint or "当前策略未生成可下发题组。"
         return jsonify({"error": msg, "design_type": design_type, "model_state": model_state, "d_error": d_error}), 409
 
+    tpp = _tasks_per_questionnaire_from_design(payload_inner, recommendation, design_type)
+    tasks = _select_tasks_for_questionnaire(
+        tasks,
+        tpp,
+        design_type=design_type,
+        runtime=rec.get("runtime", {}) if isinstance(rec.get("runtime", {}), dict) else {},
+    )
+
     ok = record_design_distribution(
         design_save_name,
         respondent_id=respondent_id,
@@ -894,10 +902,77 @@ def _tasks_per_questionnaire_from_design(payload_inner: dict, recommendation: di
     return 6
 
 
+def _select_tasks_for_questionnaire(
+    tasks: list[dict] | None,
+    tpp: int,
+    *,
+    design_type: str | None = None,
+    runtime: dict | None = None,
+) -> list[dict]:
+    """从题池中截取单份问卷应看到的题目数。
+
+    efficient 设计会先生成多 block 题池，真正展示/下发时应只取一个 block。
+    """
+    task_list = [t for t in (tasks or []) if isinstance(t, dict)]
+    limit = max(1, int(tpp or 1))
+    if len(task_list) <= limit:
+        return task_list[:limit]
+
+    dtype = normalize_design_type(design_type)
+    if dtype != "efficient":
+        return task_list[:limit]
+
+    task_counts = {}
+    if isinstance(runtime, dict):
+        raw_counts = runtime.get("task_issue_counts", {})
+        if isinstance(raw_counts, dict):
+            task_counts = raw_counts
+
+    block_groups: dict[str, list[dict]] = {}
+    block_order: list[str] = []
+    for task in task_list:
+        block_key = str(task.get("block", "")).strip() or "__default__"
+        if block_key not in block_groups:
+            block_groups[block_key] = []
+            block_order.append(block_key)
+        block_groups[block_key].append(task)
+
+    if len(block_groups) <= 1:
+        return task_list[:limit]
+
+    def _block_sort_key(block_key: str) -> tuple[int, str]:
+        try:
+            return (0, f"{int(block_key):08d}")
+        except Exception:
+            return (1, block_key)
+
+    best_block_key = None
+    best_score = None
+    for block_key in sorted(block_order, key=_block_sort_key):
+        block_tasks = block_groups.get(block_key, [])
+        if not block_tasks:
+            continue
+        issue_count = sum(int(task_counts.get(str(t.get("id", "")), 0) or 0) for t in block_tasks)
+        score = (
+            issue_count,
+            0 if len(block_tasks) >= limit else 1,
+            abs(len(block_tasks) - limit),
+            _block_sort_key(block_key),
+        )
+        if best_score is None or score < best_score:
+            best_score = score
+            best_block_key = block_key
+
+    if best_block_key is not None:
+        return block_groups.get(best_block_key, [])[:limit]
+    return task_list[:limit]
+
+
 def _preview_tasks_for_saved_design(rec: dict, payload_inner: dict, design_type: str, safe_name: str) -> dict:
     """只为页面样式预览生成题组，不读取 respondent、不更新权重、不写 distribution_log。"""
     recommendation = rec.get("recommendation", None) if isinstance(rec, dict) else None
     tasks = rec.get("preview_tasks", []) if isinstance(rec.get("preview_tasks", []), list) else []
+    runtime = rec.get("runtime", {}) if isinstance(rec.get("runtime", {}), dict) else {}
     model_state: dict[str, Any] = {
         "preview_only": True,
         "preview_note": "仅用于设计阶段查看题面样式；不绑定 respondent，不记录分发，不更新策略权重。",
@@ -930,7 +1005,7 @@ def _preview_tasks_for_saved_design(rec: dict, payload_inner: dict, design_type:
 
     tpp = _tasks_per_questionnaire_from_design(payload_inner, recommendation, design_type)
     if isinstance(tasks, list) and tpp > 0:
-        tasks = tasks[:tpp]
+        tasks = _select_tasks_for_questionnaire(tasks, tpp, design_type=design_type, runtime=runtime)
     return {
         "tasks": tasks if isinstance(tasks, list) else [],
         "recommendation": recommendation,
