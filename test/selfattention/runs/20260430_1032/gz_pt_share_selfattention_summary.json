@@ -1,0 +1,642 @@
+{
+  "source_design_save_name": "gz_pt_share_variable_universe_v1",
+  "effective_design_type": "selfattention",
+  "design_summary": {
+    "save_name": "gz_pt_share_variable_universe_v1",
+    "stored_type": "efficient",
+    "effective_test_type": "selfattention",
+    "alternatives": [
+      {
+        "name": "bus",
+        "label": "公交车",
+        "variables": [
+          {
+            "alternative": "bus",
+            "name": "total_time",
+            "variable_type": "continuous",
+            "levels": [
+              "18",
+              "22",
+              "26",
+              "30"
+            ],
+            "description": "公交全程时间（含步行到站、候车、车内，分钟）",
+            "beta_default": -0.08,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "wait_time",
+            "variable_type": "continuous",
+            "levels": [
+              "4",
+              "7",
+              "10",
+              "13"
+            ],
+            "description": "公交候车时间（分钟）",
+            "beta_default": -0.12,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "fare",
+            "variable_type": "continuous",
+            "levels": [
+              "2",
+              "3"
+            ],
+            "description": "公交费用（元；广州日班公交基础票价：20公里及以下2元，20公里以上3元）",
+            "beta_default": -0.16,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "service_quality_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "公交服务体验（1差-4好，含准点/拥挤/站点环境）",
+            "beta_default": 0.13,
+            "beta_min": 0,
+            "beta_max": null
+          }
+        ]
+      },
+      {
+        "name": "metro",
+        "label": "地铁",
+        "variables": [
+          {
+            "alternative": "metro",
+            "name": "total_time",
+            "variable_type": "continuous",
+            "levels": [
+              "16",
+              "20",
+              "24",
+              "28"
+            ],
+            "description": "地铁全程时间（含进出站、候车、车内，分钟）",
+            "beta_default": -0.075,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "access_time",
+            "variable_type": "continuous",
+            "levels": [
+              "5",
+              "8",
+              "11",
+              "14"
+            ],
+            "description": "到地铁站接驳/步行时间（分钟）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "fare",
+            "variable_type": "continuous",
+            "levels": [
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "description": "地铁费用（元；按广州地铁最短轨道里程分段计价）",
+            "beta_default": -0.17,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "crowding_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "地铁拥挤程度（1低-4高）",
+            "beta_default": -0.16,
+            "beta_min": null,
+            "beta_max": 0
+          }
+        ]
+      },
+      {
+        "name": "bike_ebike",
+        "label": "自行车/电动自行车/共享单车",
+        "variables": [
+          {
+            "alternative": "bike_ebike",
+            "name": "travel_time",
+            "variable_type": "continuous",
+            "levels": [
+              "14",
+              "17",
+              "20",
+              "23"
+            ],
+            "description": "骑行全程时间（分钟）",
+            "beta_default": -0.08,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "total_cost",
+            "variable_type": "continuous",
+            "levels": [
+              "0",
+              "2",
+              "4",
+              "6"
+            ],
+            "description": "骑行/用车费用（元）",
+            "beta_default": -0.12,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "safety_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "骑行安全感（1低-4高）",
+            "beta_default": 0.12,
+            "beta_min": 0,
+            "beta_max": null
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "weather_exposure_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "受天气影响程度（1低-4高）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          }
+        ]
+      },
+      {
+        "name": "car_ride_hailing",
+        "label": "小汽车/网约车",
+        "variables": [
+          {
+            "alternative": "car_ride_hailing",
+            "name": "travel_time",
+            "variable_type": "continuous",
+            "levels": [
+              "10",
+              "13",
+              "16",
+              "19"
+            ],
+            "description": "小汽车/网约车全程时间（分钟）",
+            "beta_default": -0.07,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "total_cost",
+            "variable_type": "continuous",
+            "levels": [
+              "8",
+              "14",
+              "20",
+              "28"
+            ],
+            "description": "小汽车/网约车总费用（元）",
+            "beta_default": -0.17,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "access_or_parking_time",
+            "variable_type": "continuous",
+            "levels": [
+              "0",
+              "4",
+              "8",
+              "12"
+            ],
+            "description": "等车/找车位时间（分钟）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "comfort_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "舒适便利程度（1低-4高）",
+            "beta_default": 0.1,
+            "beta_min": 0,
+            "beta_max": null
+          }
+        ]
+      }
+    ],
+    "alternative_names": [
+      "bus",
+      "metro",
+      "bike_ebike",
+      "car_ride_hailing"
+    ],
+    "variable_slot_count": 16,
+    "fare_levels": {
+      "bus.fare": [
+        "2",
+        "3"
+      ],
+      "metro.fare": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "bike_ebike.total_cost": [
+        "0",
+        "2",
+        "4",
+        "6"
+      ],
+      "car_ride_hailing.total_cost": [
+        "8",
+        "14",
+        "20",
+        "28"
+      ]
+    },
+    "conditions": [
+      "metro.total_time <= bus.total_time * 1.2",
+      "bike_ebike.travel_time <= bus.total_time * 1.3",
+      "car_ride_hailing.travel_time <= bus.total_time * 1.1",
+      "car_ride_hailing.access_or_parking_time <= car_ride_hailing.travel_time",
+      "car_ride_hailing.total_cost >= bus.fare",
+      "metro.fare >= bus.fare",
+      "bike_ebike.total_cost <= car_ride_hailing.total_cost",
+      "bus.wait_time <= bus.total_time",
+      "metro.access_time <= metro.total_time",
+      "bus.fare >= 2",
+      "bus.fare <= 3",
+      "metro.fare >= 2",
+      "metro.fare <= 5"
+    ],
+    "asc_base_alternative": "bus",
+    "recommendation": {
+      "tasks_per_person": 6,
+      "blocks": 12,
+      "rows": 72,
+      "note": "纸笔/街头调查建议每人6题；实际计算时仍会按约束过滤不可行题组。",
+      "fare_policy_note": "广州公交日班车基础票价采用2/3元；广州地铁按最短轨道里程分段计价，本5km基准场景使用2/3/4/5元作为可解释水平。"
+    },
+    "payload_sample_size": 2000,
+    "payload_target_block_sample": 160,
+    "payload_n_parameters": 19
+  },
+  "generated_rows": 300,
+  "rows_loaded_for_train": 300,
+  "online_rows_planned": 300,
+  "online_rows_limit": null,
+  "online_update_disabled": false,
+  "candidate_pool_size": 120,
+  "candidate_pool_target": 120,
+  "candidate_pool_source": "feasible_combo_pool",
+  "preview_source": "recomputed_efficient_preview",
+  "expert_preview_size": 48,
+  "candidate_expert_overlap": 0,
+  "train_model_state": {
+    "trained": true,
+    "backend": "pytorch_parallel_selfattention",
+    "architecture_mode": "parallel_question_block_generator",
+    "question_generation_mode": "parallel_queries",
+    "context_dim": 48,
+    "slot_dim": 16,
+    "max_questions": 6,
+    "count_range": [
+      6,
+      6
+    ],
+    "count_head_classes": 1,
+    "variable_semantics": "count -> slot_select -> variable_mask -> value",
+    "sampling_semantics": "respondent_target_head -> recommended RP cells for remaining sample collection",
+    "sample_target_dim": 16,
+    "sample_target_cells": [
+      "zone=440103",
+      "zone=440104",
+      "zone=440105",
+      "zone=440106",
+      "zone=440111",
+      "zone=440112",
+      "zone=440113",
+      "zone=440114",
+      "zone=440115",
+      "zone=440117",
+      "zone=440118",
+      "attr_0=female",
+      "attr_0=male",
+      "attr_1=18-30",
+      "attr_1=31-45",
+      "attr_1=46-60"
+    ],
+    "sample_cell_targets": {
+      "zone=440103": 0.09090909,
+      "zone=440104": 0.09090909,
+      "zone=440105": 0.09090909,
+      "zone=440106": 0.09090909,
+      "zone=440111": 0.09090909,
+      "zone=440112": 0.09090909,
+      "zone=440113": 0.09090909,
+      "zone=440114": 0.09090909,
+      "zone=440115": 0.09090909,
+      "zone=440117": 0.09090909,
+      "zone=440118": 0.09090909,
+      "attr_0=female": 0.26458729,
+      "attr_0=male": 0.30182057,
+      "attr_1=18-30": 0.10107381,
+      "attr_1=31-45": 0.21150509,
+      "attr_1=46-60": 0.12101324
+    },
+    "train_samples": 300,
+    "train_epochs": 200,
+    "hidden_dim": 64,
+    "num_heads": 4,
+    "prototype_pool_size": 120,
+    "expert_demo_size": 48,
+    "current_mnl_signal": {},
+    "generated_summary": {
+      "count_probs": [
+        1.0
+      ],
+      "predicted_question_count": 6,
+      "slot_scores": [
+        0.90254,
+        0.902452,
+        0.902448,
+        0.895116,
+        0.895098,
+        0.895089
+      ],
+      "slot_select_scores": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "quality_scores": [
+        0.721542,
+        0.721293,
+        0.721279,
+        0.700332,
+        0.700281,
+        0.700255
+      ],
+      "slot_indices": [
+        2,
+        3,
+        1,
+        5,
+        0,
+        4
+      ],
+      "sampling_recommendation": [
+        {
+          "cell": "attr_0=male",
+          "priority": 0.159915,
+          "needed_n": 32,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "attr_0=female",
+          "priority": 0.13896,
+          "needed_n": 28,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "attr_1=31-45",
+          "priority": 0.112819,
+          "needed_n": 23,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "attr_1=46-60",
+          "priority": 0.059606,
+          "needed_n": 12,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "attr_1=18-30",
+          "priority": 0.055539,
+          "needed_n": 11,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "zone=440118",
+          "priority": 0.047922,
+          "needed_n": 10,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "zone=440115",
+          "priority": 0.046036,
+          "needed_n": 9,
+          "reason": "respondent_target_head_priority"
+        },
+        {
+          "cell": "zone=440104",
+          "priority": 0.045356,
+          "needed_n": 9,
+          "reason": "respondent_target_head_priority"
+        }
+      ]
+    },
+    "sampling_recommendation": [
+      {
+        "cell": "attr_0=male",
+        "priority": 0.159915,
+        "needed_n": 32,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "attr_0=female",
+        "priority": 0.13896,
+        "needed_n": 28,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "attr_1=31-45",
+        "priority": 0.112819,
+        "needed_n": 23,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "attr_1=46-60",
+        "priority": 0.059606,
+        "needed_n": 12,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "attr_1=18-30",
+        "priority": 0.055539,
+        "needed_n": 11,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "zone=440118",
+        "priority": 0.047922,
+        "needed_n": 10,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "zone=440115",
+        "priority": 0.046036,
+        "needed_n": 9,
+        "reason": "respondent_target_head_priority"
+      },
+      {
+        "cell": "zone=440104",
+        "priority": 0.045356,
+        "needed_n": 9,
+        "reason": "respondent_target_head_priority"
+      }
+    ]
+  },
+  "train_iteration_log": [
+    {
+      "epoch": 1,
+      "loss": 1.788276,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.349222,
+      "mask_loss": 0.534291,
+      "value_loss": 0.129653,
+      "score_loss": 0.087234,
+      "sample_target_loss": 2.969959,
+      "samples": 300
+    },
+    {
+      "epoch": 41,
+      "loss": 0.891135,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.0,
+      "mask_loss": 0.0,
+      "value_loss": 0.105028,
+      "score_loss": 0.007107,
+      "sample_target_loss": 2.540862,
+      "samples": 300
+    },
+    {
+      "epoch": 81,
+      "loss": 0.883923,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.0,
+      "mask_loss": 0.0,
+      "value_loss": 0.103403,
+      "score_loss": 0.000235,
+      "sample_target_loss": 2.532486,
+      "samples": 300
+    },
+    {
+      "epoch": 121,
+      "loss": 0.889134,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.0,
+      "mask_loss": 0.0,
+      "value_loss": 0.103403,
+      "score_loss": 0.000229,
+      "sample_target_loss": 2.549864,
+      "samples": 300
+    },
+    {
+      "epoch": 161,
+      "loss": 0.881619,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.0,
+      "mask_loss": 0.0,
+      "value_loss": 0.103403,
+      "score_loss": 0.000129,
+      "sample_target_loss": 2.524945,
+      "samples": 300
+    },
+    {
+      "epoch": 200,
+      "loss": 0.878823,
+      "count_loss": 0.0,
+      "slot_select_loss": 0.0,
+      "mask_loss": 0.0,
+      "value_loss": 0.103403,
+      "score_loss": 0.000453,
+      "sample_target_loss": 2.515196,
+      "samples": 300
+    }
+  ],
+  "online_update_steps": 300,
+  "final_policy_version": 300,
+  "row_meta": {
+    "attr_dim_names": [
+      "attr_0",
+      "attr_1"
+    ],
+    "attr_categories": [
+      [
+        "female",
+        "male"
+      ],
+      [
+        "18-30",
+        "31-45",
+        "46-60",
+        "60+"
+      ]
+    ],
+    "n_rows": 300,
+    "n_rows_source": "selfattention.train_respondents"
+  },
+  "timing": {
+    "total_elapsed_seconds": 150.981,
+    "total_elapsed_hms": "00:02:31",
+    "online_updates_elapsed_seconds": 19.738,
+    "online_updates_elapsed_hms": "00:00:20",
+    "timer_interval_seconds": 30.0
+  },
+  "outputs": {
+    "rows_jsonl": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260430_1032/gz_pt_share_selfattention_rows.jsonl",
+    "trace_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260430_1032/gz_pt_share_selfattention_trace.json",
+    "summary_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260430_1032/gz_pt_share_selfattention_summary.json",
+    "candidate_pool_json": "/Users/convel/PycharmProjects/spSurvey/test/selfattention/runs/20260430_1032/gz_pt_share_selfattention_candidate_pool.json"
+  }
+}

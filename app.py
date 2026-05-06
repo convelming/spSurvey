@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request
 
 from engine.config import DATA_DIR, DEFAULT_CONFIG, DEFAULT_RP_SCHEMA
 from engine import dynamicPPO as dyppo_engine
@@ -26,6 +26,7 @@ from engine.storage import append_jsonl, load_json, load_jsonl, save_json, utc_n
 
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
 DOCS_DIR = Path(__file__).resolve().parent / "docs"
 DOCS_FILE_ORDER = (
@@ -2866,12 +2867,18 @@ def survey_trip_diary():
 
 @app.route("/survey/sp")
 def survey_sp():
-    return render_template("sp_questionnaire.html")
+    resp = make_response(render_template("sp_questionnaire.html"))
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    return resp
 
 
 @app.route("/survey/sp-design")
 def survey_sp_design():
-    return render_template("sp_design.html")
+    resp = make_response(render_template("sp_design.html"))
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    return resp
 
 
 @app.route("/survey/map")

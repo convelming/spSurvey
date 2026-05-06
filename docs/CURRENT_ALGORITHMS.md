@@ -46,13 +46,13 @@
     - `-> sampling_recommendation`
   - `parallel block decoder`
     - `Q_slot^(0) ∈ R^[B,T_max,d_model]`
-    - `-> Question-Set Self-Attention`，不使用 causal masked attention
+    - `-> Question-Set Self-Attention`，建模同一 block 内候选题位关系
     - `-> Cross-Attention(H_enc)`
     - `-> FFN`
     - `-> count / slot_select / mask / value / score heads`
   - 口径说明
     - `X_hist` 对应前 `n-1` 份已完成问卷 / blocks 提炼出的历史 SP 上下文
-    - `question queries` 是并行候选 slot，不是 shifted-right 序列，也不是最终页面题号
+    - `question queries` 是并行候选 slot，表示模型内部候选题位，不等于最终页面题号
     - `count_head` 决定本次问卷题数
     - `slot_select_head` 从候选 slot 中选出最终进入问卷的题集合
     - `mask_head` 决定题内变量结构

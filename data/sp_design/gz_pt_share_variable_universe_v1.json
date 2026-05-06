@@ -1,15 +1,25 @@
 {
   "save_name": "gz_pt_share_variable_universe_v1",
-  "type": "efficient",
-  "saved_at": "2026-04-29T09:08:29.063259+00:00",
+  "type": "dyppo",
+  "saved_at": "2026-04-30T09:29:26.181325+00:00",
   "payload": {
     "save_name": "gz_pt_share_variable_universe_v1",
     "sample_size": 2000,
-    "design_type": "efficient",
+    "design_type": "dyppo",
     "design_options": {
       "efficient": {
         "tasks_per_person": 6,
         "row_exchange_iterations": 300
+      },
+      "dyppo": {
+        "tasks_per_round": 6,
+        "batch_size": 64,
+        "explore_epsilon": 0.1,
+        "reward_weight_d_error": 1.0,
+        "train_respondents": 60,
+        "train_epochs": 20,
+        "train_lr": 0.03,
+        "target_kl": 0.1
       }
     },
     "n_parameters": 19,
@@ -128,10 +138,10 @@
       "asc_base_alternative": "bus",
       "sp_intro_text": "本场景用于研究广州公交客流减少的原因及敏感性：在给定一次约5km左右的城市出行情境下，比较公交与地铁、骑行/电动自行车、小汽车/网约车等替代方式。为适配街头调查和纸笔问卷，每个方式仅展示4个核心可感知变量。",
       "conditions": [
-        "metro.total_time <= bus.total_time * 1.2",
-        "bike_ebike.travel_time <= bus.total_time * 1.3",
-        "car_ride_hailing.travel_time <= bus.total_time * 1.1",
-        "car_ride_hailing.access_or_parking_time <= car_ride_hailing.travel_time",
+        "metro.total_time <= bus.total_time * 1.35",
+        "bike_ebike.travel_time <= bus.total_time * 1.5",
+        "car_ride_hailing.travel_time <= bus.total_time * 1.25",
+        "car_ride_hailing.access_or_parking_time <= car_ride_hailing.travel_time * 1.2",
         "car_ride_hailing.total_cost >= bus.fare",
         "metro.fare >= bus.fare",
         "bike_ebike.total_cost <= car_ride_hailing.total_cost",
@@ -394,18 +404,175 @@
   },
   "recommendation": {
     "tasks_per_person": 6,
-    "blocks": 12,
-    "rows": 72,
-    "note": "纸笔/街头调查建议每人6题；实际计算时仍会按约束过滤不可行题组。",
+    "blocks": 1,
+    "rows": 6,
+    "note": "dynamicPPO默认每位受访者生成1个6题block；条件约束已放宽以提高feasible combo pool覆盖率。",
     "fare_policy_note": "广州公交日班车基础票价采用2/3元；广州地铁按最短轨道里程分段计价，本5km基准场景使用2/3/4/5元作为可解释水平。"
   },
   "preview_tasks": [],
   "runtime": {
-    "distribution_log": [],
-    "distribution_count": 0,
-    "task_issue_counts": {},
+    "distribution_log": [
+      {
+        "dedupe_key": "api/design/issue||issue_e5203d376454|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_e5203d376454",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:28:19.037642+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_d00b75505741|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_d00b75505741",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:29:06.209808+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_5a42dfec28f1|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_5a42dfec28f1",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:29:26.838072+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_5401abcd3bc4|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_5401abcd3bc4",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:29:47.459517+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_339212a05758|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_339212a05758",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:30:07.773418+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_69b4f5b89e98|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_69b4f5b89e98",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:53:03.134672+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_dac11e5cdb73|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_dac11e5cdb73",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:53:29.253853+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      },
+      {
+        "dedupe_key": "api/design/issue||issue_c984d2979566|R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submission_id": null,
+        "assignment_id": "issue_c984d2979566",
+        "respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "source": "api/design/issue",
+        "issued_to_respondent_id": "R20260413175727_MACCHRPC_MGKM_VYRO",
+        "submitted_at": "2026-05-06T07:53:49.766909+00:00",
+        "task_ids": [
+          "preview_b1_r1",
+          "preview_b1_r2",
+          "preview_b1_r3",
+          "preview_b1_r4",
+          "preview_b1_r5",
+          "preview_b1_r6"
+        ],
+        "choices": {}
+      }
+    ],
+    "distribution_count": 8,
+    "task_issue_counts": {
+      "preview_b1_r1": 8,
+      "preview_b1_r2": 8,
+      "preview_b1_r3": 8,
+      "preview_b1_r4": 8,
+      "preview_b1_r5": 8,
+      "preview_b1_r6": 8
+    },
     "choice_counts": {},
-    "last_distributed_at": null,
-    "note": "Bus ridership decline sensitivity design. Runtime cleared because alternatives/variables changed."
+    "last_distributed_at": "2026-05-06T07:53:49.766909+00:00",
+    "note": "Bus ridership decline sensitivity design. Default strategy switched to dynamicPPO; constraints relaxed for feasible combo coverage.",
+    "model_weights": {
+      "updated_at": "2026-05-06T07:54:10.313315+00:00",
+      "format": "pt",
+      "weight_file": "gz_pt_share_variable_universe_v1.pt"
+    }
   }
 }

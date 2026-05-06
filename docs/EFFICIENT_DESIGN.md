@@ -282,9 +282,9 @@ bus.wait < car.time < 60
 
 ## 6. 初始题组的构造方式
 
-### 6.1 不是在 full factorial 组合空间上直接求解全局最优
+### 6.1 初始设计与局部改进流程
 
-当前 `_compute_efficient()` 的起点不是“先枚举全部 full factorial 组合，再在整个离散空间上直接求解全局最优”，而是采用“先构造初始设计，再做局部改进”的两阶段流程：
+当前 `_compute_efficient()` 采用“先构造初始设计，再做局部改进”的两阶段流程：
 
 1. 依据 `rows = tasks_per_person × blocks` 确定当前需要生成的题目总数。
 2. 调用 `_build_tasks_from_spec(spec, rows, seed)` 构造一组初始题组。
@@ -316,15 +316,15 @@ level_index = (i + v_idx + random_offset) mod len(levels)
 - 它可重复，因为随机种子固定时输出可复现
 - 它本身不是一个优化过程，而只是为后续 D-error 改进提供可行起点
 
-### 6.3 为什么不直接从 full factorial 空间做全局优化
+### 6.3 full factorial 空间与当前局部搜索实现
 
-原因在于，当前 `efficient` 的实现目标是为前端页面提供可在有限时间内生成的可行设计，而不是在 full factorial 离散空间中执行高计算量的全局组合优化。
+当前 `efficient` 的实现目标是为前端页面提供可在有限时间内生成的可行设计。完整 full factorial 离散空间作为候选组合来源，实际求解采用局部搜索路径：
 
-因此，当前实现采用的是：
+当前实现采用的是：
 - 先以构造式方法生成一个可行初始设计
 - 再通过局部替换逐步降低 D-error
 
-这更准确地说应理解为“基于初始设计的局部搜索”，而不是“对完整 full factorial 空间的一步式全局最优求解”。
+该流程可理解为“基于初始设计的局部搜索”：先得到可行起点，再通过候选替换持续改进 D-error。
 
 ## 7. rows 和 blocks 是怎么定的
 

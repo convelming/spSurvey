@@ -1,0 +1,9 @@
+{
+  "runtime": {
+    "model_weights": {
+      "updated_at": "2026-05-06T07:00:30.959477+00:00",
+      "format": "pt",
+      "weight_file": "sp_efficient_dyppo.pt"
+    }
+  }
+}

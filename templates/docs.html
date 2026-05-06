@@ -55,10 +55,10 @@
         新增采样控制分支：`respondent_target_head` 根据总体目标分布、当前样本覆盖和模型状态，输出下一阶段建议补充的 RP cell。
       </div>
       <div class="hint" style="margin-top:8px;">
-        统一口径：对 respondent 而言，SP 问卷始终是整份 block 一次性生成、一次性发放、一次性填写；问卷内题目按集合处理，不按时序序列处理。
+        统一口径：对 respondent 而言，SP 问卷始终以整份 block 为生成单位；文档只说明模块作用、维度变化、功能边界和前后衔接。
       </div>
       <div class="hint" style="margin-top:8px;">
-        Decoder attention 已统一为 `Question-Set Self-Attention`：不再使用 causal masked attention；`mask_head` 只表示题内变量是否激活。
+        Decoder attention 模块采用 `Question-Set Self-Attention`：用于建模同一 block 内候选题位之间的互补、重复和覆盖关系；`mask_head` 表示题内变量是否激活。
       </div>
       <div class="docs-toc">
         {% for doc in docs %}

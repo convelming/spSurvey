@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-PROJECT_DIR = Path("/")
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
@@ -552,7 +552,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 
 
 

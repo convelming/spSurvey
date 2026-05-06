@@ -1,0 +1,4056 @@
+{
+  "design_save_name": "gz_pt_share_variable_universe_v1",
+  "design_summary": {
+    "save_name": "gz_pt_share_variable_universe_v1",
+    "stored_type": "efficient",
+    "effective_test_type": "selfattention",
+    "alternatives": [
+      {
+        "name": "bus",
+        "label": "公交车",
+        "variables": [
+          {
+            "alternative": "bus",
+            "name": "total_time",
+            "variable_type": "continuous",
+            "levels": [
+              "18",
+              "22",
+              "26",
+              "30"
+            ],
+            "description": "公交全程时间（含步行到站、候车、车内，分钟）",
+            "beta_default": -0.08,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "wait_time",
+            "variable_type": "continuous",
+            "levels": [
+              "4",
+              "7",
+              "10",
+              "13"
+            ],
+            "description": "公交候车时间（分钟）",
+            "beta_default": -0.12,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "fare",
+            "variable_type": "continuous",
+            "levels": [
+              "2",
+              "3"
+            ],
+            "description": "公交费用（元；广州日班公交基础票价：20公里及以下2元，20公里以上3元）",
+            "beta_default": -0.16,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bus",
+            "name": "service_quality_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "公交服务体验（1差-4好，含准点/拥挤/站点环境）",
+            "beta_default": 0.13,
+            "beta_min": 0,
+            "beta_max": null
+          }
+        ]
+      },
+      {
+        "name": "metro",
+        "label": "地铁",
+        "variables": [
+          {
+            "alternative": "metro",
+            "name": "total_time",
+            "variable_type": "continuous",
+            "levels": [
+              "16",
+              "20",
+              "24",
+              "28"
+            ],
+            "description": "地铁全程时间（含进出站、候车、车内，分钟）",
+            "beta_default": -0.075,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "access_time",
+            "variable_type": "continuous",
+            "levels": [
+              "5",
+              "8",
+              "11",
+              "14"
+            ],
+            "description": "到地铁站接驳/步行时间（分钟）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "fare",
+            "variable_type": "continuous",
+            "levels": [
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "description": "地铁费用（元；按广州地铁最短轨道里程分段计价）",
+            "beta_default": -0.17,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "metro",
+            "name": "crowding_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "地铁拥挤程度（1低-4高）",
+            "beta_default": -0.16,
+            "beta_min": null,
+            "beta_max": 0
+          }
+        ]
+      },
+      {
+        "name": "bike_ebike",
+        "label": "自行车/电动自行车/共享单车",
+        "variables": [
+          {
+            "alternative": "bike_ebike",
+            "name": "travel_time",
+            "variable_type": "continuous",
+            "levels": [
+              "14",
+              "17",
+              "20",
+              "23"
+            ],
+            "description": "骑行全程时间（分钟）",
+            "beta_default": -0.08,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "total_cost",
+            "variable_type": "continuous",
+            "levels": [
+              "0",
+              "2",
+              "4",
+              "6"
+            ],
+            "description": "骑行/用车费用（元）",
+            "beta_default": -0.12,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "safety_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "骑行安全感（1低-4高）",
+            "beta_default": 0.12,
+            "beta_min": 0,
+            "beta_max": null
+          },
+          {
+            "alternative": "bike_ebike",
+            "name": "weather_exposure_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "受天气影响程度（1低-4高）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          }
+        ]
+      },
+      {
+        "name": "car_ride_hailing",
+        "label": "小汽车/网约车",
+        "variables": [
+          {
+            "alternative": "car_ride_hailing",
+            "name": "travel_time",
+            "variable_type": "continuous",
+            "levels": [
+              "10",
+              "13",
+              "16",
+              "19"
+            ],
+            "description": "小汽车/网约车全程时间（分钟）",
+            "beta_default": -0.07,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "total_cost",
+            "variable_type": "continuous",
+            "levels": [
+              "8",
+              "14",
+              "20",
+              "28"
+            ],
+            "description": "小汽车/网约车总费用（元）",
+            "beta_default": -0.17,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "access_or_parking_time",
+            "variable_type": "continuous",
+            "levels": [
+              "0",
+              "4",
+              "8",
+              "12"
+            ],
+            "description": "等车/找车位时间（分钟）",
+            "beta_default": -0.1,
+            "beta_min": null,
+            "beta_max": 0
+          },
+          {
+            "alternative": "car_ride_hailing",
+            "name": "comfort_level",
+            "variable_type": "ordinal",
+            "levels": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "description": "舒适便利程度（1低-4高）",
+            "beta_default": 0.1,
+            "beta_min": 0,
+            "beta_max": null
+          }
+        ]
+      }
+    ],
+    "alternative_names": [
+      "bus",
+      "metro",
+      "bike_ebike",
+      "car_ride_hailing"
+    ],
+    "variable_slot_count": 16,
+    "fare_levels": {
+      "bus.fare": [
+        "2",
+        "3"
+      ],
+      "metro.fare": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "bike_ebike.total_cost": [
+        "0",
+        "2",
+        "4",
+        "6"
+      ],
+      "car_ride_hailing.total_cost": [
+        "8",
+        "14",
+        "20",
+        "28"
+      ]
+    },
+    "conditions": [
+      "metro.total_time <= bus.total_time * 1.2",
+      "bike_ebike.travel_time <= bus.total_time * 1.3",
+      "car_ride_hailing.travel_time <= bus.total_time * 1.1",
+      "car_ride_hailing.access_or_parking_time <= car_ride_hailing.travel_time",
+      "car_ride_hailing.total_cost >= bus.fare",
+      "metro.fare >= bus.fare",
+      "bike_ebike.total_cost <= car_ride_hailing.total_cost",
+      "bus.wait_time <= bus.total_time",
+      "metro.access_time <= metro.total_time",
+      "bus.fare >= 2",
+      "bus.fare <= 3",
+      "metro.fare >= 2",
+      "metro.fare <= 5"
+    ],
+    "asc_base_alternative": "bus",
+    "recommendation": {
+      "tasks_per_person": 6,
+      "blocks": 12,
+      "rows": 72,
+      "note": "纸笔/街头调查建议每人6题；实际计算时仍会按约束过滤不可行题组。",
+      "fare_policy_note": "广州公交日班车基础票价采用2/3元；广州地铁按最短轨道里程分段计价，本5km基准场景使用2/3/4/5元作为可解释水平。"
+    },
+    "payload_sample_size": 2000,
+    "payload_target_block_sample": 160,
+    "payload_n_parameters": 19
+  },
+  "preview_source": "recomputed_efficient_preview",
+  "candidate_pool_source": "feasible_combo_pool",
+  "candidate_pool_size": 120,
+  "expert_preview_size": 48,
+  "overlap_with_expert": 0,
+  "candidate_pool": [
+    {
+      "idx": 1,
+      "sig": "4a9820d415d613c8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 2,
+      "sig": "18d58b646a1573de",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 3,
+      "sig": "f345efbb9e20dc50",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 4,
+      "sig": "cff289e8d6889299",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 5,
+      "sig": "13706f92d9b3c441",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 6,
+      "sig": "2c832cee1da56e13",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 7,
+      "sig": "2b97e8e1392de75d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 8,
+      "sig": "e919db7aa6dc999c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 9,
+      "sig": "02d69ba162f238b9",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "3",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 10,
+      "sig": "36b37076d380b4f7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 11,
+      "sig": "4d2c19622507896e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 12,
+      "sig": "368106178b2e255c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 13,
+      "sig": "b1c33e606241683a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 14,
+      "sig": "81d77750d5d5acb5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 15,
+      "sig": "15274fabd6db8467",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 16,
+      "sig": "2891ea4c3fdce5a2",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 17,
+      "sig": "5f50c3714cecc5d4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 18,
+      "sig": "cb47b590f0cbcac1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 19,
+      "sig": "4e3300e5f28e8cab",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 20,
+      "sig": "7f060a93ffd13c66",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 21,
+      "sig": "c62322d684a9773c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 22,
+      "sig": "2dc0f6c134d46687",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 23,
+      "sig": "4ba4be66bf7cae48",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 24,
+      "sig": "48c1d895be077547",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 25,
+      "sig": "038bc034d52431bd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 26,
+      "sig": "d93bd68c6b8f5e31",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 27,
+      "sig": "bafdc6602599096e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 28,
+      "sig": "d6642a57478c4d7a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 29,
+      "sig": "958bc4af3b59cd48",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 30,
+      "sig": "1a52874b0de10df6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 31,
+      "sig": "c2a7c8725adb6133",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "3",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "3",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 32,
+      "sig": "4510119b04815c07",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "4",
+          "safety_level": "2",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 33,
+      "sig": "1181acf1b8734a9c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 34,
+      "sig": "6026b23ec5e2dcbd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 35,
+      "sig": "218d7540d8797e7a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 36,
+      "sig": "43dcc62c371940f9",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 37,
+      "sig": "1048558d67131bd3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 38,
+      "sig": "2dad54b61be05df7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 39,
+      "sig": "c47cadbdffed54dc",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 40,
+      "sig": "88970165dbb903a2",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 41,
+      "sig": "24c8854ff109ff9b",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 42,
+      "sig": "b0ae1f0c7bd62467",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 43,
+      "sig": "1ede80c6abcf12b0",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 44,
+      "sig": "d23b6b4ac77b746f",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "28",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 45,
+      "sig": "f8dafa9813bfcab6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 46,
+      "sig": "b170423adad3f689",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 47,
+      "sig": "04af33ebf2ad2891",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 48,
+      "sig": "f356efb230ca9e85",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 49,
+      "sig": "e6b0d0e526e3345d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 50,
+      "sig": "ddb9eca5bbe331bd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 51,
+      "sig": "d2f3f58b0e309204",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 52,
+      "sig": "e764fa6e4da42cc6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 53,
+      "sig": "6156cf55f8b387de",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 54,
+      "sig": "527ce24380390a96",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "14",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 55,
+      "sig": "37e0461fbba0f369",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 56,
+      "sig": "2be7bfeff8784fad",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 57,
+      "sig": "35779d2ee982b701",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 58,
+      "sig": "29703d631c0026d8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 59,
+      "sig": "b5306bbdbf586508",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 60,
+      "sig": "af892d6bb038135c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 61,
+      "sig": "5713723487e32df5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 62,
+      "sig": "da6c35bd2735dfb4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 63,
+      "sig": "7ae7a0e4391f57a6",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 64,
+      "sig": "df7d1c981965e610",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 65,
+      "sig": "7a6ceb6dce6a8e40",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 66,
+      "sig": "b816a46933ad35ce",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 67,
+      "sig": "e851dc61d70f8d98",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 68,
+      "sig": "45feaabaa29bdfd5",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 69,
+      "sig": "85fffbc14b11d26a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 70,
+      "sig": "ea8dca62f37bae3d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 71,
+      "sig": "65095f4ae47c7e4d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 72,
+      "sig": "b1d89a3c59a13740",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 73,
+      "sig": "406e9af69976f2ab",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "3",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "12",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 74,
+      "sig": "cc1f71fec4811751",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "2",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 75,
+      "sig": "785ef98a8fa3218c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 76,
+      "sig": "b872a7a362c8122d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "3",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 77,
+      "sig": "5c6e49b61b8105cd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 78,
+      "sig": "65f26c33307279b3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 79,
+      "sig": "fda89265790ec91d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "14",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 80,
+      "sig": "98ca3e7aa4a089c8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "3",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 81,
+      "sig": "8785e2004823380b",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 82,
+      "sig": "73c8f4c60f4314b4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 83,
+      "sig": "49ae7174a53872bd",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 84,
+      "sig": "dceb0f83af5ecf95",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "5",
+          "fare": "3",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "0",
+          "safety_level": "2",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 85,
+      "sig": "abefec003d33ac8e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 86,
+      "sig": "a5caa12e2c6e1df7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 87,
+      "sig": "f2b51b6702c42391",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "0",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 88,
+      "sig": "920311c0568dfbed",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 89,
+      "sig": "e0b337cedce112f7",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 90,
+      "sig": "c59ea70f2cb88b53",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "2",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 91,
+      "sig": "31b674bbcf94d6ab",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "28",
+          "access_or_parking_time": "12",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 92,
+      "sig": "8568d01441b16392",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 93,
+      "sig": "b652b800a1c9ac1c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 94,
+      "sig": "faeddb48de75f120",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 95,
+      "sig": "2831b9767700351d",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "20",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 96,
+      "sig": "3827c2e2ed71bc8c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 97,
+      "sig": "17292a2d3151c209",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 98,
+      "sig": "5ee3bc264f856b70",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 99,
+      "sig": "7ad39e56bf01aeb1",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 100,
+      "sig": "c98b5e15b799dca8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "10",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "2",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "8",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 101,
+      "sig": "d5830e90e9cd7251",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 102,
+      "sig": "7995258e2e4a44e4",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "2",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 103,
+      "sig": "93ef22ca3d8b9783",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 104,
+      "sig": "5bd799263b2e7477",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 105,
+      "sig": "337c9edf11138a24",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "5",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 106,
+      "sig": "5a5242fe2fa0050c",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "4",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "3",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 107,
+      "sig": "d67ca175663470bf",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 108,
+      "sig": "1ba46f478d0315c8",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "4",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "8",
+          "access_or_parking_time": "12",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 109,
+      "sig": "fa25015b5ac77c35",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "30",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "28",
+          "access_time": "5",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "0",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 110,
+      "sig": "26d2c71d6f02a550",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "24",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "2"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "1",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 111,
+      "sig": "d4a5ed294f087f5a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "1"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "4",
+          "safety_level": "3",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 112,
+      "sig": "0647b357a6eebb01",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "14",
+          "total_cost": "2",
+          "safety_level": "1",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "4",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 113,
+      "sig": "d3d85010f9f8eda3",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "22",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "4"
+        },
+        "car_ride_hailing": {
+          "travel_time": "19",
+          "total_cost": "14",
+          "access_or_parking_time": "12",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 114,
+      "sig": "c0c3b1b465f81946",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "18",
+          "wait_time": "13",
+          "fare": "3",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "4",
+          "crowding_level": "4"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "0",
+          "safety_level": "1",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "8",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 115,
+      "sig": "05718e77f5f9cdeb",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "11",
+          "fare": "4",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "17",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "14",
+          "access_or_parking_time": "0",
+          "comfort_level": "3"
+        }
+      }
+    },
+    {
+      "idx": 116,
+      "sig": "b6674262f7183bee",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "13",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "3"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "4",
+          "safety_level": "4",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "13",
+          "total_cost": "20",
+          "access_or_parking_time": "0",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 117,
+      "sig": "a0247dd383f831be",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "2",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "2"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "20",
+          "access_or_parking_time": "4",
+          "comfort_level": "2"
+        }
+      }
+    },
+    {
+      "idx": 118,
+      "sig": "7921de6549165656",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "2"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "8",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "28",
+          "access_or_parking_time": "8",
+          "comfort_level": "1"
+        }
+      }
+    },
+    {
+      "idx": 119,
+      "sig": "63683c302b27e20e",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "10",
+          "fare": "2",
+          "service_quality_level": "3"
+        },
+        "metro": {
+          "total_time": "20",
+          "access_time": "14",
+          "fare": "3",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "20",
+          "total_cost": "6",
+          "safety_level": "3",
+          "weather_exposure_level": "3"
+        },
+        "car_ride_hailing": {
+          "travel_time": "16",
+          "total_cost": "28",
+          "access_or_parking_time": "12",
+          "comfort_level": "4"
+        }
+      }
+    },
+    {
+      "idx": 120,
+      "sig": "0d9a877a4f68cc7a",
+      "is_in_expert_preview": false,
+      "alternatives": {
+        "bus": {
+          "total_time": "26",
+          "wait_time": "7",
+          "fare": "3",
+          "service_quality_level": "4"
+        },
+        "metro": {
+          "total_time": "16",
+          "access_time": "14",
+          "fare": "5",
+          "crowding_level": "1"
+        },
+        "bike_ebike": {
+          "travel_time": "23",
+          "total_cost": "2",
+          "safety_level": "2",
+          "weather_exposure_level": "1"
+        },
+        "car_ride_hailing": {
+          "travel_time": "10",
+          "total_cost": "14",
+          "access_or_parking_time": "8",
+          "comfort_level": "4"
+        }
+      }
+    }
+  ]
+}

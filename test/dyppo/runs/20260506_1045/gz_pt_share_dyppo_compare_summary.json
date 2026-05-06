@@ -1,0 +1,341 @@
+{
+  "config_path": "/Users/convel/PycharmProjects/spSurvey/data/sp_design/gz_pt_share_variable_universe_v1.json",
+  "run_dir": "/Users/convel/PycharmProjects/spSurvey/test/dyppo/runs/20260506_1045",
+  "elapsed_seconds": 201.061,
+  "summaries": [
+    {
+      "mode": "saved",
+      "started_at": "2026-05-06T10:45:53",
+      "config_path": "/Users/convel/PycharmProjects/spSurvey/data/sp_design/gz_pt_share_variable_universe_v1.json",
+      "torch_available": true,
+      "status": "ok",
+      "design_type": "dyppo",
+      "save_name": "gz_pt_share_variable_universe_v1",
+      "alternatives": [
+        "bus",
+        "metro",
+        "bike_ebike",
+        "car_ride_hailing"
+      ],
+      "variable_counts": {
+        "bus": 4,
+        "metro": 4,
+        "bike_ebike": 4,
+        "car_ride_hailing": 4
+      },
+      "dyppo_options": {
+        "tasks_per_round": 6,
+        "batch_size": 64,
+        "explore_epsilon": 0.1,
+        "reward_weight_d_error": 1.0,
+        "train_respondents": 60,
+        "train_epochs": 20,
+        "train_lr": 0.03,
+        "target_kl": 0.1
+      },
+      "target_block_sample": 160,
+      "full_combo_count": 2147483648,
+      "condition_sample": {
+        "sample_rows": 960,
+        "passed": 793,
+        "pass_rate": 0.826,
+        "conditions_count": 13
+      },
+      "candidate_pool_target": 120,
+      "candidate_pool_size": 120,
+      "teacher_rows": 63,
+      "teacher_d_error": 0.130004,
+      "generated_rows": 6,
+      "generated_d_error": 28.771347,
+      "generated_preview": [
+        {
+          "id": "preview_b1_r1",
+          "block": 1,
+          "row_in_block": 1,
+          "alternatives": {
+            "bus": {
+              "total_time": "26",
+              "wait_time": "7",
+              "fare": "3",
+              "service_quality_level": "2"
+            },
+            "metro": {
+              "total_time": "16",
+              "access_time": "11",
+              "fare": "4",
+              "crowding_level": "1"
+            },
+            "bike_ebike": {
+              "travel_time": "17",
+              "total_cost": "4",
+              "safety_level": "4",
+              "weather_exposure_level": "1"
+            },
+            "car_ride_hailing": {
+              "travel_time": "16",
+              "total_cost": "14",
+              "access_or_parking_time": "0",
+              "comfort_level": "3"
+            }
+          }
+        },
+        {
+          "id": "preview_b1_r2",
+          "block": 1,
+          "row_in_block": 2,
+          "alternatives": {
+            "bus": {
+              "total_time": "30",
+              "wait_time": "4",
+              "fare": "2",
+              "service_quality_level": "4"
+            },
+            "metro": {
+              "total_time": "20",
+              "access_time": "5",
+              "fare": "5",
+              "crowding_level": "3"
+            },
+            "bike_ebike": {
+              "travel_time": "17",
+              "total_cost": "0",
+              "safety_level": "3",
+              "weather_exposure_level": "1"
+            },
+            "car_ride_hailing": {
+              "travel_time": "10",
+              "total_cost": "20",
+              "access_or_parking_time": "12",
+              "comfort_level": "3"
+            }
+          }
+        },
+        {
+          "id": "preview_b1_r3",
+          "block": 1,
+          "row_in_block": 3,
+          "alternatives": {
+            "bus": {
+              "total_time": "26",
+              "wait_time": "10",
+              "fare": "2",
+              "service_quality_level": "4"
+            },
+            "metro": {
+              "total_time": "24",
+              "access_time": "8",
+              "fare": "5",
+              "crowding_level": "3"
+            },
+            "bike_ebike": {
+              "travel_time": "23",
+              "total_cost": "6",
+              "safety_level": "2",
+              "weather_exposure_level": "2"
+            },
+            "car_ride_hailing": {
+              "travel_time": "19",
+              "total_cost": "8",
+              "access_or_parking_time": "8",
+              "comfort_level": "4"
+            }
+          }
+        }
+      ],
+      "iteration_log_count": 2,
+      "iteration_log_head": [
+        {
+          "epoch": 1,
+          "loss": 0.294907,
+          "policy_loss": 0.054877,
+          "value_loss": 0.573666,
+          "entropy": 4.680274,
+          "approx_kl": 0.10413,
+          "clip_frac": 0.535937,
+          "mean_reward": 0.352612,
+          "episodes": 60,
+          "steps": 360
+        },
+        {
+          "epoch": 1,
+          "event": "early_stop_target_kl",
+          "target_kl": 0.1,
+          "approx_kl": 0.10413
+        }
+      ],
+      "iteration_log_tail": [
+        {
+          "epoch": 1,
+          "loss": 0.294907,
+          "policy_loss": 0.054877,
+          "value_loss": 0.573666,
+          "entropy": 4.680274,
+          "approx_kl": 0.10413,
+          "clip_frac": 0.535937,
+          "mean_reward": 0.352612,
+          "episodes": 60,
+          "steps": 360
+        },
+        {
+          "epoch": 1,
+          "event": "early_stop_target_kl",
+          "target_kl": 0.1,
+          "approx_kl": 0.10413
+        }
+      ],
+      "model_state": {
+        "trained": true,
+        "backend": "pytorch",
+        "input_dim": 22,
+        "output_dim": 120,
+        "candidate_pool_size": 120,
+        "training_data_source": "synthetic_popsim_rollout",
+        "rows_used": 0,
+        "rollout_episodes": 60,
+        "rollout_steps": 360,
+        "mean_episode_reward": 0.21510484686490416,
+        "train_samples": 360,
+        "train_epochs": 20,
+        "gamma": 0.99,
+        "gae_lambda": 0.95,
+        "clip_eps": 0.2,
+        "value_coef": 0.5,
+        "entropy_coef": 0.01,
+        "batch_size": 64,
+        "target_kl": 0.1,
+        "epsilon": 0.1,
+        "expert_overlap": 0,
+        "expert_prior_weight": 0.0,
+        "active_bound_mask_params": 0,
+        "bound_masked_candidates": 0,
+        "bound_mask_min_factor": 1.0,
+        "scoring_state_source": "synthetic_respondent",
+        "attr_dim_names": [
+          "attr_0",
+          "attr_1"
+        ],
+        "attr_categories": [
+          [
+            "female",
+            "male"
+          ],
+          [
+            "18-30",
+            "31-45",
+            "46-60",
+            "60+"
+          ]
+        ],
+        "zone_categories": [
+          "440103",
+          "440104",
+          "440105",
+          "440106",
+          "440111",
+          "440112",
+          "440113",
+          "440114",
+          "440115",
+          "440117",
+          "440118",
+          "__missing__"
+        ],
+        "policy_version": 1,
+        "current_mnl_signal": {}
+      },
+      "stage_timings": [
+        {
+          "name": "validate payload",
+          "seconds": 0.0
+        },
+        {
+          "name": "sample condition pass-rate",
+          "seconds": 0.111
+        },
+        {
+          "name": "build feasible candidate pool",
+          "seconds": 0.05
+        },
+        {
+          "name": "compute efficient teacher prior",
+          "seconds": 0.469
+        },
+        {
+          "name": "train dynamicPPO",
+          "seconds": 20.421
+        },
+        {
+          "name": "evaluate generated block d-error",
+          "seconds": 0.003
+        }
+      ],
+      "elapsed_seconds": 21.055,
+      "finished_at": "2026-05-06T10:46:14"
+    },
+    {
+      "mode": "frontend",
+      "started_at": "2026-05-06T10:46:14",
+      "config_path": "/Users/convel/PycharmProjects/spSurvey/data/sp_design/gz_pt_share_variable_universe_v1.json",
+      "torch_available": true,
+      "status": "error",
+      "design_type": "dyppo",
+      "save_name": "gz_pt_share_variable_universe_v1",
+      "alternatives": [
+        "bus",
+        "metro",
+        "bike_ebike",
+        "car_ride_hailing"
+      ],
+      "variable_counts": {
+        "bus": 4,
+        "metro": 4,
+        "bike_ebike": 4,
+        "car_ride_hailing": 4
+      },
+      "dyppo_options": {
+        "tasks_per_round": 6,
+        "batch_size": 64,
+        "explore_epsilon": 0.1,
+        "reward_weight_d_error": 1.0
+      },
+      "target_block_sample": 2000,
+      "full_combo_count": 2147483648,
+      "condition_sample": {
+        "sample_rows": 960,
+        "passed": 793,
+        "pass_rate": 0.826,
+        "conditions_count": 13
+      },
+      "candidate_pool_target": 120,
+      "candidate_pool_size": 120,
+      "teacher_rows": 5,
+      "teacher_d_error": 29.976903,
+      "error": "diagnostic timeout after 180s",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/convel/PycharmProjects/spSurvey/test/dyppo/gz_pt_share_dyppo_debug_flow.py\", line 232, in run_one\n    trained = train_dynamic_ppo(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 1740, in train_dynamic_ppo\n    rollouts = _build_synthetic_rollouts(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 1320, in _build_synthetic_rollouts\n    reward_metrics = _questionnaire_reward_metrics(\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 977, in _questionnaire_reward_metrics\n    after_signal = _mnl_signal_from_obs_rows(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 863, in _mnl_signal_from_obs_rows\n    beta_raw = _estimate_mnl(\n               ^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 718, in _estimate_mnl\n    denom = np.sum(p)\n            ^^^^^^^^^\n  File \"/Users/convel/Library/Python/3.12/lib/python/site-packages/numpy/core/fromnumeric.py\", line 2313, in sum\n    return _wrapreduction(a, np.add, 'sum', axis, dtype, out, keepdims=keepdims,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/Library/Python/3.12/lib/python/site-packages/numpy/core/fromnumeric.py\", line 88, in _wrapreduction\n    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/test/dyppo/gz_pt_share_dyppo_debug_flow.py\", line 92, in _handle_timeout\n    raise TimeoutError(f\"diagnostic timeout after {self.seconds}s\")\nTimeoutError: diagnostic timeout after 180s\n",
+      "stage_timings": [
+        {
+          "name": "validate payload",
+          "seconds": 0.0
+        },
+        {
+          "name": "sample condition pass-rate",
+          "seconds": 0.123
+        },
+        {
+          "name": "build feasible candidate pool",
+          "seconds": 0.053
+        },
+        {
+          "name": "compute efficient teacher prior",
+          "seconds": 0.046
+        },
+        {
+          "name": "train dynamicPPO",
+          "seconds": 179.78
+        }
+      ],
+      "elapsed_seconds": 180.005,
+      "finished_at": "2026-05-06T10:49:14"
+    }
+  ]
+}

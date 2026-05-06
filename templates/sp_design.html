@@ -305,6 +305,7 @@
     ? {index:'index.html',profile:'profile.html',trip:'trip_diary.html',sp:'sp_questionnaire.html',design:'sp_design.html',map:'web_map.html',overview:'collection_dashboard.html',docs:'docs.html'}
     : {index:'/',profile:'/survey/profile',trip:'/survey/trip-diary',sp:'/survey/sp',design:'/survey/sp-design',map:'/survey/map',overview:'/survey/collection-dashboard',docs:'/survey/docs'};
   document.querySelectorAll('[data-page]').forEach((a) => { a.href = routes[a.dataset.page]; a.classList.toggle('is-active', a.dataset.page === currentPage); });
+  const DEFAULT_SP_DESIGN_SAVE_NAME = 'gz_pt_share_variable_universe_v1';
 
   const alternativesContainer = document.getElementById('alternativesContainer');
   const saveNameInput = document.getElementById('saveName');
@@ -316,6 +317,7 @@
   const designTypeEl = document.getElementById('designType');
   const savedConfigSelect = document.getElementById('savedConfigSelect');
   let loadedFromSaveName = '';
+  let loadedDesignOptions = {};
   let loadingMask = null;
   let latestPreviewBundle = null;
 
@@ -356,6 +358,13 @@
 
   function safeName(s) {
     return String(s || '').trim().replace(/\s+/g, '_');
+  }
+
+  function sanitizeSaveNameForServer(s) {
+    const filtered = Array.from(String(s || ''))
+      .filter((ch) => /[\p{L}\p{N}_\-.]/u.test(ch))
+      .join('');
+    return filtered.replace(/^[._-]+|[._-]+$/g, '');
   }
 
   function genAutoSaveName() {
@@ -630,11 +639,21 @@
   }
 
   async function refreshSavedConfigList() {
-    if (isFile) return;
+    if (isFile) return null;
     const res = await fetch('/api/design/spec');
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || '读取保存列表失败');
     fillSavedConfigOptions(data);
+    return data;
+  }
+
+  async function loadDefaultConfigOnStartup() {
+    if (isFile) return;
+    const data = await refreshSavedConfigList();
+    const names = Array.isArray(data && data.available_save_names) ? data.available_save_names : [];
+    if (!names.includes(DEFAULT_SP_DESIGN_SAVE_NAME)) return;
+    savedConfigSelect.value = DEFAULT_SP_DESIGN_SAVE_NAME;
+    await loadConfigByName(DEFAULT_SP_DESIGN_SAVE_NAME);
   }
 
   function setFormFromPayload(payload) {
@@ -642,6 +661,8 @@
     const spec = payload.design_spec || {};
     const type = String(payload.design_type || 'efficient').toLowerCase();
     designTypeEl.value = type;
+    loadedDesignOptions = JSON.parse(JSON.stringify(payload.design_options || {}));
+    invalidateGeneratedSpPreview();
 
     document.getElementById('sampleSize').value = String(payload.sample_size || 600);
     document.getElementById('spIntroText').value = String(spec.sp_intro_text || '');
@@ -717,20 +738,24 @@
     let designOptions = {};
     if (designType === 'efficient') {
       const t = Number(document.getElementById('efficientTasksPerPerson').value || 8);
+      const storedEff = (loadedDesignOptions && loadedDesignOptions.efficient) || {};
       taskCandidates = [Math.max(1, t)];
       designOptions = {
         efficient: {
+          ...storedEff,
           tasks_per_person: Math.max(1, t),
           row_exchange_iterations: Number(document.getElementById('efficientIterations').value || 200),
         },
       };
     } else if (designType === 'dyppo') {
       const t = Number(document.getElementById('mappoTasksPerRound').value || 6);
+      const storedDyppo = (loadedDesignOptions && loadedDesignOptions.dyppo) || {};
       taskCandidates = [Math.max(1, t)];
       minBlockSample = 1;
       targetBlockSample = sampleSize;
       designOptions = {
         dyppo: {
+          ...storedDyppo,
           tasks_per_round: Math.max(1, t),
           batch_size: Number(document.getElementById('mappoBatchSize').value || 16),
           explore_epsilon: Number(document.getElementById('mappoExploreEps').value || 0.2),
@@ -739,11 +764,13 @@
       };
     } else if (designType === 'selfattention') {
       const t = Number(document.getElementById('selfAttnTasksPerRound').value || 6);
+      const storedSelfAttn = (loadedDesignOptions && loadedDesignOptions.selfattention) || {};
       taskCandidates = [Math.max(1, t)];
       minBlockSample = 1;
       targetBlockSample = sampleSize;
       designOptions = {
         selfattention: {
+          ...storedSelfAttn,
           tasks_per_round: Math.max(1, t),
           batch_size: Number(document.getElementById('selfAttnBatchSize').value || 16),
           explore_epsilon: Number(document.getElementById('selfAttnExploreEps').value || 0.15),
@@ -1039,27 +1066,23 @@
   }
 
   async function saveDesignBundleToServer(bundle) {
-    const saveName = String(document.getElementById('saveName').value || '').trim();
-    if (!saveName) throw new Error('请先填写保存名（配置文件名称）');
-    const fromName = String(loadedFromSaveName || '').trim();
+    const rawSaveName = String(document.getElementById('saveName').value || '').trim();
+    if (!rawSaveName) throw new Error('请先填写保存名（配置文件名称）');
+    const saveName = sanitizeSaveNameForServer(rawSaveName);
+    if (!saveName) throw new Error('保存名无效：请使用中英文、数字、下划线、短横线或点号');
+    const fromName = sanitizeSaveNameForServer(loadedFromSaveName || '');
     const isCopyFromHistory = !!fromName && fromName !== saveName;
-    const listRes = await fetch('/api/design/spec');
-    const listData = await listRes.json();
-    if (!listRes.ok || listData.error) {
-      throw new Error(listData.error || '读取保存名列表失败');
-    }
-    const names = Array.isArray(listData.available_save_names) ? listData.available_save_names : [];
-    if (names.includes(saveName) && saveName !== fromName) {
-      throw new Error(`保存名“${saveName}”已存在，请重命名后再保存`);
-    }
+    const payloadForSave = JSON.parse(JSON.stringify((bundle && bundle.payload) || {}));
+    payloadForSave.save_name = saveName;
+    payloadForSave.design_save_name = saveName;
     const res = await fetch('/api/design/spec', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         save_name: saveName,
         source_save_name: fromName || null,
-        inherit_model_weights: Boolean(isCopyFromHistory && bundle && bundle.payload && (bundle.payload.design_type === 'dyppo' || bundle.payload.design_type === 'selfattention')),
-        payload: bundle.payload,
+        inherit_model_weights: Boolean(isCopyFromHistory && payloadForSave && (payloadForSave.design_type === 'dyppo' || payloadForSave.design_type === 'selfattention')),
+        payload: payloadForSave,
         recommendation: bundle.recommendation,
         preview_tasks: bundle.tasks,
       }),
@@ -1068,7 +1091,8 @@
     if (!res.ok || data.error) {
       throw new Error(data.error || '保存设计到服务器失败');
     }
-    loadedFromSaveName = saveName;
+    loadedFromSaveName = String(data.save_name || saveName);
+    if (saveNameInput) saveNameInput.value = loadedFromSaveName;
     return data;
   }
 
@@ -1152,6 +1176,13 @@
     if (style) style.remove();
   }
 
+  function computeLoadingText(designType) {
+    const t = String(designType || 'efficient').toLowerCase();
+    if (t === 'dyppo') return '正在按 DYPPO 配置生成题组与参数...';
+    if (t === 'selfattention') return '正在按 SelfAttention 配置生成题组与参数...';
+    return '正在按 Efficient Design 配置生成题组与参数...';
+  }
+
   async function runComputeAndPoll(payload) {
     if (isFile) {
       const t = payload.tasks_per_person_candidates[0] || 8;
@@ -1221,6 +1252,8 @@
     alternativesContainer.innerHTML = '';
     addAlternative({ name: '', variables: [] });
     loadedFromSaveName = '';
+    loadedDesignOptions = {};
+    invalidateGeneratedSpPreview();
     ensureAutoSaveName();
     refreshComputed();
   }
@@ -1280,7 +1313,7 @@
     }
 
     configPreview.textContent = JSON.stringify(payload, null, 2);
-    showLoading((payload.design_type === 'dyppo' || payload.design_type === 'selfattention') ? '正在按RL配置生成题组与参数...' : '正在按Efficient配置生成题组与参数...');
+    showLoading(computeLoadingText(payload.design_type));
 
     try {
       const computeOut = await runComputeAndPoll(payload);
@@ -1313,7 +1346,9 @@
   ensureAutoSaveName();
   loadDefaults();
   if (!isFile) {
-    refreshSavedConfigList().catch(() => {});
+    loadDefaultConfigOnStartup().catch(() => {
+      refreshSavedConfigList().catch(() => {});
+    });
   }
   bindCollapsible('utilityPreviewToggle', 'utilityPreviewWrap', '实时 Utility 公式预览');
   bindCollapsible('configPreviewToggle', 'configPreviewWrap', '提交参数摘要');

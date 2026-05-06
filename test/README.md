@@ -5,4 +5,6 @@
 - `test/dyppo/`
 - `test/selfattention/`
 
-当前已落地的调试脚本主要在 `test/dyppo/`。
+当前主要调试入口：
+- `test/dyppo/`：dynamicPPO 相关流程测试。
+- `test/selfattention/gz_pt_share_selfattention_debug_flow.py`：基于广州公交客流下降场景配置的 SelfAttention block generator 测试。

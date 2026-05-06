@@ -2,28 +2,22 @@
 
 更新时间：2026-04-28
 
-本文档采用当前项目最终统一的口径描述 `selfattention` 路线：
+本文档采用当前项目统一的模块说明口径描述 `selfattention` 路线，重点说明各模块的作用、数据维度变化、功能边界和前后衔接。
 
-- 一份 SP 问卷中的题目是 **一次性并行生成** 的；
-- respondent 也是 **一次性看到并填写整份 block**；
-- 因此 decoder 不再使用“shifted-right 历史题 token + causal masked attention”的自回归解释；
-- 更合适的结构是：
-  - `encoder` 负责读取 RP / 环境 / 历史问卷统计 / 候选变量模板；
-  - `respondent_target_head` 从 encoder 的全局状态输出剩余样本的定向采样建议；
-  - `parallel question queries` 负责并行表示一组候选题位 proposal slots；
-  - `question-set self-attention` 负责建模整份问卷内部各候选题之间的结构关系；
-  - `count_head` 决定本次问卷题数；
-  - `slot_select_head` 决定从候选题位中选出哪些题进入最终问卷；
-  - `mask_head` 决定每题哪些变量激活；
-  - `value_head` 给激活变量赋值；
-  - `score_head` 评估每题质量。
+当前结构由以下模块组成：
 
-这意味着：
+- `encoder` 读取 RP / 环境 / 历史问卷统计 / 候选变量模板；
+- `respondent_target_head` 从 encoder 的全局状态输出剩余样本的定向采样建议；
+- `parallel question queries` 并行表示一组候选题位 proposal slots；
+- `question-set self-attention` 建模整份问卷内部各候选题之间的结构关系；
+- `cross-attention` 让候选题位读取 encoder 条件信息；
+- `count_head` 决定本次问卷题数；
+- `slot_select_head` 决定从候选题位中选出哪些题进入最终问卷；
+- `mask_head` 决定每题哪些变量激活；
+- `value_head` 给激活变量赋值；
+- `score_head` 评估每题质量。
 
-```text
-selfattention 不是“逐题自回归发题”，
-而是“先并行构造一个完整 question block，再一次性发放”。
-```
+整体流程是：先并行构造一个完整 question block，再一次性发放给 respondent 填写，提交后回写统计状态和模型训练数据。
 
 ---
 
@@ -46,13 +40,13 @@ efficient design
 - 但会根据 respondent 和历史反馈动态调整题组分发
 
 ### 1.3 SelfAttention
-- 不再只是在固定 combo 池中选题
-- 可以决定每道题中哪些变量激活
-- 可以直接生成连续值或映射后的离散值
-- 可以一次性生成一整份 block，而不是按 respondent 作答顺序逐题展开
-- 可以额外输出“下一阶段更建议收集哪些 RP cell”的采样建议，例如某些区、性别、年龄或教育分段仍然不足。
+- 将动作空间从固定 combo 池扩展为结构化题组生成
+- 支持决定每道题中哪些变量激活
+- 支持直接生成连续值或映射后的离散值
+- 支持一次性生成一整份 respondent block
+- 支持额外输出“下一阶段更建议收集哪些 RP cell”的采样建议，例如某些区、性别、年龄或教育分段仍然不足。
 
-因此这里的升级核心不是“更深的网络”，而是：
+这里的升级核心是：
 
 ```text
 从“离散题库选择”升级为“条件约束下的并行结构化题组生成”。
@@ -60,33 +54,35 @@ efficient design
 
 ---
 
-## 2. 为什么 decoder 不再使用 Masked Multi-Head Attention
+## 2. Block 生成模块总览
 
-当前项目的业务逻辑已经明确：
-
-1. 一份 SP 问卷的题数 `T_q` 在生成阶段就确定；
-2. 这 `T_q` 道题一起写入页面；
-3. respondent 一次性填写整份问卷；
-4. 回答提交后系统再更新模型和统计状态。
-
-因此下面这套解释已经不再适用：
+当前 respondent block 的生成链路如下：
 
 ```text
-第 1 题不能看第 2 题
-第 2 题不能看第 3 题
-...
+X_rp, X_env, X_hist, X_cand
+    -> embedding
+    -> concat
+    -> encoder
+    -> H_enc
+
+Q_slot^(0)
+    -> question-set self-attention
+    -> cross-attention(H_enc)
+    -> count / slot_select / mask / value / score heads
+    -> Q_block
 ```
 
-那是标准自回归 decoder 的解释，而不是当前项目需要的口径。
+其中：
 
-在本项目当前设定里，更合理的是：
+- `X_rp` 表示当前 respondent 的个人、家庭和区域特征。
+- `X_env` 表示当前采样进度、覆盖偏差、模型稳定性和设计质量状态。
+- `X_hist` 表示前 `n-1` 份已完成问卷 / blocks 提炼出的历史 SP 上下文。
+- `X_cand` 表示当前 design 下可被激活或赋值的候选变量模板。
+- `H_enc` 是 encoder 融合后的条件表示。
+- `Q_slot^(0)` 是 decoder 的并行候选题位输入。
+- `Q_block` 是最终组装后写回 SP 页面的一整份问卷题组。
 
-- decoder 输入是 `T_max` 个并行的 question queries，它们是内部候选题位，不是页面展示顺序；
-- question queries 之间做 **full self-attention**；
-- 如果存在 mask，也应该是：
-  - `slot selection result`：哪些候选题位被选入最终 block；
-  - `variable activation mask`：题内哪些变量有效；
-- 不再是“遮住未来题位”的 causal attention mask。
+该模块按 respondent block 生成整份 SP 问卷，slot 只是模型内部候选位置，最终页面展示顺序由后处理规则确定。
 
 ---
 
@@ -261,39 +257,32 @@ priority = 0.45 * model_priority + 0.55 * target_gap_priority
 
 ---
 
-## 5. Decoder 输入改成并行 question queries
+## 5. Decoder 并行 question queries 输入
 
-当前项目下，decoder 不再从“`Y_in=[BOS,q_1,...]` 这种 shifted-right 序列”出发，
-而是从一组 **并行 question queries** 出发。
+Decoder 输入采用一组 **并行 question queries**，这些 queries 更准确地说是内部 **proposal slots**：
 
-这些 queries 更准确地说是内部 **proposal slots**：
 - slot 编号只用于模型内部区分候选生成位置；
 - slot 编号不等于页面上的第 1 题、第 2 题；
 - 最终问卷展示顺序可以由前端或后处理规则排序；
 - 训练时不应假定 teacher block 的第 1 题必须对应模型 slot 1。
 
 记：
-- `T_min`：问卷最小题数
-- `T_max`：问卷最大题数
-- `T_q`：当前这份问卷最终生成的题数，满足 `T_min ≤ T_q ≤ T_max`
 
-则 decoder 初始输入定义为：
+- `T_min`：问卷最小题数；
+- `T_max`：问卷最大题数；
+- `T_q`：当前这份问卷最终生成的题数，满足 `T_min ≤ T_q ≤ T_max`。
+
+Decoder 初始输入定义为：
 
 ```text
 Q_slot^(0) ∈ R^[B, T_max, d_model]
 ```
 
 其中：
-- 第二维的 `T_max` 不是时间步，而是“待生成题位”的最大并行数量；
+
+- 第二维的 `T_max` 表示“待生成题位”的最大并行数量；
 - 每个 slot 都是一个 question query；
-- 这些 queries 同时存在，不是 shifted-right 序列。
-
-这一步最重要的解释是：
-
-```text
-每个 slot 表示“这一份问卷中潜在的一道候选题”，
-不是“下一时刻要生成的一个 token”，也不是最终页面顺序。
-```
+- 每个 slot 表示“这一份问卷中潜在的一道候选题”。
 
 ---
 
@@ -362,29 +351,22 @@ S_s ∈ R^[B, h, T_max, T_max]
 不是生成时间步，也不是最终展示题号。
 ```
 
-### 6.4 为什么这里不做 causal mask
+### 6.4 Attention 权重的作用
 
-因为当前项目设定是：
-- 整份 block 并行生成；
-- respondent 也是整份 block 一次性作答。
-
-所以这里不再加：
-
-```text
-j > i -> -∞
-```
-
-这种“未来题位不可见”的 causal mask。
-
-这里做的是 **full self-attention**：
-- 第 `i` 个题位可以看到第 `j` 个题位；
-- 网络学习整份问卷内部各题之间的协同、重复、互补与多样性。
-
-softmax 后：
+softmax 后得到：
 
 ```text
 A_s ∈ R^[B, h, T_max, T_max]
 ```
+
+`A_s[b, head, i, j]` 表示在第 `b` 个样本、第 `head` 个注意力头中，第 `i` 个候选 slot 对第 `j` 个候选 slot 的参考权重。
+
+该矩阵用于表达同一份 respondent block 内候选题位之间的关系，例如：
+
+- 两个候选题是否覆盖了相似变量；
+- 两个候选题的变量值是否过于接近；
+- 某个候选题是否可以补充当前题组缺少的变量组合；
+- 当前题组内部是否形成足够的敏感性分析覆盖。
 
 ### 6.5 头内输出
 
@@ -530,18 +512,7 @@ p_sample ∈ R^[B, C_sample]
 
 ### 8.2 `count_head`
 
-
-当前项目不再推荐使用 `stop_head`。
-
-因为：
-- `stop_head` 更适合逐步自回归生成；
-- 但本项目是整份问卷一次性生成。
-
-因此更自然的是：
-
-```text
-count_head : 先决定本次问卷生成多少题
-```
+`count_head` 输出当前 respondent block 的题数类别，用于决定本次问卷生成多少道 SP 题。
 
 若允许的题数范围为 `T_min..T_max`，则可把它建模成分类头：
 
@@ -564,7 +535,7 @@ T_q = argmax(p_count) + T_min
 
 ### 8.3 `slot_select_head`
 
-`count_head` 只回答“这一份问卷需要多少题”，但它不应该隐含“前几个 slot 有效”。因为一份问卷内部没有时序顺序，slot 编号只是模型内部的候选位置。
+`count_head` 只回答“这一份问卷需要多少题”。slot 编号是模型内部的候选位置，最终进入问卷的候选题位由 `slot_select_head` 单独决定。
 
 因此需要 `slot_select_head` 对所有候选题位打分：
 
@@ -583,7 +554,7 @@ M_slot ∈ {0,1}^[B, T_max]
 - 未选中的 slot 只是候选生成位置，不参与最终渲染和作答；
 - `M_slot` 不是前缀 mask，不默认 `1..T_q` 有效。
 
-这一步把模型从 sequence generation 进一步收口到 set/block generation：问卷内部的题目是一个集合，页面显示顺序只是后处理结果。
+这一步把候选题位转换为最终 respondent block：问卷内部的题目按集合处理，页面显示顺序由后处理规则确定。
 
 ### 8.4 `mask_head`
 
@@ -603,9 +574,7 @@ M_var       ∈ {0,1}^[B, T_max, V]
 
 ### 8.5 `value_head`
 
-`value_head` 不应被理解成和 `mask_head` 完全独立并列。
-
-更严格的语义是：
+`value_head` 在 `mask_head` 的结构条件下输出变量取值。对应的条件分解为：
 
 ```math
 p(T_q, S, M, X \mid H)
@@ -751,7 +720,7 @@ respondent 提交整份问卷后：
 
 这里要注意：
 - 在线更新的单位是“整份 block”；
-- 不是 respondent 作答过程中的逐题实时更新。
+- respondent 提交整份问卷后，再统一回写训练数据与统计状态。
 
 ---
 
@@ -782,8 +751,9 @@ respondent 提交整份问卷后：
 ## 12. 一句话总结
 
 ```text
-当前项目里的 selfattention，不应再理解为“按题序列自回归生成”的 masked decoder，
-而应理解为“在 respondent / 环境 / 历史问卷 / 候选模板条件下，
-通过并行 question queries 生成候选题集合，再用 count + slot selection + mask/value 组装整份 SP block，
-同时用 respondent_target_head 为剩余样本覆盖提供定向采样建议的 set/block generator”。
+当前项目里的 selfattention 是一个 respondent block generator：
+它在 respondent / 环境 / 历史问卷 / 候选模板条件下，
+通过并行 question queries 生成候选题集合，
+再用 count + slot selection + mask/value 组装整份 SP block，
+同时用 respondent_target_head 为剩余样本覆盖提供定向采样建议。
 ```

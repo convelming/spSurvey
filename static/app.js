@@ -5,6 +5,7 @@ const deviceKey = "survey_device_tag";
 
 let currentAssignment = null;
 let respondentCandidates = [];
+let spLoadingMask = null;
 let designMeta = {
   save_name: "",
   sp_intro_text: "",
@@ -83,6 +84,43 @@ function showActionDialog(title, message, actions) {
     mask.appendChild(box);
     document.body.appendChild(mask);
   });
+}
+
+function showSpLoading(message = "后台正在计算并加载SP题组，请稍候...") {
+  hideSpLoading();
+  const mask = document.createElement("div");
+  mask.style.cssText = "position:fixed;inset:0;background:rgba(31,35,40,.42);z-index:9998;display:flex;align-items:center;justify-content:center;padding:16px;";
+  const box = document.createElement("div");
+  box.style.cssText = "background:#fff;max-width:420px;width:100%;border-radius:12px;padding:18px 18px 16px;border:1px solid #d0d7de;box-shadow:0 16px 48px rgba(31,35,40,.22);display:flex;gap:14px;align-items:center;";
+  const spinner = document.createElement("div");
+  spinner.style.cssText = "width:28px;height:28px;border-radius:50%;border:3px solid #d8dee4;border-top-color:#0969da;animation:spLoadingSpin .85s linear infinite;flex:0 0 auto;";
+  const textWrap = document.createElement("div");
+  const title = document.createElement("div");
+  title.textContent = "正在计算";
+  title.style.cssText = "font-weight:700;font-size:16px;margin-bottom:4px;color:#24292f;";
+  const text = document.createElement("div");
+  text.textContent = message;
+  text.style.cssText = "font-size:14px;line-height:1.45;color:#57606a;";
+  textWrap.appendChild(title);
+  textWrap.appendChild(text);
+  box.appendChild(spinner);
+  box.appendChild(textWrap);
+  mask.appendChild(box);
+  if (!document.getElementById("spLoadingSpinStyle")) {
+    const style = document.createElement("style");
+    style.id = "spLoadingSpinStyle";
+    style.textContent = "@keyframes spLoadingSpin{to{transform:rotate(360deg)}}";
+    document.head.appendChild(style);
+  }
+  document.body.appendChild(mask);
+  spLoadingMask = mask;
+}
+
+function hideSpLoading() {
+  if (spLoadingMask) {
+    spLoadingMask.remove();
+    spLoadingMask = null;
+  }
 }
 
 function updateSpInheritBanner() {
@@ -173,61 +211,6 @@ function variableLabel(mode, key) {
   const altKey = normalizeKey(mode);
   const varKey = normalizeKey(key);
   return designMeta.byAltVar[`${altKey}.${varKey}`] || designMeta.byVar[varKey] || key;
-}
-
-function normalizeModeName(raw) {
-  const n = normalizeKey(raw);
-  if (n === "pt" || n === "publictransit" || n === "transit") return "public_transit";
-  return n;
-}
-
-function resolveConditionOperand(task, token) {
-  const t = String(token || "").trim();
-  if (!t) return { ok: false, value: 0 };
-  if (/^-?\d+(\.\d+)?$/.test(t)) return { ok: true, value: Number(t) };
-
-  const dot = t.indexOf(".");
-  if (dot <= 0 || dot >= t.length - 1) return { ok: false, value: 0 };
-  const alt = normalizeModeName(t.slice(0, dot));
-  const attr = normalizeKey(t.slice(dot + 1));
-  const attrs = task.alternatives && task.alternatives[alt];
-  if (!attrs) return { ok: false, value: 0 };
-  if (attrs[attr] === undefined || attrs[attr] === null || attrs[attr] === "") return { ok: false, value: 0 };
-
-  const numeric = Number(attrs[attr]);
-  if (Number.isNaN(numeric)) return { ok: false, value: 0 };
-  return { ok: true, value: numeric };
-}
-
-function compareValues(left, op, right) {
-  if (op === ">") return left > right;
-  if (op === ">=") return left >= right;
-  if (op === "<") return left < right;
-  if (op === "<=") return left <= right;
-  return true;
-}
-
-function taskSatisfiesConditions(task) {
-  const conditions = designMeta.conditions || [];
-  if (!conditions.length) return true;
-
-  for (const line of conditions) {
-    const parts = line.split(/(>=|<=|>|<)/).map((x) => x.trim()).filter((x) => x.length > 0);
-    if (parts.length < 3 || parts.length % 2 === 0) continue;
-
-    let ok = true;
-    for (let i = 1; i < parts.length; i += 2) {
-      const left = resolveConditionOperand(task, parts[i - 1]);
-      const op = parts[i];
-      const right = resolveConditionOperand(task, parts[i + 1]);
-      if (!left.ok || !right.ok || !compareValues(left.value, op, right.value)) {
-        ok = false;
-        break;
-      }
-    }
-    if (!ok) return false;
-  }
-  return true;
 }
 
 function createRpFields() {
@@ -409,7 +392,7 @@ function renderTasks(tasks) {
   const box = document.getElementById("tasksContainer");
   if (!box) return;
   box.innerHTML = "";
-  const filteredTasks = tasks.filter((task) => taskSatisfiesConditions(task));
+  const renderList = Array.isArray(tasks) ? tasks : [];
 
   if (currentAssignment && currentAssignment.preview_only) {
     const preview = document.createElement("div");
@@ -441,16 +424,7 @@ function renderTasks(tasks) {
     box.appendChild(cond);
   }
 
-  if (filteredTasks.length < tasks.length) {
-    const note = document.createElement("div");
-    note.className = "task";
-    const p = document.createElement("p");
-    p.textContent = `已按条件筛除 ${tasks.length - filteredTasks.length} 个不合理组合。`;
-    note.appendChild(p);
-    box.appendChild(note);
-  }
-
-  filteredTasks.forEach((task, idx) => {
+  renderList.forEach((task, idx) => {
     const taskDiv = document.createElement("div");
     taskDiv.className = "task";
     taskDiv.dataset.taskId = task.id;
@@ -549,6 +523,7 @@ function buildRealtimeTasksFromSavedSpec(payload, recommendation) {
 }
 
 function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta = {}) {
+  const issuedTasks = Array.isArray(tasks) ? tasks : [];
   const rid = String(meta.respondent_id || getOrCreateRespondentId());
   const assignmentId = String(meta.assignment_id || `saved_design_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
   const policyVersion = meta.policy_version == null ? "saved_design" : meta.policy_version;
@@ -558,7 +533,7 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
     respondent_id: rid,
     policy_version: policyVersion,
     preview_only: previewOnly,
-    tasks: tasks.filter((task) => taskSatisfiesConditions(task)),
+    tasks: issuedTasks,
   };
   localStorage.setItem(
     "survey_sp_current_assignment",
@@ -574,7 +549,7 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
   // Frontend rendering never writes distribution logs. The formal server issue route records
   // real assignments; the preview endpoint deliberately does not.
 
-  renderTasks(tasks);
+  renderTasks(issuedTasks);
   const spSection = document.getElementById("spSection");
   if (spSection) {
     spSection.classList.remove("hidden");
@@ -594,8 +569,8 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
         preview_only: previewOnly,
         policy_version: policyVersion,
         recommendation: recommendation || null,
-        tasks_total: tasks.length,
-        tasks_after_condition: currentAssignment.tasks.length,
+        tasks_total: issuedTasks.length,
+        tasks_for_submit: currentAssignment.tasks.length,
       },
       null,
       2,
@@ -603,7 +578,7 @@ function setGeneratedAssignment(tasks, recommendation, createdAt, source, meta =
   }
 
   if (!currentAssignment.tasks.length) {
-    alert("当前约束条件过严，题组被全部筛除。请调整条件后重试。");
+    alert("当前后端未返回可下发题组，请回到SP设计页重新计算方案。");
   }
   updateSpInheritBanner();
 }
@@ -801,24 +776,26 @@ async function loadDesign() {
     return;
   }
 
-  resetDesignMeta();
-
-  if (isFileMode) {
-    const raw = localStorage.getItem("survey_sp_design_payload");
-    if (!raw) {
-      alert("未找到本地保存的SP设计数据，请先到SP设计页计算并保存。");
-      return;
-    }
-    const payload = JSON.parse(raw);
-    designMeta.save_name = selectedName;
-    applyDesignPayload(payload);
-    const tasks = buildRealtimeTasksFromSavedSpec(payload, null);
-    setGeneratedAssignment(tasks, null, new Date().toISOString(), "generated_from_local_saved_design");
-    return;
-  }
+  showSpLoading("后台正在计算并加载SP题组，请稍候...");
 
   let specData = null;
   try {
+    resetDesignMeta();
+
+    if (isFileMode) {
+      const raw = localStorage.getItem("survey_sp_design_payload");
+      if (!raw) {
+        alert("未找到本地保存的SP设计数据，请先到SP设计页计算并保存。");
+        return;
+      }
+      const payload = JSON.parse(raw);
+      designMeta.save_name = selectedName;
+      applyDesignPayload(payload);
+      const tasks = buildRealtimeTasksFromSavedSpec(payload, null);
+      setGeneratedAssignment(tasks, null, new Date().toISOString(), "generated_from_local_saved_design");
+      return;
+    }
+
     const res = await fetch(`/api/design/spec?save_name=${encodeURIComponent(selectedName)}`);
     const data = await res.json();
     if (!res.ok || !data || !data.payload) {
@@ -854,6 +831,7 @@ async function loadDesign() {
   } catch (_e) {
     const requiresProfile = _e && _e.status === 409 && _e.data && _e.data.requires_profile;
     if (requiresProfile) {
+      hideSpLoading();
       const action = await showActionDialog(
         "需要先保存RP/Profile",
         "正式下发 SP 题组需要绑定当前 respondent_id，并记录到对应受访者 JSON。设计阶段如果只想查看题面样式，可以选择“仅预览问卷样式”。",
@@ -868,15 +846,20 @@ async function loadDesign() {
         return;
       }
       if (action === "preview") {
+        showSpLoading("正在加载设计预览题组，请稍候...");
         try {
           await previewDesignOnly(selectedName, specData);
         } catch (previewErr) {
           alert(previewErr && previewErr.message ? previewErr.message : "预览SP题组失败。");
+        } finally {
+          hideSpLoading();
         }
       }
       return;
     }
     alert(_e && _e.message ? _e.message : "读取保存的SP设计失败，请稍后重试。");
+  } finally {
+    hideSpLoading();
   }
 }
 

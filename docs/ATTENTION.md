@@ -1,307 +1,324 @@
 # ATTENTION 模块维度说明
 
-更新时间：2026-04-28
+更新时间：2026-04-30
 
-本文档单独把当前项目 `selfattention` 路线中的 attention 部分拆开说明，重点回答三个问题：
-
-1. 为什么 decoder 不再使用 `Masked Multi-Head Attention`
-2. `Question-Set Self-Attention` 的输入输出维度是什么
-3. `respondent-target / count / slot-select / variable-mask / value` 各自处于哪个层级
+本文档说明当前项目 `selfattention` 路线中 attention 相关模块的作用、数据维度变化、功能边界和前后衔接。
 
 ---
 
-## 1. Decoder attention 的正确口径
+## 1. 模块总览
 
-如果 decoder 是标准语言模型式的自回归结构，常见做法是：
-
-```text
-第 t 个 token 只能看 1..t 的历史 token
-```
-
-于是需要上三角 causal mask，也就是常说的 `Masked Multi-Head Attention`。
-
-但当前项目的最终设定不是这样：
-
-- 一份问卷中的 `T_q` 道 SP 题一次性生成；
-- respondent 一次性看到并填写整份问卷；
-- 模型内部需要建模的是“整份问卷内部各题之间的结构关系”，而不是“下一时刻 token 预测”。
-
-所以更合理的结构是：
+当前 attention 链路由四部分组成：
 
 ```text
-parallel question queries
-    -> full set self-attention over candidate slots
-    -> count/slot-select/mask/value/score heads
+Encoder Self-Attention
+    X_enc -> H_enc
 
-encoder pooled state
-    -> respondent_target_head
-    -> sampling recommendation
+Question-Set Self-Attention
+    Q_slot^(0) -> H_slot^self
+
+Cross-Attention
+    H_slot^self + H_enc -> H_slot^cross
+
+Output Heads
+    H_enc / H_slot^cross -> sampling / count / slot / mask / value / score
 ```
 
-也就是说：
-- decoder 内部不再需要“遮住未来题”的 attention mask；
-- attention 矩阵 `S ∈ R^[B,h,T_max,T_max]` 保持全连接；
-- 如果还保留 “mask” 这个词，只能指：
-  - `M_slot`：哪些候选 slot 被选入最终 block；
-  - `M_var`：题内哪些变量有效。
+各模块的职责如下：
+
+- `Encoder Self-Attention`：融合 RP、环境、历史问卷统计和候选变量模板。
+- `Question-Set Self-Attention`：建模同一份 respondent block 内候选题位之间的互补、重复和覆盖关系。
+- `Cross-Attention`：让每个候选题位读取 encoder 中的 respondent、环境、历史和候选变量信息。
+- `Output Heads`：输出采样建议、题数、题位选择、变量激活、变量取值和候选题质量分数。
 
 ---
 
-## 2. Question queries 的输入定义
+## 2. Encoder Self-Attention
 
-记：
-- `B`：batch size
-- `T_max`：允许生成的最大题数
-- `d_model`：统一隐藏维度
+### 2.1 输入
 
-则 decoder 并行输入写成：
+encoder 输入来自 embedding 与 concat 后的统一表示：
+
+```text
+X_enc ∈ R^[B, L_enc, d_model]
+L_enc = 1 + 1 + L_hist + L_cand
+```
+
+其中：
+
+- `B`：batch size。
+- `1`：RP token，对应当前 respondent 的个人/家庭/区域特征。
+- `1`：environment token，对应采样进度、覆盖偏差、模型稳定性等环境状态。
+- `L_hist`：历史问卷上下文 token 数。
+- `L_cand`：候选变量模板 token 数。
+- `d_model`：统一隐藏维度。
+
+### 2.2 Q / K / V 投影
+
+设 attention head 数为 `h`，单头维度为：
+
+```text
+d_h = d_model / h
+```
+
+线性投影为：
+
+```math
+Q_e = X_{enc} W_Q,
+K_e = X_{enc} W_K,
+V_e = X_{enc} W_V
+```
+
+权重维度：
+
+```text
+W_Q, W_K, W_V ∈ R^[d_model, h·d_h]
+```
+
+投影并 reshape 后：
+
+```text
+Q_e, K_e, V_e ∈ R^[B, h, L_enc, d_h]
+```
+
+### 2.3 Attention 分数与输出
+
+```math
+S_e = \frac{Q_e K_e^T}{\sqrt{d_h}}
+```
+
+```text
+S_e ∈ R^[B, h, L_enc, L_enc]
+A_e = softmax(S_e) ∈ R^[B, h, L_enc, L_enc]
+O_e = A_e V_e ∈ R^[B, h, L_enc, d_h]
+Concat(O_e) ∈ R^[B, L_enc, d_model]
+```
+
+之后进入标准残差、归一化和前馈层：
+
+```text
+Z_1 = LayerNorm(X_enc + Concat(O_e))
+Z_2 = LayerNorm(Z_1 + FFN(Z_1))
+H_enc = Z_2 ∈ R^[B, L_enc, d_model]
+```
+
+### 2.4 输出衔接
+
+`H_enc` 同时服务两类后续模块：
+
+- 全局池化后输入 `respondent_target_head`，输出下一阶段建议补充的 RP cell。
+- 作为 `Cross-Attention` 的 `K/V`，供 decoder 的候选题位读取条件信息。
+
+---
+
+## 3. Question-Set Self-Attention
+
+### 3.1 输入
+
+decoder 使用一组并行候选题位 query：
 
 ```text
 Q_slot^(0) ∈ R^[B, T_max, d_model]
 ```
 
-其中第二维 `T_max` 表示最大候选题位数，不是时间步，也不是最终页面题号。
-
----
-
-## 3. Question-set self-attention 的维度
-
-设：
-- `h`：head 数
-- `d_h = d_model / h`
-
-### 3.1 Q / K / V
-
-```math
-Q = Q_{slot}^{(0)} W_Q,
-K = Q_{slot}^{(0)} W_K,
-V = Q_{slot}^{(0)} W_V
-```
-
 其中：
 
-```math
-W_Q, W_K, W_V ∈ R^{d_{model}×(h·d_h)}
-```
+- `T_max`：一份问卷允许生成的最大候选题位数。
+- 每个 slot 表示一个候选 SP 题位置。
+- slot 编号是模型内部候选位置，不等同于页面最终展示顺序。
 
-投影后：
-
-```text
-Q,K,V ∈ R^[B, T_max, h·d_h]
-```
-
-reshape：
-
-```text
-Q,K,V ∈ R^[B, h, T_max, d_h]
-```
-
-### 3.2 注意力分数矩阵
+### 3.2 Q / K / V 投影
 
 ```math
-S = QK^T / \sqrt{d_h}
+Q_s = Q_{slot}^{(0)} W_Q,
+K_s = Q_{slot}^{(0)} W_K,
+V_s = Q_{slot}^{(0)} W_V
 ```
 
-维度：
+reshape 后：
 
 ```text
-S ∈ R^[B, h, T_max, T_max]
+Q_s, K_s, V_s ∈ R^[B, h, T_max, d_h]
 ```
 
-这里最后两个维度表示：
-- 第 3 维：当前候选 slot `i`
-- 第 4 维：被看的候选 slot `j`
-
-### 3.3 不加 causal mask
-
-当前项目下：
-
-```text
-S 不做上三角 causal mask
-```
-
-softmax 后：
-
-```text
-A ∈ R^[B, h, T_max, T_max]
-```
-
-### 3.4 输出
+### 3.3 题位关系矩阵
 
 ```math
-O = AV
+S_s = \frac{Q_s K_s^T}{\sqrt{d_h}}
 ```
-
-维度：
 
 ```text
-O ∈ R^[B, h, T_max, d_h]
+S_s ∈ R^[B, h, T_max, T_max]
+A_s = softmax(S_s) ∈ R^[B, h, T_max, T_max]
+O_s = A_s V_s ∈ R^[B, h, T_max, d_h]
+H_slot^self ∈ R^[B, T_max, d_model]
 ```
 
-拼接回去：
+`A_s[i,j]` 表示同一份 respondent block 中第 `i` 个候选 slot 对第 `j` 个候选 slot 的参考权重。该模块用于让候选题位之间形成互补、去重和覆盖协调。
 
-```text
-Concat(O) ∈ R^[B, T_max, h·d_h]
-H_slot ∈ R^[B, T_max, d_model]
-```
+### 3.4 输出衔接
 
-这一步的逻辑是：
-
-```text
-第 i 个候选 slot 可以参考其余候选 slot，
-从而让整份问卷内部形成更好的区分度、互补性和多样性。
-```
+`H_slot^self` 进入 cross-attention，作为读取 encoder 条件信息的 query。
 
 ---
 
-## 4. Cross-attention 的维度
+## 4. Cross-Attention
 
-encoder 输出：
+### 4.1 输入
 
 ```text
+H_slot^self ∈ R^[B, T_max, d_model]
 H_enc ∈ R^[B, L_enc, d_model]
 ```
 
-decoder 候选 slot 表示：
-
-```text
-H_slot ∈ R^[B, T_max, d_model]
-```
-
-cross-attention 后：
+### 4.2 投影与分数矩阵
 
 ```text
 Q_c ∈ R^[B, h, T_max, d_h]
 K_c,V_c ∈ R^[B, h, L_enc, d_h]
 S_c ∈ R^[B, h, T_max, L_enc]
 A_c ∈ R^[B, h, T_max, L_enc]
-O_c ∈ R^[B, T_max, d_model]
 ```
 
-它的作用是：
-- 每个候选 slot query
-- 去读取 respondent、环境、历史上下文和候选变量模板
-- 让每道题在这些条件下生成。
+### 4.3 输出
+
+```text
+O_c = A_c V_c ∈ R^[B, h, T_max, d_h]
+H_slot^cross ∈ R^[B, T_max, d_model]
+```
+
+cross-attention 的作用是让每个候选 slot 根据当前 respondent、环境状态、历史收集情况和候选变量模板生成题目结构表示。
 
 ---
 
-## 5. `respondent_target_head`、`count_head`、`slot_select_head`、`variable mask`、`value`
+## 5. Output Heads
 
-### 5.0 `respondent_target_head`
+### 5.1 respondent_target_head
 
-这一支从 encoder 的全局状态输出定向采样建议，不参与问卷内题目排序。
+该分支从 encoder 全局状态输出下一阶段建议补充的 RP cell。
 
 ```text
-H_enc ∈ R^[B, L_enc, d_model]
 g_enc = mean(H_enc, axis=1) ∈ R^[B, d_model]
 z_sample ∈ R^[B, C_sample]
 p_sample = softmax(z_sample)
 ```
 
-其中 `C_sample` 是 PopSim/ActivitySim 兼容统计文件解析出的边际采样 cell 数，例如：
-- `zone=天河区`
-- `gender=female`
-- `age_group=18-30`
-- `education=college`
+其中 `C_sample` 是由 PopSim/ActivitySim 兼容统计文件解析出的采样 cell 数，例如区、性别、年龄、教育等组合或边际项。
 
-如果 dashboard 已统计当前样本的 `sample_cell_counts` 和目标分布 `sample_cell_targets`，最终优先级会融合模型输出和实际覆盖缺口：
+若 dashboard 已有当前样本覆盖和目标分布，可融合覆盖缺口：
 
 ```text
 priority = 0.45 * model_priority + 0.55 * target_gap_priority
 ```
 
-### 5.1 `count_head`
+### 5.2 count_head
 
-输出本次问卷题数：
+输出当前 respondent block 的题数类别：
 
 ```text
 z_count ∈ R^[B, K_count]
-p_count ∈ R^[B, K_count]
-```
-
-其中：
-
-```text
+p_count = softmax(z_count) ∈ R^[B, K_count]
 K_count = T_max - T_min + 1
 ```
 
-### 5.2 `slot_select_head`
+### 5.3 slot_select_head
 
-`count_head` 只给出题数，不应默认“前 k 个 slot 有效”。因此还需要一个 slot selection head：
+从 `T_max` 个候选 slot 中选择进入最终问卷的题位集合：
 
 ```text
 slot_logits ∈ R^[B, T_max]
 M_slot ∈ {0,1}^[B, T_max]
 ```
 
-给定 `T_q` 后，从 `slot_logits` 中选出 top-k 个候选 slot，得到 `M_slot`。这里的 `M_slot` 是集合选择结果，不是前缀 mask。
+给定题数 `T_q` 后，从 `slot_logits` 中选出 top-k 个候选 slot，得到 `M_slot`。
 
-### 5.3 `mask_head`
+### 5.4 mask_head
 
-若每题展平后有 `V` 个变量槽位：
+输出每道候选题中各变量是否激活：
 
 ```text
 mask_logits ∈ R^[B, T_max, V]
 M_var ∈ {0,1}^[B, T_max, V]
 ```
 
-表示题内变量结构。
+其中 `V` 是展平后的变量槽位数。
 
-### 5.4 `value_head`
+### 5.5 value_head
+
+输出变量取值，并在 `M_slot` 与 `M_var` 条件下形成有效题目值：
 
 ```text
 X_raw ∈ R^[B, T_max, V]
 X_eff = M_slot[:, :, None] ⊙ M_var ⊙ X_raw
 ```
 
-最重要的是：
-
-```text
-value 不是和 mask 完全独立并列，
-而是条件于 mask 才真正生效。
-```
-
-更严格的因子分解是：
+对应的条件分解可写为：
 
 ```math
 p(T_q, S, M, X | H)
 =
-p(T_q|H)·p(S|T_q,H)·p(M|S,T_q,H)·p(X|M,S,T_q,H)
+p(T_q|H)\cdot p(S|T_q,H)\cdot p(M|S,T_q,H)\cdot p(X|M,S,T_q,H)
 ```
+
+### 5.6 score_head
+
+输出候选题质量分数：
+
+```text
+score ∈ R^[B, T_max, 1]
+```
+
+该分数可用于后处理排序、约束修正、题组质量评估和训练 reward 构造。
 
 ---
 
 ## 6. 最终 block 维度
 
-网络内部常用展平写法，先生成候选题集合：
+候选题集合的展平表示为：
 
 ```text
 Q_candidate ∈ R^[B, T_max, V]
 ```
 
-结合 `M_slot` 后只保留被选中的 `T_q` 个候选题：
+结合 `M_slot` 后得到当前 respondent 的有效题组：
 
 ```text
 Q_block = {q_i | M_slot[i] = 1}
 ```
 
-若按问卷展示结构还原，则可 reshape 为：
+按问卷展示结构还原为：
 
 ```text
 Q_block ∈ R^[B, T_q, A, K]
 ```
 
 其中：
-- `A`：每题里的方案数
-- `K`：每个方案里的变量数
+
+- `T_q`：本份问卷最终题数。
+- `A`：每题中的方案数。
+- `K`：每个方案中的变量数。
 
 ---
 
-## 7. 本项目里 attention 的一句话定义
+## 7. 模块衔接摘要
 
 ```text
-当前 selfattention 的 attention，建模的是“整份问卷内部候选 slot 之间的并行关系”，
-不是“未来时间步不能被看到”的语言模型式上三角因果序列关系。
+X_rp, X_env, X_hist, X_cand
+    -> embedding
+    -> concat as X_enc
+    -> Encoder Self-Attention
+    -> H_enc
+
+Q_slot^(0)
+    -> Question-Set Self-Attention
+    -> Cross-Attention(H_enc)
+    -> H_slot^cross
+    -> count / slot_select / mask / value / score heads
+    -> Q_block
+
+H_enc
+    -> respondent_target_head
+    -> sampling recommendation
 ```
 
-训练时也应按集合对齐：teacher block 的第 1 题不天然对应模型 slot 1，建议使用 Hungarian matching 或等价 set matching 来对齐预测候选题和 teacher 题目。
+训练时可按集合对齐预测题和 teacher 题，例如使用 Hungarian matching 或等价 set matching，让模型 slot 与 teacher 题目建立匹配关系。

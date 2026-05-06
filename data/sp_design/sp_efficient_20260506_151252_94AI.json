@@ -1,0 +1,9 @@
+{
+  "runtime": {
+    "model_weights": {
+      "updated_at": "2026-05-06T07:13:19.741302+00:00",
+      "format": "pt",
+      "weight_file": "sp_efficient_20260506_151252_94AI.pt"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "mode": "frontend",
+  "started_at": "2026-05-06T10:46:14",
+  "config_path": "/Users/convel/PycharmProjects/spSurvey/data/sp_design/gz_pt_share_variable_universe_v1.json",
+  "torch_available": true,
+  "status": "error",
+  "design_type": "dyppo",
+  "save_name": "gz_pt_share_variable_universe_v1",
+  "alternatives": [
+    "bus",
+    "metro",
+    "bike_ebike",
+    "car_ride_hailing"
+  ],
+  "variable_counts": {
+    "bus": 4,
+    "metro": 4,
+    "bike_ebike": 4,
+    "car_ride_hailing": 4
+  },
+  "dyppo_options": {
+    "tasks_per_round": 6,
+    "batch_size": 64,
+    "explore_epsilon": 0.1,
+    "reward_weight_d_error": 1.0
+  },
+  "target_block_sample": 2000,
+  "full_combo_count": 2147483648,
+  "condition_sample": {
+    "sample_rows": 960,
+    "passed": 793,
+    "pass_rate": 0.826,
+    "conditions_count": 13
+  },
+  "candidate_pool_target": 120,
+  "candidate_pool_size": 120,
+  "teacher_rows": 5,
+  "teacher_d_error": 29.976903,
+  "error": "diagnostic timeout after 180s",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/convel/PycharmProjects/spSurvey/test/dyppo/gz_pt_share_dyppo_debug_flow.py\", line 232, in run_one\n    trained = train_dynamic_ppo(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 1740, in train_dynamic_ppo\n    rollouts = _build_synthetic_rollouts(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 1320, in _build_synthetic_rollouts\n    reward_metrics = _questionnaire_reward_metrics(\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 977, in _questionnaire_reward_metrics\n    after_signal = _mnl_signal_from_obs_rows(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 863, in _mnl_signal_from_obs_rows\n    beta_raw = _estimate_mnl(\n               ^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/engine/dynamicPPO.py\", line 718, in _estimate_mnl\n    denom = np.sum(p)\n            ^^^^^^^^^\n  File \"/Users/convel/Library/Python/3.12/lib/python/site-packages/numpy/core/fromnumeric.py\", line 2313, in sum\n    return _wrapreduction(a, np.add, 'sum', axis, dtype, out, keepdims=keepdims,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/Library/Python/3.12/lib/python/site-packages/numpy/core/fromnumeric.py\", line 88, in _wrapreduction\n    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/convel/PycharmProjects/spSurvey/test/dyppo/gz_pt_share_dyppo_debug_flow.py\", line 92, in _handle_timeout\n    raise TimeoutError(f\"diagnostic timeout after {self.seconds}s\")\nTimeoutError: diagnostic timeout after 180s\n",
+  "stage_timings": [
+    {
+      "name": "validate payload",
+      "seconds": 0.0
+    },
+    {
+      "name": "sample condition pass-rate",
+      "seconds": 0.123
+    },
+    {
+      "name": "build feasible candidate pool",
+      "seconds": 0.053
+    },
+    {
+      "name": "compute efficient teacher prior",
+      "seconds": 0.046
+    },
+    {
+      "name": "train dynamicPPO",
+      "seconds": 179.78
+    }
+  ],
+  "elapsed_seconds": 180.005,
+  "finished_at": "2026-05-06T10:49:14"
+}
